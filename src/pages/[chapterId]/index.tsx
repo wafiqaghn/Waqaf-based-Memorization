@@ -302,6 +302,17 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
       revalidate: ONE_WEEK_REVALIDATION_PERIOD_SECONDS, // chapters will be generated at runtime if not found in the cache, then cached for subsequent requests for 7 days.
     };
   } catch (error) {
+    if (error instanceof Response) {
+      // eslint-disable-next-line no-console
+      console.error('getStaticProps-ChapterPage response error', {
+        status: error.status,
+        statusText: error.statusText,
+        url: error.url,
+      });
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('getStaticProps-ChapterPage error', error);
+    }
     logErrorToSentry(error, {
       transactionName: 'getStaticProps-ChapterPage',
       metadata: {
