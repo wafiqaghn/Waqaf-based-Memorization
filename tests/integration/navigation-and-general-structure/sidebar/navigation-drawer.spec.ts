@@ -136,13 +136,8 @@ const drawerLinks = [
   { text: 'Learn', href: '/learning-plans', target: '' },
   { text: 'My Quran', href: '/my-quran', target: '' },
   { text: 'Reciters', href: '/reciters', target: '' },
-  { text: 'About Us', href: '/about-us', target: '' },
-
-  // More
   { text: 'Developers', href: '/developers', target: '' },
-  { text: 'Product Updates', href: '/product-updates', target: '' },
-  { text: 'Feedback', href: 'https://feedback.quran.com/', target: '_blank' },
-  { text: 'Help', href: '/support', target: '' },
+  { text: 'About Us', href: '/about-us', target: '' },
 
   // Fundraising Banner Links
   {

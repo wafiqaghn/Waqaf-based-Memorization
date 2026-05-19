@@ -35,25 +35,6 @@
   user-select: none;
 }
 
-.accordionHeaderLeft {
-  gap: var(--spacing-xxsmall-px);
-  align-items: center;
-}
-
-.accordionContent {
-  margin-block-start: var(--spacing-medium2-px);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-medium2-px);
-  > a {
-    padding-inline-start: var(--spacing-large-px);
-  }
-}
-
-.accordionItemTitle {
-  font-weight: var(--font-weight-normal);
-}
-
 .ctaContainer {
   margin-inline: auto;
   max-inline-size: fit-content;

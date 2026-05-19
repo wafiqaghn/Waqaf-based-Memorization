@@ -55,11 +55,7 @@ const NavigationDrawerBody = ({ isLanguageDrawerOpen }: NavigationDrawerBodyProp
       >
         <div className={styles.listItems}>
           <FundraisingBanner />
-          <NavigationDrawerList
-            accordionHeaderLeftClassName={styles.accordionHeaderLeft}
-            accordionContentClassName={styles.accordionContent}
-            accordionItemTitleClassName={styles.accordionItemTitle}
-          />
+          <NavigationDrawerList />
         </div>
         <div className={styles.ctaContainer}>
           <div className={styles.ctaTop}>

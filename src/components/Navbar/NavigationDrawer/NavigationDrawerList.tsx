@@ -3,10 +3,10 @@ import React, { useCallback } from 'react';
 import useTranslation from 'next-translate/useTranslation';
 import { useDispatch } from 'react-redux';
 
-import MoreMenuCollapsible from './MoreMenuCollapsible';
 import NavigationDrawerItem from './NavigationDrawerItem';
 
 import useGetContinueReadingUrl from '@/hooks/useGetContinueReadingUrl';
+import IconAbout from '@/icons/about.svg';
 import IconBookmarkFilled from '@/icons/bookmark_filled.svg';
 import IconCode from '@/icons/code.svg';
 import DiamondIcon from '@/icons/diamond.svg';
@@ -17,6 +17,7 @@ import { setIsNavigationDrawerOpen } from '@/redux/slices/navbar';
 import Language from '@/types/Language';
 import { logButtonClick } from '@/utils/eventLogger';
 import {
+  ABOUT_US_URL,
   DEVELOPERS_URL,
   getMyQuranNavigationUrl,
   LEARNING_PLANS_URL,
@@ -24,19 +25,7 @@ import {
   ROUTES,
 } from '@/utils/navigation';
 
-interface NavigationDrawerListProps {
-  accordionHeaderClassName?: string;
-  accordionHeaderLeftClassName?: string;
-  accordionContentClassName?: string;
-  accordionItemTitleClassName?: string;
-}
-
-const NavigationDrawerList: React.FC<NavigationDrawerListProps> = ({
-  accordionHeaderClassName,
-  accordionHeaderLeftClassName,
-  accordionContentClassName,
-  accordionItemTitleClassName,
-}) => {
+const NavigationDrawerList: React.FC = () => {
   const { lang, t } = useTranslation('common');
   const dispatch = useDispatch();
   const continueReadingUrl = useGetContinueReadingUrl();
@@ -80,6 +69,12 @@ const NavigationDrawerList: React.FC<NavigationDrawerListProps> = ({
       href: DEVELOPERS_URL,
       eventName: 'navigation_drawer_developers',
     },
+    {
+      title: t('about'),
+      icon: <IconAbout />,
+      href: ABOUT_US_URL,
+      eventName: 'navigation_drawer_about',
+    },
   ];
 
   const handleItemClick = useCallback(
@@ -107,13 +102,6 @@ const NavigationDrawerList: React.FC<NavigationDrawerListProps> = ({
           />
         );
       })}
-      <MoreMenuCollapsible
-        onItemClick={handleItemClick}
-        headerClassName={accordionHeaderClassName}
-        headerLeftClassName={accordionHeaderLeftClassName}
-        contentClassName={accordionContentClassName}
-        itemTitleClassName={accordionItemTitleClassName}
-      />
     </>
   );
 };

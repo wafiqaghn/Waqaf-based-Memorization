@@ -2,6 +2,21 @@
 /* eslint-disable global-require */
 import random from 'lodash/random';
 
+import arChaptersData from '../../data/chapters/ar.json';
+import bnChaptersData from '../../data/chapters/bn.json';
+import enChaptersData from '../../data/chapters/en.json';
+import esChaptersData from '../../data/chapters/es.json';
+import frChaptersData from '../../data/chapters/fr.json';
+import idChaptersData from '../../data/chapters/id.json';
+import itChaptersData from '../../data/chapters/it.json';
+import msChaptersData from '../../data/chapters/ms.json';
+import nlChaptersData from '../../data/chapters/nl.json';
+import ruChaptersData from '../../data/chapters/ru.json';
+import swChaptersData from '../../data/chapters/sw.json';
+import trChaptersData from '../../data/chapters/tr.json';
+import urChaptersData from '../../data/chapters/ur.json';
+import zhChaptersData from '../../data/chapters/zh.json';
+
 import { formatStringNumber } from './number';
 import REVELATION_ORDER from './revelationOrder';
 
@@ -25,6 +40,22 @@ const SUPPORTED_CHAPTER_LOCALES = [
   'es',
   'sw',
 ];
+const CHAPTERS_DATA_BY_LOCALE: Record<string, Record<string, Chapter>> = {
+  ar: arChaptersData as unknown as Record<string, Chapter>,
+  bn: bnChaptersData as unknown as Record<string, Chapter>,
+  en: enChaptersData as unknown as Record<string, Chapter>,
+  es: esChaptersData as unknown as Record<string, Chapter>,
+  fr: frChaptersData as unknown as Record<string, Chapter>,
+  id: idChaptersData as unknown as Record<string, Chapter>,
+  it: itChaptersData as unknown as Record<string, Chapter>,
+  ms: msChaptersData as unknown as Record<string, Chapter>,
+  nl: nlChaptersData as unknown as Record<string, Chapter>,
+  ru: ruChaptersData as unknown as Record<string, Chapter>,
+  sw: swChaptersData as unknown as Record<string, Chapter>,
+  tr: trChaptersData as unknown as Record<string, Chapter>,
+  ur: urChaptersData as unknown as Record<string, Chapter>,
+  zh: zhChaptersData as unknown as Record<string, Chapter>,
+};
 
 /**
  * Get chapters data from the json file, by language
@@ -36,18 +67,9 @@ export const getAllChaptersData = (
   lang: string = DEFAULT_LANGUAGE,
 ): Promise<Record<string, Chapter>> => {
   if (SUPPORTED_CHAPTER_LOCALES.includes(lang)) {
-    return new Promise((res) => {
-      import(`../../data/chapters/${lang}.json`).then((data) => {
-        res(data.default);
-      });
-    });
+    return Promise.resolve(CHAPTERS_DATA_BY_LOCALE[lang]);
   }
-  return new Promise((res) => {
-    import(`../../data/chapters/en.json`).then((data) => {
-      // @ts-ignore
-      res(data.default);
-    });
-  });
+  return Promise.resolve(CHAPTERS_DATA_BY_LOCALE[DEFAULT_LANGUAGE]);
 };
 
 /**
