@@ -31,11 +31,14 @@ EventEmitter.defaultMaxListeners = Number(process.env.PROXY_DEFAULT_MAX_LISTENER
 const IS_DEVELOPMENT = process.env.NEXT_PUBLIC_VERCEL_ENV === 'development';
 const DEFAULT_BODY_SIZE_LIMIT = '8mb';
 
-const isOriginAllowed = (origin: string | undefined): boolean => {
+const getHostname = (host: string | undefined): string | undefined => host?.split(':')[0];
+
+const isOriginAllowed = (origin: string | undefined, requestHost: string | undefined): boolean => {
   if (!origin) return false;
   const url = new URL(origin);
   const { hostname } = url;
   if (hostname === 'localhost' || hostname === '127.0.0.1') return true;
+  if (hostname === getHostname(requestHost)) return true;
   return ALLOWED_DOMAINS.includes(hostname);
 };
 
@@ -95,7 +98,7 @@ const handleProxyReq = (proxyReq, req, res) => {
     // In development, only block explicitly disallowed external origins.
     // Skip signature verification since local tokens don't match production.
     const origin = req.headers.origin || req.headers.referer || '';
-    if (origin && !isOriginAllowed(origin)) {
+    if (origin && !isOriginAllowed(origin, req.headers.host)) {
       res.status(403).send({ error: ERROR_MESSAGES.FORBIDDEN });
       return;
     }
@@ -103,7 +106,7 @@ const handleProxyReq = (proxyReq, req, res) => {
     // Production: full origin + signature verification
     const origin = req.headers.origin || req.headers.referer || '';
     if (origin) {
-      if (!isOriginAllowed(origin)) {
+      if (!isOriginAllowed(origin, req.headers.host)) {
         res.status(403).send({ error: ERROR_MESSAGES.FORBIDDEN });
         return;
       }
