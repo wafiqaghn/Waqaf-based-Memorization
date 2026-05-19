@@ -82,8 +82,6 @@ export const RECITERS_URL = '/reciters';
 export const ABOUT_US_URL = '/about-us';
 export const APPS_URL = '/apps';
 export const DEVELOPERS_URL = '/developers';
-export const PRODUCT_UPDATES_URL = '/product-updates';
-export const SUPPORT_URL = '/support';
 
 /**
  * Get the href link to the my quran page.
@@ -470,15 +468,6 @@ export const getReciterChapterNavigationUrl = (reciterId: string, chapterId: str
  */
 export const getCanonicalUrl = (lang: string, path: string): string =>
   `${getBasePath()}${lang === 'en' ? '' : `/${lang}`}${path}`;
-
-/**
- * Get the href link to the product updates page.
- *
- * @param {string} id
- * @returns {string}
- */
-export const getProductUpdatesUrl = (id = ''): string =>
-  `/product-updates${`${id ? `/${id}` : ''}`}`;
 
 export const getProfileNavigationUrl = () => {
   return '/profile';

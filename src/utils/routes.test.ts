@@ -14,6 +14,5 @@ describe('isQuranReaderRoutePathname', () => {
   it('returns false for non-reader paths', () => {
     expect(isQuranReaderRoutePathname('/')).toBe(false);
     expect(isQuranReaderRoutePathname('/about-us')).toBe(false);
-    expect(isQuranReaderRoutePathname('/support')).toBe(false);
   });
 });

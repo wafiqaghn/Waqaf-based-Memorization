@@ -59,9 +59,6 @@ const footerLinks = [
   { text: 'Reciters', href: '/reciters', target: '' },
   { text: 'About Us', href: '/about-us', target: '' },
   { text: 'Developers', href: '/developers', target: '' },
-  { text: 'Product Updates', href: '/product-updates', target: '' },
-  { text: 'Feedback', href: 'https://feedback.quran.com/', target: '_blank' },
-  { text: 'Help', href: '/support', target: '' },
 
   // Popular Links section
   { text: 'Ayatul Kursi', href: '/ayatul-kursi', target: '' },
