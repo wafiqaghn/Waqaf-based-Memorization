@@ -86,7 +86,8 @@ export const getBasePath = (): string => {
 
 export const getProxiedServiceUrl = (service: QuranFoundationService, path: string): string => {
   const PROXY_PATH = `/api/proxy/${service}`;
-  const BASE_PATH = isStaticBuild
+  const BASE_PATH =
+    isStaticBuild || typeof window === 'undefined'
     ? `${process.env.API_GATEWAY_URL}${STATIC_SERVICE_BASE_PATHS[service]}`
     : `${getBasePath()}${PROXY_PATH}`;
   return `${BASE_PATH}${path}`;

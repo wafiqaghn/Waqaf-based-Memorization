@@ -11,8 +11,13 @@ export const X_INTERNAL_CLIENT = 'x-internal-client';
 
 export const getAdditionalHeaders = (req: NextApiRequest) => {
   let additionalHeaders = {};
+  const isServer = typeof window === 'undefined';
+  const isDirectApiRequest =
+    isServer &&
+    Boolean(process.env.API_GATEWAY_URL) &&
+    req.url?.startsWith(process.env.API_GATEWAY_URL);
 
-  if (isStaticBuild) {
+  if (isStaticBuild || isDirectApiRequest) {
     const { signature, timestamp } = generateSignature(
       req,
       req.url,
@@ -25,7 +30,7 @@ export const getAdditionalHeaders = (req: NextApiRequest) => {
     };
   }
 
-  if (typeof window === 'undefined') {
+  if (isServer && !isDirectApiRequest) {
     const { signature: proxySignature, timestamp: proxyTimestamp } = generateSignature(
       req,
       req.url,

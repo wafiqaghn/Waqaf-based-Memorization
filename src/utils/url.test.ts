@@ -41,29 +41,34 @@ describe('getProxiedServiceUrl', () => {
     }
   });
 
-  it('routes content through the local proxy during development', async () => {
+  it('routes content directly to the API on the server during runtime generation', async () => {
     const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
-    try {
-      expect(
-        getProxiedServiceUrl(QuranFoundationService.CONTENT, '/api/qdc/resources/translations'),
-      ).toBe('http://localhost:3000/api/proxy/content/api/qdc/resources/translations');
-    } finally {
-      clearEnv();
-    }
-  });
-
-  it('uses the Vercel deployment URL when available', async () => {
-    const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
-    process.env.VERCEL_URL = 'quran-example.vercel.app';
     vi.stubGlobal('window', undefined);
 
     try {
       expect(
         getProxiedServiceUrl(QuranFoundationService.CONTENT, '/api/qdc/resources/translations'),
-      ).toBe('https://quran-example.vercel.app/api/proxy/content/api/qdc/resources/translations');
+      ).toBe('https://api.quran.com/api/qdc/resources/translations');
     } finally {
       vi.unstubAllGlobals();
-      delete process.env.VERCEL_URL;
+      clearEnv();
+    }
+  });
+
+  it('routes content through the current browser origin on the client', async () => {
+    const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
+    vi.stubGlobal('window', {
+      location: {
+        origin: 'https://quran.example',
+      },
+    });
+
+    try {
+      expect(
+        getProxiedServiceUrl(QuranFoundationService.CONTENT, '/api/qdc/resources/translations'),
+      ).toBe('https://quran.example/api/proxy/content/api/qdc/resources/translations');
+    } finally {
+      vi.unstubAllGlobals();
       clearEnv();
     }
   });
