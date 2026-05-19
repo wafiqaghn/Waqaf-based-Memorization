@@ -1,0 +1,961 @@
+/* eslint-disable max-lines */
+import { NextApiRequest } from 'next';
+import Router from 'next/router';
+import { configureRefreshFetch } from 'refresh-fetch';
+
+import { getTimezone } from '../datetime';
+import { prepareGenerateMediaFileRequestData } from '../media/utils';
+
+import { BANNED_USER_ERROR_ID } from './constants';
+import { AuthErrorCodes } from './errors';
+import BookmarkByCollectionIdQueryParams from './types/BookmarkByCollectionIdQueryParams';
+import { MappedPage, MappedVerse, MapMushafParams } from './types/MushafMapping';
+import GetAllNotesQueryParams from './types/Note/GetAllNotesQueryParams';
+import { ShortenUrlResponse } from './types/ShortenUrl';
+
+import { fetcher } from '@/api';
+import { addSentryBreadcrumb, logErrorToSentry } from '@/lib/sentry';
+import { RamadanChallengeResponse } from '@/types/ApiResponses';
+import {
+  ActivityDay,
+  ActivityDayType,
+  FilterActivityDaysParams,
+  QuranActivityDay,
+  UpdateActivityDayBody,
+  UpdateActivityDayParams,
+  UpdateLessonActivityDayBody,
+  UpdateQuranActivityDayBody,
+  UpdateQuranReadingProgramActivityDayBody,
+} from '@/types/auth/ActivityDay';
+import ConsentType from '@/types/auth/ConsentType';
+import { Course } from '@/types/auth/Course';
+import {
+  CreateGoalRequest,
+  CreateGoalRequestUnion,
+  Goal,
+  GoalCategory,
+  UpdateGoalRequest,
+} from '@/types/auth/Goal';
+import { Note } from '@/types/auth/Note';
+import QuranProgramWeekResponse from '@/types/auth/QuranProgramWeekResponse';
+import { Response } from '@/types/auth/Response';
+import { StreakWithMetadataParams, StreakWithUserMetadata } from '@/types/auth/Streak';
+import UserProgramResponse from '@/types/auth/UserProgramResponse';
+import Language from '@/types/Language';
+import GenerateMediaFileRequest, { MediaType } from '@/types/Media/GenerateMediaFileRequest';
+import MediaRenderError from '@/types/Media/MediaRenderError';
+import QuestionResponse from '@/types/QuestionsAndAnswers/QuestionResponse';
+import QuestionType from '@/types/QuestionsAndAnswers/QuestionType';
+import { Mushaf } from '@/types/QuranReader';
+import {
+  CollectionsQueryParams,
+  makeActivityDaysUrl,
+  makeAddBulkCollectionBookmarksUrl,
+  makeAddCollectionBookmarkUrl,
+  makeAddCollectionUrl,
+  makeBookmarkCollectionsUrl,
+  makeBookmarksRangeUrl,
+  makeBookmarkUrl,
+  makeBookmarksUrl,
+  makeCollectionsUrl,
+  makeCompleteAnnouncementUrl,
+  makeCompleteSignupUrl,
+  makeCountNotesWithinRangeUrl,
+  makeCountQuestionsWithinRangeUrl,
+  makeCourseFeedbackUrl,
+  makeDeleteAccountUrl,
+  makeDeleteBookmarkUrl,
+  makeDeleteCollectionBookmarkByIdUrl,
+  makeDeleteCollectionBookmarkByKeyUrl,
+  makeDeleteCollectionUrl,
+  makeDeleteOrUpdateNoteUrl,
+  makeEnrollUserInQuranProgramUrl,
+  makeEnrollUserUrl,
+  makeEstimateRangesReadingTimeUrl,
+  makeFilterActivityDaysUrl,
+  makeFullUrlById,
+  makeGenerateMediaFileUrl,
+  makeGetBookmarkByCollectionId,
+  makeGetCoursesUrl,
+  makeGetCourseUrl,
+  makeGetMediaFileProgressUrl,
+  makeGetMonthlyMediaFilesCountUrl,
+  makeGetNoteByIdUrl,
+  makeGetNotesByVerseUrl,
+  makeGetQuestionByIdUrl,
+  makeGetQuestionsByVerseKeyUrl,
+  makeGetQuranicWeekUrl,
+  makeGetUserCoursesCountUrl,
+  makeGetUserQuranProgramUrl,
+  makeGoalUrl,
+  makeReadingGoalCountUrl,
+  makeLogoutUrl,
+  makeNotesUrl,
+  makePublishNoteUrl,
+  makeReadingSessionsUrl,
+  makeRefreshTokenUrl,
+  makeShortenUrlUrl,
+  makeStreakUrl,
+  makeSyncLocalDataUrl,
+  makeUpdateCollectionUrl,
+  makeUserBulkPreferencesUrl,
+  makeUserConsentsUrl,
+  makeUserFeatureFlagsUrl,
+  makeUserPreferencesUrl,
+  makeUserProfileUrl,
+  makeVerificationCodeUrl,
+  makeReadingGoalStatusUrl,
+  GetCoursesQueryParams,
+  makeMapUrl,
+  makeTranslationFeedbackUrl,
+  makeAddPinnedItemUrl,
+  makePinnedItemsUrl,
+  makeSyncPinnedItemsUrl,
+  makeBulkDeletePinnedItemsUrl,
+  makeClearPinnedItemsUrl,
+  makeDeletePinnedItemUrl,
+} from '@/utils/auth/apiPaths';
+import { getAdditionalHeaders } from '@/utils/headers';
+import CompleteAnnouncementRequest from 'types/auth/CompleteAnnouncementRequest';
+import EnrollmentMethod from 'types/auth/EnrollmentMethod';
+import { GetBookmarkCollectionsIdResponse } from 'types/auth/GetBookmarksByCollectionId';
+import PreferenceGroup from 'types/auth/PreferenceGroup';
+import RefreshToken from 'types/auth/RefreshToken';
+import { SyncLocalDataPayload } from 'types/auth/SyncDataType';
+import SyncUserLocalDataResponse from 'types/auth/SyncUserLocalDataResponse';
+import UserPreferencesResponse from 'types/auth/UserPreferencesResponse';
+import UserProfile from 'types/auth/UserProfile';
+import Bookmark from 'types/Bookmark';
+import BookmarksMap from 'types/BookmarksMap';
+import BookmarkType from 'types/BookmarkType';
+import { Collection } from 'types/Collection';
+import CompleteSignupRequest from 'types/CompleteSignupRequest';
+import { PinnedItemDTO, PinnedItemTargetType, SyncPinnedItemPayload } from 'types/PinnedItem';
+
+type RequestData = Record<string, any>;
+const IGNORE_ERRORS = [
+  MediaRenderError.MediaVersesRangeLimitExceeded,
+  MediaRenderError.MediaFilesPerUserLimitExceeded,
+  AuthErrorCodes.InvalidCredentials,
+  AuthErrorCodes.NotFound,
+  AuthErrorCodes.BadRequest,
+  AuthErrorCodes.Invalid,
+  AuthErrorCodes.Mismatch,
+  AuthErrorCodes.Missing,
+  AuthErrorCodes.Duplicate,
+  AuthErrorCodes.Banned,
+  AuthErrorCodes.Expired,
+  AuthErrorCodes.Used,
+  AuthErrorCodes.Immutable,
+  AuthErrorCodes.ValidationError,
+];
+
+/**
+ * Checks if an API response contains error information and throws an error if it does.
+ * This is useful for handling responses from APIs that return error information in the response body
+ * instead of rejecting the promise (like when ValidationError is in IGNORE_ERRORS).
+ *
+ * @param {unknown} response - The API response to check
+ * @param {string} [errorMessage] - Optional custom error message to throw
+ * @throws {Error} If the response contains error information
+ * @returns {void}
+ */
+export const throwIfResponseContainsError = (response: unknown, errorMessage?: string): void => {
+  if (
+    response &&
+    typeof response === 'object' &&
+    ((response as any).error ||
+      (response as any).details?.error ||
+      (response as any).success === false)
+  ) {
+    const message =
+      errorMessage ||
+      (response as any).error?.message ||
+      (response as any).details?.error?.message ||
+      'API request failed';
+    throw new Error(message);
+  }
+};
+
+const handleErrors = async (res) => {
+  const body = await res.json();
+  const error = body?.error || body?.details?.error;
+  const errorName = body?.name || body?.details?.name;
+
+  // sometimes FE needs to handle the error from the API instead of showing a general something went wrong message
+  const shouldIgnoreError = IGNORE_ERRORS.includes(error?.code);
+  if (shouldIgnoreError) {
+    return body;
+  }
+  // const toast = useToast();
+
+  if (errorName === BANNED_USER_ERROR_ID) {
+    await logoutUser();
+    return Router.push(`/login?error=${errorName}`);
+  }
+
+  throw new Error(body?.message);
+};
+
+/**
+ * Execute a POST request
+ *
+ * @param {string} url
+ * @param {RequestData} requestData
+ * @returns {Promise<T>}
+ */
+export const postRequest = <T>(url: string, requestData: RequestData): Promise<T> =>
+  privateFetcher(url, {
+    method: 'POST',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestData),
+  });
+
+/**
+ * Execute a DELETE request.
+ *
+ * @param {string} url
+ * @param {RequestData} requestData
+ * @returns {Promise<T>}
+ */
+const deleteRequest = <T>(url: string, requestData?: RequestData): Promise<T> =>
+  privateFetcher(url, {
+    method: 'DELETE',
+    ...(requestData && {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    }),
+  });
+
+/**
+ * Execute a PATCH request.
+ *
+ * @param {string} url
+ * @param {RequestData} requestData
+ * @returns {Promise<T>}
+ */
+const patchRequest = <T>(url: string, requestData?: RequestData): Promise<T> =>
+  privateFetcher(url, {
+    method: 'PATCH',
+    ...(requestData && {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestData),
+    }),
+  });
+
+export const getUserProfile = async (): Promise<UserProfile> =>
+  privateFetcher(makeUserProfileUrl());
+
+export const getUserFeatureFlags = async (): Promise<Record<string, boolean>> =>
+  privateFetcher(makeUserFeatureFlagsUrl());
+
+export const refreshToken = async (): Promise<RefreshToken> =>
+  privateFetcher(makeRefreshTokenUrl());
+
+// Track token refresh progress to allow UI / logic to defer actions while refreshing
+let tokenRefreshInProgress = false;
+export const isTokenRefreshInProgress = () => tokenRefreshInProgress;
+
+const refreshTokenWithFlag = async (): Promise<RefreshToken> => {
+  if (!tokenRefreshInProgress) {
+    tokenRefreshInProgress = true;
+    addSentryBreadcrumb('auth.refresh', 'token refresh start');
+  }
+  try {
+    const result = await refreshToken();
+    addSentryBreadcrumb('auth.refresh', 'token refresh success');
+    return result;
+  } catch (e) {
+    addSentryBreadcrumb('auth.refresh', 'token refresh failure');
+    logErrorToSentry(e, {
+      transactionName: 'auth.refresh',
+    });
+    throw e;
+  } finally {
+    tokenRefreshInProgress = false;
+  }
+};
+
+export const completeSignup = async (data: CompleteSignupRequest): Promise<UserProfile> =>
+  postRequest(makeCompleteSignupUrl(), data);
+
+export const completeAnnouncement = async (data: CompleteAnnouncementRequest): Promise<any> => {
+  return postRequest(makeCompleteAnnouncementUrl(), data);
+};
+
+export const updateUserConsent = async (data: {
+  consentType: ConsentType;
+  consented: boolean;
+}): Promise<any> => {
+  return postRequest(makeUserConsentsUrl(), data);
+};
+
+export const deleteAccount = async (): Promise<void> => deleteRequest(makeDeleteAccountUrl());
+
+type AddBookmarkParams = {
+  key: number;
+  mushafId: number;
+  type: BookmarkType;
+  verseNumber?: number;
+  isReading?: boolean | null;
+};
+
+export const addBookmark = async ({
+  key,
+  mushafId,
+  type,
+  verseNumber,
+  isReading,
+}: AddBookmarkParams): Promise<Bookmark> => {
+  // Ensure all required fields are present
+  if (!key || !mushafId || !type) {
+    throw new Error('Missing required fields: key, mushafId, and type are required');
+  }
+
+  const payload: Record<string, any> = {
+    key,
+    mushaf: mushafId,
+    type,
+  };
+
+  // Include verseNumber if provided (required for ayah bookmarks)
+  if (verseNumber !== undefined) {
+    payload.verseNumber = verseNumber;
+  }
+
+  // Include isReading if provided
+  if (isReading !== undefined) {
+    payload.isReading = isReading;
+  }
+
+  return postRequest(makeBookmarksUrl(mushafId), payload);
+};
+
+export const getPageBookmarks = async (
+  mushafId: number,
+  chapterNumber: number,
+  verseNumber: number,
+  perPage: number,
+): Promise<BookmarksMap> =>
+  privateFetcher(makeBookmarksRangeUrl(mushafId, chapterNumber, verseNumber, perPage));
+
+export const getBookmark = async (
+  mushafId: number,
+  key: number,
+  type: BookmarkType,
+  verseNumber?: number,
+): Promise<Bookmark> => {
+  return privateFetcher(makeBookmarkUrl(mushafId, key, type, verseNumber));
+};
+
+export const getBookmarkCollections = async (
+  mushafId: number,
+  key: number,
+  type: BookmarkType,
+  verseNumber?: number,
+): Promise<string[]> =>
+  privateFetcher(makeBookmarkCollectionsUrl(mushafId, key, type, verseNumber));
+
+/**
+ * Fetch all bookmarks for a surah.
+ * Returns a map keyed by verseKey (e.g., "1:1", "1:2", etc.)
+ * Backend handles mushaf mapping automatically.
+ *
+ * @param {number} mushafId - The mushaf ID
+ * @param {number} surahNumber - The surah number (1-114)
+ * @returns {Promise<BookmarksMap>} Map of verseKey -> Bookmark
+ */
+export const getSurahBookmarks = async (
+  mushafId: number,
+  surahNumber: number,
+): Promise<BookmarksMap> => {
+  const limit = 20;
+  const bookmarks: Bookmark[] = [];
+  const seenIds = new Set<string>();
+  let page = 1;
+  let response: Bookmark[] = [];
+  let pagesFetched = 0;
+  const maxPages = 200;
+
+  while (pagesFetched < maxPages) {
+    // eslint-disable-next-line no-await-in-loop
+    response = (await privateFetcher(
+      makeBookmarksUrl(mushafId, limit, BookmarkType.Ayah, undefined, surahNumber, page),
+    )) as Bookmark[];
+
+    const newItems = response.filter((bookmark) => !seenIds.has(bookmark.id));
+    newItems.forEach((bookmark) => {
+      seenIds.add(bookmark.id);
+      bookmarks.push(bookmark);
+    });
+
+    if (response.length < limit || newItems.length === 0) break;
+
+    page += 1;
+    pagesFetched += 1;
+  }
+  const bookmarksMap: BookmarksMap = {};
+  bookmarks.forEach((bookmark) => {
+    const verseKey = bookmark.verseNumber
+      ? `${bookmark.key}:${bookmark.verseNumber}`
+      : `${bookmark.key}`;
+    bookmarksMap[verseKey] = bookmark;
+  });
+  return bookmarksMap;
+};
+
+// No auth required
+export const getReadingGoalCount = async (
+  category: GoalCategory,
+): Promise<{ data: { count: number } }> => fetcher(makeReadingGoalCountUrl({ type: category }));
+
+export const getReadingGoalStatus = async (
+  type: GoalCategory,
+): Promise<{ data: RamadanChallengeResponse }> =>
+  privateFetcher(makeReadingGoalStatusUrl({ type }));
+
+export const addReadingGoal = async (data: CreateGoalRequestUnion): Promise<{ data?: Goal }> => {
+  if (data.category === GoalCategory.RAMADAN_CHALLENGE) {
+    return postRequest(makeGoalUrl({ type: data.category }), {});
+  }
+  const { category, mushafId, ...requestBody } = data as CreateGoalRequest;
+  return postRequest(makeGoalUrl({ mushafId, type: category }), requestBody);
+};
+
+export const updateReadingGoal = async ({
+  mushafId,
+  category,
+  ...data
+}: UpdateGoalRequest): Promise<{ data?: Goal }> =>
+  patchRequest(makeGoalUrl({ mushafId, type: category }), data);
+
+export const deleteReadingGoal = async (params: { category: GoalCategory }): Promise<void> =>
+  deleteRequest(makeGoalUrl({ type: params.category }));
+
+export const filterReadingDays = async (
+  params: FilterActivityDaysParams,
+): Promise<{ data: ActivityDay<QuranActivityDay>[] }> =>
+  privateFetcher(makeFilterActivityDaysUrl(params));
+
+export const getActivityDay = async (
+  type: ActivityDayType,
+): Promise<{ data?: ActivityDay<QuranActivityDay> }> =>
+  privateFetcher(makeActivityDaysUrl({ type }));
+
+export const addReadingSession = async (chapterNumber: number, verseNumber: number) =>
+  postRequest(makeReadingSessionsUrl(), {
+    chapterNumber,
+    verseNumber,
+  });
+
+export const updateActivityDay = async (
+  params: UpdateActivityDayParams,
+): Promise<ActivityDay<QuranActivityDay>> => {
+  if (params.type === ActivityDayType.QURAN) {
+    const { mushafId, type, ...body } = params as UpdateActivityDayBody<UpdateQuranActivityDayBody>;
+    return postRequest(makeActivityDaysUrl({ mushafId, type }), body);
+  }
+  if (params.type === ActivityDayType.QURAN_READING_PROGRAM) {
+    const { type, ...body } =
+      params as UpdateActivityDayBody<UpdateQuranReadingProgramActivityDayBody>;
+    return postRequest(makeActivityDaysUrl({ type }), body);
+  }
+  const { type, ...body } = params as UpdateActivityDayBody<UpdateLessonActivityDayBody>;
+  return postRequest(makeActivityDaysUrl({ type }), body);
+};
+
+export const estimateRangesReadingTime = async (body: {
+  ranges: string[];
+}): Promise<{ data: { seconds: number } }> => {
+  return privateFetcher(makeEstimateRangesReadingTimeUrl(body));
+};
+
+export const getStreakWithUserMetadata = async (
+  params: StreakWithMetadataParams,
+): Promise<{ data: StreakWithUserMetadata }> => privateFetcher(makeStreakUrl(params));
+
+export const syncUserLocalData = async (
+  payload: SyncLocalDataPayload,
+): Promise<SyncUserLocalDataResponse> => postRequest(makeSyncLocalDataUrl(), payload);
+
+export const getUserPreferences = async (): Promise<UserPreferencesResponse> => {
+  const userPreferences = (await privateFetcher(
+    makeUserPreferencesUrl(),
+  )) as UserPreferencesResponse;
+  return userPreferences;
+};
+
+export const addOrUpdateUserPreference = async (
+  key: string,
+  value: any,
+  group: PreferenceGroup,
+  mushafId?: Mushaf,
+) =>
+  postRequest(makeUserPreferencesUrl(mushafId), {
+    key,
+    value,
+    group,
+  });
+
+export const getCollectionsList = async (
+  queryParams: CollectionsQueryParams,
+): Promise<{ data: Collection[] }> => {
+  return privateFetcher(makeCollectionsUrl(queryParams));
+};
+
+export const updateCollection = async (
+  collectionId: string,
+  { name }: { name: string },
+): Promise<unknown> => {
+  // Some endpoints may return `200` with `{ success: false, ... }` on validation errors.
+  // Ensure callers get a rejected promise so `.catch`/try-catch paths run and optimistic updates roll back.
+  const response = await postRequest<unknown>(makeUpdateCollectionUrl(collectionId), { name });
+  throwIfResponseContainsError(response);
+  return response;
+};
+
+export const deleteCollection = async (collectionId: string) => {
+  return deleteRequest(makeDeleteCollectionUrl(collectionId));
+};
+
+interface CollectionBookmarkResponse {
+  message: string;
+  bookmark: Bookmark;
+}
+
+export const addCollectionBookmark = async ({
+  collectionId,
+  key,
+  mushafId,
+  type,
+  verseNumber,
+  bookmarkId,
+}: {
+  collectionId: string;
+  key: number;
+  mushafId: number;
+  type: BookmarkType;
+  verseNumber?: number;
+  bookmarkId?: string;
+}): Promise<CollectionBookmarkResponse> => {
+  return postRequest(makeAddCollectionBookmarkUrl(collectionId), {
+    collectionId,
+    key,
+    mushaf: mushafId,
+    type,
+    verseNumber,
+    ...(bookmarkId && { bookmarkId }),
+  });
+};
+
+export const addBulkCollectionBookmarks = async ({
+  collectionId,
+  bookmarks,
+  mushafId,
+}: {
+  collectionId: string;
+  bookmarks: Array<{
+    key: number;
+    type: BookmarkType;
+    verseNumber?: number;
+  }>;
+  mushafId: number;
+}): Promise<{ added: number; skipped: number }> => {
+  return postRequest(makeAddBulkCollectionBookmarksUrl(collectionId), {
+    collectionId,
+    bookmarks,
+    mushaf: mushafId,
+  });
+};
+
+export const deleteCollectionBookmarkById = async (collectionId: string, bookmarkId: string) => {
+  return deleteRequest(makeDeleteCollectionBookmarkByIdUrl(collectionId, bookmarkId));
+};
+
+interface DeleteCollectionBookmarkResponse {
+  message: string;
+  bookmark: Bookmark | null;
+  deleted: boolean;
+}
+
+export const deleteCollectionBookmarkByKey = async ({
+  collectionId,
+  key,
+  mushafId,
+  type,
+  verseNumber,
+}: {
+  collectionId: string;
+  key: number;
+  mushafId: number;
+  type: BookmarkType;
+  verseNumber?: number;
+}): Promise<DeleteCollectionBookmarkResponse> => {
+  return deleteRequest(makeDeleteCollectionBookmarkByKeyUrl(collectionId), {
+    collectionId,
+    key,
+    mushaf: mushafId,
+    type,
+    verseNumber,
+  });
+};
+
+export const deleteBookmarkById = async (bookmarkId: string) => {
+  return deleteRequest(makeDeleteBookmarkUrl(bookmarkId));
+};
+
+/**
+ * Get the user's reading bookmark by querying bookmarks with isReading=true
+ * Note: This requires a mushafId and type, so we query for both Ayah and Page types
+ * and return the first one found (there should only be one reading bookmark)
+ * @param {number} mushafId - The mushafId to get the reading bookmark for
+ * @returns {Promise<Bookmark | null>} The reading bookmark
+ */
+export const getReadingBookmark = async (mushafId: number): Promise<Bookmark | null> => {
+  try {
+    // Try to get reading bookmark
+    const bookmarks = await privateFetcher<Bookmark | Bookmark[]>(
+      `${makeBookmarksUrl(mushafId, 1, undefined, true)}`,
+    );
+    if (bookmarks && !Array.isArray(bookmarks) && bookmarks.key && bookmarks.type) {
+      return bookmarks;
+    }
+    if (bookmarks && Array.isArray(bookmarks) && bookmarks.length > 0) {
+      const bookmark = bookmarks[0];
+      if (bookmark && bookmark.key && bookmark.type) {
+        return bookmark;
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Set a bookmark as reading bookmark by using addBookmark with isReading=true
+ * @param {number} key - The key of the bookmark to set as reading bookmark
+ * @param {number} mushafId - The mushafId of the bookmark to set as reading bookmark
+ * @param {BookmarkType} type - The type of the bookmark to set as reading bookmark
+ * @param {number} verseNumber - The verse number of the bookmark to set as reading bookmark
+ * @returns {Promise<Bookmark>} The reading bookmark
+ */
+export const setReadingBookmark = async (
+  key: number,
+  mushafId: number,
+  type: BookmarkType,
+  verseNumber?: number,
+): Promise<Bookmark> => {
+  return addBookmark({
+    key,
+    mushafId,
+    type,
+    verseNumber,
+    isReading: true,
+  });
+};
+
+/**
+ * Unset the reading bookmark by using addBookmark with isReading=false
+ * The backend will find and unset the bookmark with isReading=true
+ * @param {number} key - The key of the bookmark (chapterId for ayah, pageNumber for page)
+ * @param {number} mushafId - The mushafId
+ * @param {BookmarkType} type - The type of the bookmark
+ * @param {number} verseNumber - The verse number (for ayah type)
+ * @returns {Promise<void>}
+ * @deprecated Use addBookmark directly with isReading=false instead
+ */
+export const unsetReadingBookmark = async (
+  key: number,
+  mushafId: number,
+  type: BookmarkType,
+  verseNumber?: number,
+): Promise<void> => {
+  await addBookmark({
+    key,
+    mushafId,
+    type,
+    verseNumber,
+    isReading: false,
+  });
+};
+
+export const getBookmarksByCollectionId = async (
+  collectionId: string,
+  queryParams: BookmarkByCollectionIdQueryParams,
+): Promise<GetBookmarkCollectionsIdResponse> => {
+  return privateFetcher(makeGetBookmarkByCollectionId(collectionId, queryParams));
+};
+
+type EnrollUserParams = {
+  courseId: string;
+  enrollmentMethod: EnrollmentMethod;
+};
+
+export const enrollUser = async ({
+  courseId,
+  enrollmentMethod,
+}: EnrollUserParams): Promise<{ success: boolean }> =>
+  postRequest(makeEnrollUserUrl(), {
+    courseId,
+    enrollmentMethod,
+  });
+
+export const postCourseFeedback = async ({
+  courseId,
+  rating,
+  body,
+}: {
+  courseId: string;
+  rating: number;
+  body?: string;
+}): Promise<{ success: boolean }> =>
+  postRequest(makeCourseFeedbackUrl(courseId), {
+    rating,
+    body,
+  });
+
+export const getCourses = async (params?: GetCoursesQueryParams): Promise<Course[]> =>
+  privateFetcher(makeGetCoursesUrl(params));
+
+export const getCourse = async (courseSlugOrId: string): Promise<Course> =>
+  privateFetcher(makeGetCourseUrl(courseSlugOrId));
+
+export const getUserCoursesCount = async (): Promise<{ count: number }> =>
+  privateFetcher(makeGetUserCoursesCountUrl());
+
+export const addCollection = async (collectionName: string): Promise<Collection> => {
+  // Some endpoints may return `200` with `{ success: false, ... }` on validation errors.
+  const response = await postRequest<unknown>(makeAddCollectionUrl(), { name: collectionName });
+  throwIfResponseContainsError(response);
+  return response as Collection;
+};
+
+type QuestionTypes = {
+  [key in QuestionType]?: number;
+};
+
+export type QuestionsData = { total: number; types: QuestionTypes };
+
+export const countQuestionsWithinRange = async (
+  from: string,
+  to: string,
+  language: Language,
+): Promise<Record<string, QuestionsData>> => {
+  return privateFetcher(makeCountQuestionsWithinRangeUrl(from, to, language));
+};
+
+export const getAllNotes = async (params: GetAllNotesQueryParams) => {
+  return privateFetcher(makeNotesUrl(params));
+};
+
+export const countNotesWithinRange = async (from: string, to: string) => {
+  return privateFetcher(makeCountNotesWithinRangeUrl(from, to));
+};
+
+export const getAyahQuestions = async (ayahKey: string, language: Language) => {
+  return privateFetcher(
+    makeGetQuestionsByVerseKeyUrl({
+      verseKey: ayahKey,
+      language,
+    }),
+  );
+};
+
+export const getQuestionById = async (questionId: string): Promise<QuestionResponse> => {
+  return privateFetcher(makeGetQuestionByIdUrl(questionId));
+};
+
+export const addNote = async (payload: Pick<Note, 'body' | 'ranges' | 'saveToQR'>) => {
+  return postRequest(makeNotesUrl(), payload);
+};
+
+export const publishNoteToQR = async (
+  noteId: string,
+  payload: {
+    body: string;
+    ranges?: string[];
+  },
+): Promise<{ success: boolean; postId: string }> =>
+  postRequest(makePublishNoteUrl(noteId), payload);
+
+export const getNoteById = async (id: string): Promise<Note> =>
+  privateFetcher(makeGetNoteByIdUrl(id));
+
+export const getNotesByVerse = async (verseKey: string): Promise<Note[]> => {
+  addSentryBreadcrumb('notes.split', 'fetching notes by verse', { verseKey });
+
+  const notes: Note[] = await privateFetcher(makeGetNotesByVerseUrl(verseKey));
+
+  addSentryBreadcrumb('notes.split', 'fetched notes', {
+    notesCount: notes.length,
+  });
+
+  return notes;
+};
+
+export const updateNote = async (id: string, body: string, saveToQR: boolean) =>
+  patchRequest(makeDeleteOrUpdateNoteUrl(id), {
+    body,
+    saveToQR,
+  });
+
+export const deleteNote = async (id: string) => deleteRequest(makeDeleteOrUpdateNoteUrl(id));
+
+export const getMediaFileProgress = async (
+  renderId: string,
+): Promise<Response<{ isDone: boolean; progress: number; url?: string }>> =>
+  privateFetcher(makeGetMediaFileProgressUrl(renderId));
+
+export const getMonthlyMediaFilesCount = async (
+  type: MediaType,
+): Promise<Response<{ count: number; limit: number }>> =>
+  privateFetcher(makeGetMonthlyMediaFilesCountUrl(type));
+
+export const generateMediaFile = async (
+  payload: GenerateMediaFileRequest,
+): Promise<Response<{ renderId?: string; url?: string }>> => {
+  return postRequest(makeGenerateMediaFileUrl(), prepareGenerateMediaFileRequestData(payload));
+};
+
+export const requestVerificationCode = async (emailToVerify) => {
+  return postRequest(makeVerificationCodeUrl(), { email: emailToVerify });
+};
+export const addOrUpdateBulkUserPreferences = async (
+  preferences: Record<PreferenceGroup, any>,
+  mushafId: Mushaf,
+) => postRequest(makeUserBulkPreferencesUrl(mushafId), preferences);
+
+/**
+ * Shorten a URL.
+ *
+ * @param {string} url
+ * @returns {Promise<ShortenUrlResponse>}
+ */
+export const shortenUrl = async (url: string): Promise<ShortenUrlResponse> => {
+  return postRequest(makeShortenUrlUrl(), { url });
+};
+
+/**
+ * Get full URL by id.
+ *
+ * @param {string} id
+ * @returns {Promise<ShortenUrlResponse>}
+ */
+export const getFullUrlById = async (id: string): Promise<ShortenUrlResponse> => {
+  return privateFetcher(makeFullUrlById(id));
+};
+
+export const getUserPrograms = async ({
+  programId,
+}: {
+  programId: string;
+}): Promise<{ data: UserProgramResponse }> => {
+  return privateFetcher(makeGetUserQuranProgramUrl(programId));
+};
+
+export const enrollUserInQuranProgram = async (
+  programId: string,
+): Promise<{ success: boolean }> => {
+  return postRequest(makeEnrollUserInQuranProgramUrl(), {
+    programId,
+  });
+};
+
+export const getQuranProgramWeek = async (
+  programId: string,
+  weekId: string,
+): Promise<{ data: QuranProgramWeekResponse }> => {
+  return privateFetcher(makeGetQuranicWeekUrl(programId, weekId));
+};
+
+export const logoutUser = async () => {
+  return postRequest(makeLogoutUrl(), {});
+};
+
+export const submitTranslationFeedback = async (params: {
+  translationId: number;
+  surahNumber: number;
+  ayahNumber: number;
+  feedback: string;
+}): Promise<{ success: boolean; message: string; feedbackId?: string }> => {
+  return postRequest(makeTranslationFeedbackUrl(), params);
+};
+
+// Pinned Items
+export const getPinnedItems = async (
+  targetType?: PinnedItemTargetType,
+): Promise<{ success: boolean; data: { data: PinnedItemDTO[] } }> =>
+  privateFetcher(makePinnedItemsUrl(targetType));
+
+export const addPinnedItem = async (params: {
+  targetType: PinnedItemTargetType;
+  targetId: string;
+  metadata?: Record<string, unknown>;
+}): Promise<PinnedItemDTO> => postRequest(makeAddPinnedItemUrl(), params);
+
+export const deletePinnedItemById = async (pinnedItemId: string) =>
+  deleteRequest(makeDeletePinnedItemUrl(pinnedItemId));
+
+export const syncPinnedItems = async (
+  items: SyncPinnedItemPayload[],
+): Promise<{ synced: number; lastSyncAt: Date }> =>
+  postRequest(makeSyncPinnedItemsUrl(), { items });
+
+export const bulkDeletePinnedItems = async (
+  targetType: PinnedItemTargetType,
+  targetIds: string[],
+) => deleteRequest(makeBulkDeletePinnedItemsUrl(), { targetType, targetIds });
+
+export const clearPinnedItems = async (targetType?: PinnedItemTargetType) =>
+  deleteRequest(makeClearPinnedItemsUrl(), targetType ? { targetType } : undefined);
+
+const shouldRefreshToken = (error) => {
+  return error?.message === 'must refresh token';
+};
+
+export const withCredentialsFetcher = async <T>(
+  input: RequestInfo,
+  init?: RequestInit,
+): Promise<T> => {
+  try {
+    const request: NextApiRequest = {
+      url: typeof input === 'string' ? input : input.url,
+      method: init?.method || 'GET',
+      body: init?.body,
+      headers: init?.headers,
+      query: {},
+    } as NextApiRequest;
+    const additionalHeaders = getAdditionalHeaders(request);
+    const data = await fetcher<T>(input, {
+      ...init,
+      credentials: 'include',
+      headers: {
+        ...init?.headers,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'x-timezone': getTimezone(),
+        ...additionalHeaders,
+      },
+    });
+    return data;
+  } catch (error) {
+    return handleErrors(error);
+  }
+};
+
+export const privateFetcher = configureRefreshFetch({
+  shouldRefreshToken,
+  // @ts-ignore
+  refreshToken: refreshTokenWithFlag,
+  fetch: withCredentialsFetcher,
+});
+
+export const mapMushaf = <T = MappedPage | MappedVerse>(
+  params: MapMushafParams,
+): Promise<{ success: boolean; data: T }> => {
+  return postRequest<{ success: boolean; data: T }>(makeMapUrl(), params);
+};

@@ -1,0 +1,117 @@
+{
+  "additional-resources": "Burime Shtesë",
+  "additional-resources-subtitle": "Këto burime shtesë do t'ju ndihmojnë të fitoni një lidhje më të thellë me vargjet që keni lexuar.",
+  "ask-question": "Bëj një pyetje",
+  "complete": "E plotësuar",
+  "completed-weeks": "{{completedWeeks}} / {{totalWeeks}} Javë të përfunduara",
+  "divine-book-club": "Klubi i Librit Hyjnor",
+  "divine-book-club-description": "Ky është një diskutim i lehtë në grup i cili ju ndihmon të ndiqni kontekstin e leximit të çdo jave.",
+  "end-of-calendar": "Fundi i kalendarit",
+  "english-pdf": "Anglisht PDF",
+  "faq": "Pyetjet e bëra më shpesh",
+  "faq-items": [
+    {
+      "answer": "Kurani në një vit është një plan i thjeshtë dhe i strukturuar leximi për t'ju ndihmuar të përfundoni të gjithë Kuranin në një vit - nga fundi i një Ramazani deri në fillimin e tjetrin. Qëllimi është të fitohet një kuptim themelor i Kuranit nga mbulesa në mbulesë, pa u ndier nën presion ose të mbingarkuar.",
+      "question": "Çfarë është \"Kurani në një vit\"?"
+    },
+    {
+      "answer": "Jeni të ftuar të gjeni kohë çdo javë për të lexuar vetëm disa faqe të Kuranit në një gjuhë që kuptoni. Ka gjithsej 46 lexime, një për çdo javë në kalendarin islamik nga Shevali deri në Shaban. Kjo ndarje e Kuranit plotëson ndarjet e tjera, siç janë 30 pjesët e famshme që lehtësojnë leximin e Kuranit në një muaj.",
+      "question": "Si funksionon programi?"
+    },
+    {
+      "answer": "Aspak. Pika e fillimit në këtë program është të angazhoheni me kuptimet e Kur'anit përmes çdo gjuhe (përkthimi) me të cilën jeni të kënaqur. Quran.com ofron përkthime në shumë gjuhë për ta bërë këtë të arritshme për të gjithë. Ne synojmë të frymëzojmë pjesëmarrësit që të vazhdojnë të rriten nga viti në vit.",
+      "question": "A duhet të di të lexoj arabisht për të marrë pjesë?"
+    },
+    {
+      "answer": "Çdo javë, detyra e përditësuar e leximit do të jetë e disponueshme në Quran.com/calendar. Mund të lexoni drejtpërdrejt në Quran.com, ku një lidhje e dedikuar do t'ju çojë direkt në leximin parësor për javën. \\n \\n Mund të hapësh gjithashtu PDF-në në anglisht dhe ta printosh në shtëpi. Ky përmban një përkthim të rrjedhshëm të përshtatur kryesisht nga vepra e MAS Abdel Haleem. Dokumenti i çdo jave është i ndarë në shtatë pjesë, duke e bërë më të lehtë përhapjen e leximit gjatë javës nëse dëshironi. Ka hyrje të shkurtra për suret, titujt dhe shënimet për të sqaruar disa pika thelbësore, dhe çdo pjesë e përditshme ka një pyetje reflektimi dhe veprim të sugjeruar.",
+      "question": "Ku mund t'i gjej detyrat javore të leximit?"
+    },
+    {
+      "answer": "Ju keni shumë opsione për të qëndruar në rrugën e duhur. Ne rekomandojmë shumë të abonoheni për të marrë email me detyrat javore të leximit të bashkangjitura. Ne kemi krijuar gjithashtu kanale të komunitetit në Telegram dhe WhatsApp të cilat do të përmbajnë kujtesë dhe inkurajim. Thjesht klikoni butonat e zgjedhjes suaj në Quran.com/calendar për t'u abonuar. Ju mund të zgjidhni të tre nëse dëshironi.",
+      "question": "Si mund të marr kujtesa javore për leximin?"
+    },
+    {
+      "answer": "Në Quran.com, shkoni te menyja e cilësimeve për: \\n • Rregulloni madhësitë dhe stilet e shkronjave \\n • Kaloni midis modalitetit të dritës, errësirës dhe sepisë \\n • Zgjidhni nga përkthimet e shumta të disponueshme \\n \\n Kjo e bën të lehtë për këdo që të marrë pjesë në një përkthim të qartë dhe informativ që e kupton më së miri.",
+      "question": "Si mund ta personalizoj përvojën time të leximit?"
+    },
+    {
+      "answer": "Ne ju inkurajojmë të shfletoni QuranReflec.com për reflektimet e njerëzve të tjerë mbi pjesët e lexuara çdo javë dhe sapo të ndiheni gati, postoni për të ndarë mendimet tuaja! \\n \\n Sigurohuni gjithashtu të shikoni podkastin e Klubit të Librit Hyjnor: një diskutim i thellë i udhëhequr nga studiuesit që ndjek këtë plan. Është vetëm një orë çdo javë dhe ofron një kontekst shumë të dobishëm.",
+      "question": "Çfarë burimesh shtesë ofroni?"
+    },
+    {
+      "answer": "Nuk ka problem. Thjesht merrni në leximin e javës aktuale - nuk ka nevojë të kapni javët e humbura. Qëndroni të qëndrueshëm dhe përqendrohuni në ecjen përpara. Gjithmonë ka vitin e ardhshëm për të marrë gjithçka që keni humbur.",
+      "question": "Po sikur të mbetem prapa ose të bashkohem vonë?"
+    },
+    {
+      "answer": "Mënyra më e mirë për të qëndruar konsistent është duke lexuar me të tjerët. Ne ju inkurajojmë të filloni një klub personal librash - me familjen, miqtë apo edhe në internet. Takohuni çdo javë, diskutoni atë që keni lexuar dhe mbështesni njëri-tjetrin në këtë udhëtim.",
+      "question": "Si mund të përfitoj sa më shumë nga ky udhëtim?"
+    },
+    {
+      "answer": "Ne planifikojmë të promovojmë hapat e ardhshëm dhe nivelet më të larta. Në vitin aktual, ne po ftojmë sa më shumë njerëz që të jetë e mundur që të fillojnë duke e mbajtur atë të thjeshtë: të lexojnë Kuranin e plotë me kuptim bazë. Pasi ta keni bërë këtë, do të ndiheni gati për të lexuar përsëri dhe për të shkuar më thellë!",
+      "question": "A do të ketë opsione më të thella studimi më vonë?"
+    },
+    {
+      "answer": "po. \"Kurani në një vit\" është plotësisht falas dhe ju inkurajojmë ta ndani atë me të tjerët. Fto një mik, hap një klub librash dhe ndihmo më shumë njerëz të përfundojnë leximin e parë të plotë të Kuranit.",
+      "question": "A është kjo falas? A mund ta ndaj?"
+    }
+  ],
+  "hero": {
+    "description": "Një orar i hartuar me kujdes që jua bën të lehtë të lexoni dhe kuptoni të gjithë Kuranin nga një Ramazan në tjetrin, me një ritëm të qëndrueshëm dhe të menaxhueshëm.",
+    "line-1": "Kalendari Global Kuranor është një orar leximi i krijuar për të inkurajuar leximin reflektues të të gjithë Kuranit nga fundi i një Ramazani deri në fillimin e tjetrin. Ne ju inkurajojmë të gjeni kohë për të kuptuar dhe reflektuar mbi vargjet, në mënyrë që të fitoni një lidhje më të thellë dhe më të përzemërt."
+  },
+  "interact-with-post": "Ndërveproni me këtë postim në QuranReflect",
+  "islamic-months": {
+    "1": "Muharrem",
+    "2": "Safar",
+    "3": "Rabi'ul Evvel",
+    "4": "Rabi' al-Thani",
+    "5": "Xhumada el-Evuel",
+    "6": "Xhumada al-Thani",
+    "7": "Rexheb",
+    "8": "Shaban",
+    "9": "Ramazani",
+    "10": "Shevali",
+    "11": "Dhul-Kida",
+    "12": "Dhul Hixhe"
+  },
+  "join-qc": {
+    "line-1": "Jemi në <highlight> Javën {{weekNumber}} </highlight> të Kalendarit Kur'anor.",
+    "line-2": "<normal> Bashkohuni me ne për leximin e kësaj jave edhe nëse është hera juaj e parë! </normal>"
+  },
+  "join-quranic-calendar": "Abonohu për të marrë përditësime dhe burime nëpërmjet QuranReflect",
+  "join-quranic-calendar-success": "Ju jeni bashkuar me sukses në Klubin e Librit Hyjnor!",
+  "join-telegram": "Bashkohuni në Telegramin tonë",
+  "join-telegram-mobile": "Telegrami",
+  "join-whatsapp": "Bashkohuni me Whatsapp-in tonë",
+  "join-whatsapp-mobile": "Whatsapp",
+  "mark-as-completed": "Shënoni si të përfunduar",
+  "marked-as-completed": "Kjo javë është shënuar si e përfunduar me sukses!",
+  "month": "muaj",
+  "my-progress": "Përparimi im",
+  "progress-subtitle": "Mos ngurroni të ktheheni dhe të plotësoni javët që keni humbur!",
+  "quran-calendar-description": "Një plan i strukturuar leximi për të përfunduar Kuranin brenda një viti. Ndërtoni qëndrueshmëri, thelloni mirëkuptimin tuaj dhe qëndroni në rrugën e duhur - pa u ndier i mbingarkuar.",
+  "quran-calendar-title": "Kurani në një vit – Një plan i thjeshtë për të lexuar dhe kuptuar të gjithë Kuranin",
+  "quran-reflect": "Kurani Reflekto",
+  "quran-reflect-description": "Angazhohuni me të tjerët në lidhje me vargjet që keni lexuar këtë javë.",
+  "quranic-calendar": "Kalendari Global Kur'anor",
+  "ramadan": "Ramazani",
+  "read-online": "Lexoni në internet",
+  "read-this-weeks-verses": "Lexoni vargjet e kësaj jave",
+  "reading-options": {
+    "default-settings": "Lexo me cilësimet e mia të paracaktuara",
+    "en-and-ar": "Lexoni në anglisht dhe arabisht",
+    "en-only": "Lexoni vetëm në anglisht"
+  },
+  "reflection-prompts": "💭 REFLECTION kërkon nga leximi i kësaj jave <span> (Shkarko PDF për të parë më shumë) </span> :",
+  "share-reflections": "Ndani reflektimet tuaja",
+  "start-tracking": "Filloni të gjurmoni",
+  "supplemental-resources": "Burimet Mbështetëse",
+  "today": "Data e sotme është: <highlight> {{month}} {{day}} {{year}} , {{gregorianDate}} </highlight>",
+  "verse": "Ajeti",
+  "verses-subtitle": "Jeni të inkurajuar të përqendroheni në të kuptuarit e kuptimeve bazë, ndaj zgjidhni gjuhën që funksionon për ju.",
+  "watch-episode": "Shiko episodin {{weekNumber}}",
+  "week": "javë",
+  "week-completed": "E përfunduar",
+  "week-title": "Java {{weekNumber}} ( {{month}} ) që mbulon vargjet {{rangeStart}} deri në {{rangeEnd}}",
+  "weekly-verses-help-description-1": "Ky PDF përmban një përkthim të rrjedhshëm të përshtatur kryesisht nga vepra e MAS Abdel Haleem. Dokumenti i çdo jave është i ndarë në shtatë pjesë, duke e bërë më të lehtë përhapjen e leximit gjatë javës nëse dëshironi. Ka hyrje të shkurtra për suret, titujt dhe shënimet për të sqaruar disa pika thelbësore, dhe çdo pjesë e përditshme ka një pyetje reflektimi dhe veprim të sugjeruar"
+}

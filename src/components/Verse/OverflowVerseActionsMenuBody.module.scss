@@ -1,0 +1,14 @@
+@use 'src/styles/breakpoints';
+.container {
+  line-height: var(--spacing-small);
+  > span {
+    line-height: var(--spacing-small);
+  }
+  [data-radix-popper-content-wrapper] {
+    z-index: var(--z-index-default);
+  }
+}
+
+.moreMenuTrigger {
+  margin-inline-end: calc(var(--spacing-small-px) * -1);
+}

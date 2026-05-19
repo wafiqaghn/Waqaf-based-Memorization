@@ -1,0 +1,547 @@
+/* eslint-disable max-lines */
+import { camelizeKeys } from 'humps';
+import { NextApiRequest } from 'next';
+
+import {
+  AyahHadithsBackendResponse,
+  AyahHadithsResponse,
+  HadithCountResponse,
+} from '@/types/Hadith';
+import Language from '@/types/Language';
+import { LayeredTranslationApiResponse } from '@/types/LayeredTranslation';
+import { QiraatApiResponse } from '@/types/Qiraat';
+import { MushafLines, QuranFont } from '@/types/QuranReader';
+import { SearchRequestParams, SearchMode } from '@/types/Search/SearchRequestParams';
+import NewSearchResponse from '@/types/Search/SearchResponse';
+import { getMushafId } from '@/utils/api';
+import {
+  makeAdvancedCopyUrl,
+  makeTafsirsUrl,
+  makeLanguagesUrl,
+  makeAudioTimestampsUrl,
+  makeChapterAudioDataUrl,
+  makeAvailableRecitersUrl,
+  makeTranslationsInfoUrl,
+  makeTranslationsUrl,
+  makeVersesUrl,
+  makeJuzVersesUrl,
+  makeRubVersesUrl,
+  makeHizbVersesUrl,
+  makeChapterInfoUrl,
+  makePageVersesUrl,
+  makeFootnoteUrl,
+  makeChapterUrl,
+  makeReciterUrl,
+  makeTafsirContentUrl,
+  makePagesLookupUrl,
+  makeNewSearchResultsUrl,
+  makeByRangeVersesUrl,
+  makeWordByWordTranslationsUrl,
+  makeChapterMetadataUrl,
+  makeVersesFilterUrl,
+  makeQiraatMatrixUrl,
+  makeQiraatJuncturesCountUrl,
+  makeLayeredTranslationByVerseUrl,
+  makeLayeredTranslationCountWithinRangeUrl,
+} from '@/utils/apiPaths';
+import {
+  makeHadithsByAyahUrl,
+  makeHadithCountWithinRangeUrl,
+  transformHadithResponse,
+} from '@/utils/hadith';
+import { getAdditionalHeaders } from '@/utils/headers';
+import { AdvancedCopyRequest, PagesLookUpRequest } from 'types/ApiRequests';
+import {
+  TranslationsResponse,
+  AdvancedCopyRawResultResponse,
+  LanguagesResponse,
+  RecitersResponse,
+  AudioDataResponse,
+  AudioTimestampsResponse,
+  TafsirsResponse,
+  VersesResponse,
+  ChapterInfoResponse,
+  ChapterMetadataResponse,
+  FootnoteResponse,
+  ChapterResponse,
+  ReciterResponse,
+  TafsirContentResponse,
+  PagesLookUpResponse,
+  WordByWordTranslationsResponse,
+} from 'types/ApiResponses';
+import AudioData from 'types/AudioData';
+
+export const OFFLINE_ERROR = 'OFFLINE';
+
+export const fetcher = async function fetcher<T>(
+  input: RequestInfo,
+  init: RequestInit = {},
+  fullResponse: boolean = false,
+): Promise<T> {
+  // if the user is not online when making the API call
+  if (typeof window !== 'undefined' && !window.navigator.onLine) {
+    throw new Error(OFFLINE_ERROR);
+  }
+  const req: NextApiRequest = {
+    url: typeof input === 'string' ? input : input.url,
+    method: init.method || 'GET',
+    body: init.body,
+    headers: init.headers,
+    query: {},
+  } as NextApiRequest;
+
+  const additionalHeaders = getAdditionalHeaders(req);
+
+  const reqInit = {
+    ...init,
+    headers: {
+      ...init.headers,
+      ...additionalHeaders,
+    },
+  };
+
+  const res = await fetch(input, reqInit);
+  if (fullResponse) return res as unknown as T;
+  if (!res.ok || res.status === 500 || res.status === 404) {
+    throw res;
+  }
+  const json = await res.json();
+  return camelizeKeys(json);
+};
+
+/**
+ * Get the verses of a specific chapter.
+ *
+ * @param {string | number} id the ID of the chapter.
+ * @param {string} locale the locale.
+ * @param {Record<string, unknown>} params optional parameters.
+ *
+ * @returns {Promise<VersesResponse>}
+ */
+export const getChapterVerses = async (
+  id: string | number,
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher<VersesResponse>(makeVersesUrl(id, locale, params), {});
+
+export const getRangeVerses = async (
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher<VersesResponse>(makeByRangeVersesUrl(locale, params));
+
+/**
+ * Get the current available translations with the name translated in the current language.
+ *
+ * @param {string} language we use this to get translated names of authors in specific the current language.
+ *
+ * @returns {Promise<TranslationsResponse>}
+ */
+export const getAvailableTranslations = async (language: string): Promise<TranslationsResponse> =>
+  fetcher(makeTranslationsUrl(language), {});
+
+/**
+ * Get the current available wbw translations with the name translated in the current language.
+ *
+ * @param {string} language we use this to get translated names of authors in specific the current language.
+ *
+ * @returns {Promise<WordByWordTranslationsResponse>}
+ */
+export const getAvailableWordByWordTranslations = async (
+  language: string,
+): Promise<WordByWordTranslationsResponse> => fetcher(makeWordByWordTranslationsUrl(language));
+
+/**
+ * Get the current available languages with the name translated in the current language.
+ *
+ * @param {string} language we use this to get language names in specific the current language.
+ *
+ * @returns {Promise<LanguagesResponse>}
+ */
+export const getAvailableLanguages = async (language: string): Promise<LanguagesResponse> =>
+  fetcher(makeLanguagesUrl(language), {});
+
+/**
+ * Get list of available reciters.
+ *
+ * @param {string} locale  the locale.
+ * @param {string[]} fields optional fields to include.
+ *
+ * @returns {Promise<RecitersResponse>}
+ */
+export const getAvailableReciters = async (
+  locale: string,
+  fields?: string[],
+): Promise<RecitersResponse> => fetcher(makeAvailableRecitersUrl(locale, fields), {});
+
+export const getReciterData = async (reciterId: string, locale: string): Promise<ReciterResponse> =>
+  fetcher(makeReciterUrl(reciterId, locale));
+
+/**
+ * Get audio file for a specific reciter and chapter.
+ * additionally you can pass `segment: true` to get the timestamps
+ * for each verse and words
+ *
+ * @param {number} reciterId
+ * @param {number} chapter the id of the chapter
+ * @param {boolean} segments flag to include segments.
+ *
+ * @returns {Promise<AudioData>}
+ */
+export const getChapterAudioData = async (
+  reciterId: number,
+  chapter: number,
+  segments = false,
+): Promise<AudioData> => {
+  const res = await fetcher<AudioDataResponse>(
+    makeChapterAudioDataUrl(reciterId, chapter, segments),
+    {},
+  );
+
+  if (res.error) {
+    throw new Error(res.error);
+  }
+  if (res.status === 500) {
+    throw new Error('server error: fail to get audio file');
+  }
+  const { audioFiles: audioData } = res;
+  const [firstAudio] = audioData;
+  if (!firstAudio) {
+    throw new Error('No audio file found');
+  }
+
+  return {
+    ...firstAudio,
+    reciterId,
+  };
+};
+
+/**
+ * Get the timestamps for a specific verseKey.
+ * We need this to select to move the cursor in the audio player when we click "play" in a specific verse.
+ *
+ * @param {number} reciterId
+ * @param {number} verseKey example "1:1", meaning chapter 1, verse 1
+ * @returns {Promise<AudioTimestampsResponse>}
+ */
+export const getVerseTimestamps = async (
+  reciterId: number,
+  verseKey: string,
+): Promise<AudioTimestampsResponse> => fetcher(makeAudioTimestampsUrl(reciterId, verseKey));
+
+/**
+ * Get the information of translations by their IDs.
+ *
+ * @param {string} locale the current user locale.
+ * @param {number[]} translations the ids of the translations selected.
+ * @returns {Promise<TranslationsResponse>}
+ */
+export const getTranslationsInfo = async (
+  locale: string,
+  translations: number[],
+): Promise<TranslationsResponse> => fetcher(makeTranslationsInfoUrl(locale, translations));
+
+/**
+ * Get the advanced copy content that will be copied to clipboard and put in a file.
+ *
+ * @param {AdvancedCopyRequest} params
+ * @returns {Promise<AdvancedCopyRawResultResponse>}
+ */
+export const getAdvancedCopyRawResult = async (
+  params: AdvancedCopyRequest,
+): Promise<AdvancedCopyRawResultResponse> => fetcher(makeAdvancedCopyUrl(params));
+
+/**
+ * Get the search results of a query.
+ *
+ * @param {SearchRequestParams} params
+ * @returns  {Promise<NewSearchResponse>}
+ */
+export const getNewSearchResults = async <T extends SearchMode>(
+  params: SearchRequestParams<T>,
+): Promise<NewSearchResponse> => fetcher(makeNewSearchResultsUrl(params));
+
+/**
+ * Get the list of tafsirs.
+ *
+ * @param {string} language
+ * @returns {Promise<TafsirsResponse>}
+ */
+export const getTafsirs = async (language: string): Promise<TafsirsResponse> =>
+  fetcher(makeTafsirsUrl(language));
+
+/**
+ * Get a chapter's info
+ *
+ * @param {string} chapterId
+ * @param {string} language
+ * @param {object} options optional parameters.
+ * @param {string | number} options.resourceId filter by resource id or slug.
+ * @param {boolean} options.includeResources include resources array in response.
+ * @returns {Promise<ChapterInfoResponse>}
+ */
+export const getChapterInfo = async (
+  chapterId: string,
+  language: string,
+  options?: { resourceId?: string | number; includeResources?: boolean },
+): Promise<ChapterInfoResponse> => fetcher(makeChapterInfoUrl(chapterId, language, options));
+
+/**
+ * Get chapter metadata including suggestions and next/previous summaries.
+ *
+ * @param {string} chapterId
+ * @param {string} language
+ * @returns {Promise<ChapterMetadataResponse>}
+ */
+export const getChapterMetadata = async (
+  chapterId: string,
+  language: string,
+): Promise<ChapterMetadataResponse> => fetcher(makeChapterMetadataUrl(chapterId, language));
+
+/**
+ * Get a chapter's.
+ *
+ * @param {string} chapterIdOrSlug
+ * @param {string} language
+ * @returns {Promise<ChapterInfoResponse>}
+ */
+export const getChapter = async (
+  chapterIdOrSlug: string,
+  language: string,
+): Promise<ChapterResponse> => fetcher(makeChapterUrl(chapterIdOrSlug, language));
+
+/**
+ * Get the verses of a specific Juz.
+ *
+ * @param {string} id the ID of the Juz.
+ * @param {string} locale  the locale.
+ * @param {string} params the params that we might need to include that differs from the default ones.
+ *
+ * @returns {Promise<VersesResponse>}
+ */
+export const getJuzVerses = async (
+  id: string,
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher(makeJuzVersesUrl(id, locale, params));
+
+/**
+ * Get the verses of a specific Rub El Hizb.
+ *
+ * @param {string} id the ID of the Rub El Hizb.
+ * @param {string} locale  the locale.
+ * @param {string} params the params that we might need to include that differs from the default ones.
+ *
+ * @returns {Promise<VersesResponse>}
+ */
+export const getRubVerses = async (
+  id: string,
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher(makeRubVersesUrl(id, locale, params));
+
+/**
+ * Get the verses of a specific Hizb.
+ *
+ * @param {string} id the ID of the Hizb.
+ * @param {string} locale  the locale.
+ * @param {string} params the params that we might need to include that differs from the default ones.
+ *
+ * @returns {Promise<VersesResponse>}
+ */
+export const getHizbVerses = async (
+  id: string,
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher(makeHizbVersesUrl(id, locale, params));
+
+/**
+ * Get the verses of a specific page.
+ *
+ * @param {string} id the ID of the page.
+ * @param {string} locale  the locale.
+ * @param {string} params the params that we might need to include that differs from the default ones.
+ *
+ * @returns {Promise<VersesResponse>}
+ */
+export const getPageVerses = async (
+  id: string,
+  locale: string,
+  params?: Record<string, unknown>,
+): Promise<VersesResponse> => fetcher(makePageVersesUrl(id, locale, params));
+
+/**
+ * Get the footnote details.
+ *
+ * @param {string} footnoteId the ID of the footnote.
+ *
+ * @returns {Promise<FootnoteResponse>}
+ */
+export const getFootnote = async (footnoteId: string): Promise<FootnoteResponse> =>
+  fetcher(makeFootnoteUrl(footnoteId));
+
+/**
+ * Get the footnote details.
+ *
+ * @param {PagesLookUpRequest} params
+ *
+ * @returns {Promise<PagesLookUpResponse>}
+ */
+export const getPagesLookup = async (params: PagesLookUpRequest): Promise<PagesLookUpResponse> =>
+  fetcher(makePagesLookupUrl(params));
+
+/**
+ * Get the chapter id by a slug.
+ *
+ * @param {string} slug
+ * @param {string} locale
+ * @returns {Promise<false|string>}
+ */
+export const getChapterIdBySlug = async (slug: string, locale: string): Promise<false | string> => {
+  try {
+    const chapterResponse = await getChapter(encodeURI(slug), locale);
+    return chapterResponse.chapter.id as string;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * Get the Tafsir content of a verse by the tafsir ID.
+ *
+ * @param {string} tafsirIdOrSlug
+ * @param {string} verseKey
+ * @param {QuranFont} quranFont
+ * @param {MushafLines} mushafLines
+ * @returns {Promise<TafsirContentResponse>}
+ */
+export const getTafsirContent = (
+  tafsirIdOrSlug: string,
+  verseKey: string,
+  quranFont: QuranFont,
+  mushafLines: MushafLines,
+  locale: string,
+): Promise<TafsirContentResponse> => {
+  return fetcher(
+    makeTafsirContentUrl(tafsirIdOrSlug as string, verseKey, {
+      lang: locale,
+      quranFont,
+      mushafLines,
+    }),
+  );
+};
+
+/**
+ * Get the page number for a specific verse by chapter and verse number.
+ * This is used as a fallback when verse data is not already available in memory.
+ *
+ * @param {string} chapterId the chapter ID
+ * @param {number} verseNumber the verse number
+ * @param {QuranFont} quranFont the selected Quran font
+ * @param {MushafLines} mushafLines the selected mushaf lines
+ * @param {AbortSignal} signal optional abort signal for request cancellation
+ * @returns {Promise<VersesResponse>}
+ */
+export const getVersePageNumber = async (
+  chapterId: string,
+  verseNumber: number,
+  quranFont: QuranFont,
+  mushafLines: MushafLines,
+  signal?: AbortSignal,
+): Promise<VersesResponse> => {
+  return fetcher<VersesResponse>(
+    makeVersesFilterUrl({
+      filters: `${chapterId}:${verseNumber}`,
+      fields: `page_number`,
+      ...getMushafId(quranFont, mushafLines),
+    }),
+    { signal },
+  );
+};
+
+/**
+ * Get the Qiraat matrix for a specific verse.
+ *
+ * @param {string} verseKey - The verse key (e.g., "10:35")
+ * @param {Language} language - The language of the Qiraat
+ * @returns {Promise<QiraatApiResponse>}
+ */
+export const getQiraatMatrix = async (
+  verseKey: string,
+  language: Language,
+): Promise<QiraatApiResponse> => fetcher(makeQiraatMatrixUrl(verseKey, language));
+
+/**
+ * Get the Qiraat junctures count for a specific verse range.
+ *
+ * @param {{ from: string; to: string }} range - The verse range object with from and to keys
+ * @returns {Promise<Record<string, number>>}
+ */
+export const getQiraatJuncturesCount = async (range: {
+  from: string;
+  to: string;
+}): Promise<Record<string, number>> => fetcher(makeQiraatJuncturesCountUrl(range));
+
+/**
+ * Get hadiths for a specific ayah (paginated).
+ *
+ * @param {string} ayahKey - The ayah key (e.g., "96:1")
+ * @param {Language} language - The language of the hadiths
+ * @param {number} page - Page number for pagination
+ * @param {number} limit - Number of hadiths per page
+ * @returns {Promise<AyahHadithsResponse>}
+ */
+export const getAyahHadiths = async (
+  ayahKey: string,
+  language: Language,
+  page = 1,
+  limit = 4,
+): Promise<AyahHadithsResponse> => {
+  const backendResponse = await fetcher<AyahHadithsBackendResponse>(
+    makeHadithsByAyahUrl(ayahKey, language, page, limit),
+  );
+
+  return transformHadithResponse(backendResponse, language);
+};
+
+/**
+ * Get hadith count within a verse range.
+ *
+ * @param {{ from: string; to: string }} range - The verse range object with from and to keys
+ * @param {Language} language - The language of the hadiths
+ * @returns {Promise<HadithCountResponse>}
+ */
+export const getHadithCountWithinRange = async (
+  range: { from: string; to: string },
+  language: Language,
+): Promise<HadithCountResponse> =>
+  fetcher(makeHadithCountWithinRangeUrl(range.from, range.to, language));
+
+/**
+ * Get layered translation data for a specific verse.
+ *
+ * @param {string} verseKey - The verse key (e.g., "67:1")
+ * @param {Language} language - Preferred language
+ * @param {number} [resourceId] - Optional specific layered translation resource ID
+ * @returns {Promise<LayeredTranslationApiResponse>}
+ */
+export const getLayeredTranslationByVerse = async (
+  verseKey: string,
+  language: Language,
+  resourceId?: number,
+): Promise<LayeredTranslationApiResponse> =>
+  fetcher(makeLayeredTranslationByVerseUrl(verseKey, language, resourceId));
+
+/**
+ * Get layered translation count for a verse range.
+ *
+ * @param {{ from: string; to: string }} range - Verse range
+ * @param {Language} language - Preferred language
+ * @param {number} [resourceId] - Optional specific layered translation resource ID
+ * @returns {Promise<Record<string, number>>}
+ */
+export const getLayeredTranslationCountWithinRange = async (
+  range: { from: string; to: string },
+  language: Language,
+  resourceId?: number,
+): Promise<Record<string, number>> =>
+  fetcher(makeLayeredTranslationCountWithinRangeUrl(range, language, resourceId));

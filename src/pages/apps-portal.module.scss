@@ -1,0 +1,498 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/utility';
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.5 * var(--spacing-mega));
+  padding-block: calc(1.5 * var(--spacing-mega));
+  background: var(--color-background-default);
+}
+
+.hero {
+  display: grid;
+  gap: var(--spacing-small);
+  justify-items: center;
+  text-align: center;
+  padding-inline: var(--spacing-mega);
+}
+
+// .heroBadge {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: var(--spacing-xsmall);s
+//   padding: var(--spacing-xsmall) var(--spacing-medium);
+//   border-radius: var(--border-radius-pill);
+//   border: 1px solid var(--color-border-gray-faded);
+//   background: var(--color-background-alternative-faint-new);
+//   font-weight: var(--font-weight-semibold);
+//   letter-spacing: 0.18em;
+//   text-transform: uppercase;
+//   font-size: var(--font-size-small);
+//   color: var(--color-text-faded);
+// }
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+}
+
+.heroSubtitle {
+  margin: 0;
+  color: var(--color-text-faded-new);
+  font-size: var(--font-size-large);
+  line-height: 1.6;
+  max-inline-size: 36rem;
+}
+
+.section {
+  background: var(--color-background-default);
+  border-radius: var(--border-radius-large-px);
+  border: none;
+  padding: calc(1.1 * var(--spacing-mega)) calc(1.25 * var(--spacing-mega));
+}
+
+/* OUTER: full-bleed background */
+.sectionAlt {
+  position: relative;
+  z-index: 0;
+  padding: calc(1.25 * var(--spacing-mega)) 0;
+}
+
+.sectionAlt::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline: 50%;
+  margin-inline: -50vw;
+  background: var(--color-background-alternative-faded);
+}
+
+/* INNER: same content width + padding style as .section */
+.sectionAltInner {
+  padding: calc(1.1 * var(--spacing-mega)) calc(1.25 * var(--spacing-mega));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-medium);
+  margin-block-end: var(--spacing-medium);
+}
+
+.sectionHeaderAlt {
+  display: flex;
+  align-items: center;
+  margin-block-end: var(--spacing-medium);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 2vw, 2.25rem);
+  color: var(--color-text-default);
+  font-weight: var(--font-weight-bold);
+}
+
+.sectionLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-large);
+  color: var(--color-text-faded-new);
+  text-decoration: underline;
+}
+
+.featuredGrid,
+.appGrid {
+  display: grid;
+  gap: var(--spacing-medium);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  align-items: stretch;
+}
+
+.emptyState {
+  margin: 0;
+  color: var(--color-text-faded-new);
+}
+
+.featuredCard {
+  background: var(--color-background-default);
+  border: 1px solid var(--color-separators-ayah-level);
+  border-radius: var(--border-radius-large-px);
+  box-sizing: border-box;
+  box-shadow: var(--shadow-small-new);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 220px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  flex: 1;
+}
+
+.appMeta {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.appMetaText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.appIcon {
+  inline-size: calc(var(--spacing-xxlarge-px) + var(--spacing-micro-px));
+  block-size: calc(var(--spacing-xxlarge-px) + var(--spacing-micro-px));
+  border-radius: var(--spacing-medium-plus-px);
+  background: var(--color-background-alternative-faded);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-small);
+}
+
+.appIconImage {
+  object-fit: contain;
+}
+
+.appName {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-large2);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.appTagline {
+  color: var(--color-text-faded-new);
+  font-size: var(--font-size-normal);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.appDescription {
+  margin: 0;
+  color: var(--color-text-faded-new);
+  font-size: var(--font-size-normal);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-block-size: calc(3 * 1.5em);
+}
+
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-block-start: auto;
+  min-block-size: var(--cta-badge-height);
+  --cta-badge-width: 96px;
+  --cta-badge-height: 32px;
+}
+
+.storeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-xsmall-px);
+  overflow: hidden;
+  line-height: 0;
+  box-shadow: var(--shadow-small);
+  inline-size: var(--cta-badge-width);
+  block-size: var(--cta-badge-height);
+  min-block-size: var(--cta-badge-height);
+  max-block-size: var(--cta-badge-height);
+  flex: 0 0 auto;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.storeBadgeImage {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.visitBadge {
+  inline-size: 100%;
+  block-size: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: var(--color-text-inverse);
+  line-height: 1;
+  font-size: 0.74rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.005em;
+  gap: 6px;
+  padding-inline: 8px;
+  font-family: inherit;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.visitBadgeIcon {
+  inline-size: 14px;
+  block-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.visitBadgeIcon > svg {
+  inline-size: 100%;
+  block-size: 100%;
+  stroke: currentColor;
+}
+
+.visitBadgeText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.storeBadge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.storeBadge:focus-visible {
+  outline: 2px solid var(--color-primary-medium);
+  outline-offset: 2px;
+}
+
+@include breakpoints.smallerThanTablet {
+  .page {
+    gap: var(--spacing-large);
+    padding-block: var(--spacing-large);
+  }
+
+  .hero {
+    padding-inline: var(--spacing-medium);
+  }
+
+  .section {
+    padding-block: var(--spacing-large);
+    padding-inline: var(--spacing-medium2);
+  }
+
+  .sectionAlt {
+    padding: var(--spacing-large) 0;
+  }
+
+  .sectionAltInner {
+    padding-block: var(--spacing-large);
+    padding-inline: var(--spacing-medium2);
+    gap: var(--spacing-small);
+  }
+
+  .sectionHeader,
+  .sectionHeaderAlt {
+    margin-block-end: var(--spacing-small);
+  }
+
+  .cardBody {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .appMeta {
+    gap: 12px;
+  }
+
+  .appIcon {
+    inline-size: 3rem;
+    block-size: 3rem;
+    border-radius: 14px;
+  }
+
+  .cardActions {
+    gap: 5px;
+    --cta-badge-width: 88px;
+    --cta-badge-height: 30px;
+  }
+
+  .storeBadge {
+    inline-size: var(--cta-badge-width);
+    block-size: var(--cta-badge-height);
+    min-block-size: var(--cta-badge-height);
+    max-block-size: var(--cta-badge-height);
+  }
+
+  .visitBadge {
+    font-size: 0.72rem;
+  }
+
+  .visitBadgeIcon {
+    inline-size: 13px;
+    block-size: 13px;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small);
+  margin-block-end: var(--spacing-medium);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  background: var(--color-background-default);
+  border: 1px solid var(--color-border-gray-faded, var(--color-borders-hairline));
+  border-radius: var(--border-radius-pill);
+  box-sizing: border-box;
+  padding: var(--spacing-small) var(--spacing-medium);
+  min-block-size: 2.75rem;
+  inline-size: 100%; // full width of Browse All Apps inner container
+}
+
+.search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: var(--font-size-normal);
+  inline-size: 100%;
+  color: var(--color-text-default);
+}
+
+.search input::placeholder {
+  color: var(--color-text-faded-new);
+}
+
+.searchIcon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-small);
+  align-items: center;
+}
+
+.pill {
+  border: 1px solid var(--color-border-gray-faded, var(--color-borders-hairline));
+  background: var(--color-background-default);
+  color: var(--color-text-default);
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-radius: var(--border-radius-pill);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.pillActive {
+  background: #22a5ad;
+  border-color: #22a5ad;
+  color: var(--color-text-inverse);
+  box-shadow: 0 6px 16px rgba(34, 165, 173, 0.2);
+}
+
+@include breakpoints.smallerThanTablet {
+  .filters {
+    margin-block-end: var(--spacing-small);
+  }
+
+  .pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: var(--spacing-xsmall);
+    padding-block: var(--spacing-xxsmall);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pill {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: var(--spacing-xxsmall) var(--spacing-medium);
+    font-size: var(--font-size-small);
+  }
+
+  .search {
+    padding: var(--spacing-xxsmall) var(--spacing-medium);
+    min-block-size: 2.25rem;
+  }
+
+  .searchIcon {
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+  }
+
+  .search input {
+    font-size: var(--font-size-small);
+  }
+}
+
+.appCard {
+  @extend .featuredCard;
+}
+
+@include breakpoints.tablet {
+  .page {
+    padding-block: var(--spacing-mega);
+  }
+
+  .sectionHeader {
+    align-items: flex-start;
+    // flex-direction: column;
+  }
+
+  .cardActions {
+    align-items: flex-start;
+  }
+}
+
+@include breakpoints.desktop {
+  .page {
+    gap: var(--spacing-large);
+  }
+
+  .featuredGrid,
+  .appGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .section {
+    padding-block-end: var(--spacing-medium);
+  }
+
+  .sectionAlt {
+    padding-block-start: var(--spacing-large);
+  }
+
+  .sectionAltInner {
+    padding-block-start: var(--spacing-large);
+  }
+}

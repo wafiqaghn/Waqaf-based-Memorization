@@ -1,0 +1,117 @@
+{
+  "additional-resources": "Recursos adicionais",
+  "additional-resources-subtitle": "Esses recursos adicionais ajudarão você a obter uma conexão mais profunda com os Versículos que você leu.",
+  "ask-question": "Faça uma pergunta",
+  "complete": "Completo",
+  "completed-weeks": "{{completedWeeks}} / {{totalWeeks}} semanas concluídas",
+  "divine-book-club": "O Clube do Livro Divino",
+  "divine-book-club-description": "Esta é uma discussão leve em grupo que ajuda você a acompanhar o contexto da leitura de cada semana.",
+  "end-of-calendar": "Fim do calendário",
+  "english-pdf": "PDF em inglês",
+  "faq": "Perguntas frequentes",
+  "faq-items": [
+    {
+      "answer": "Quran em um Ano é um plano de leitura simples e estruturado para ajudar você a completar o Quran inteiro em um ano — do fim de um Ramadan até o começo do próximo. O objetivo é obter uma compreensão básica do Quran de capa a capa sem se sentir pressionado ou sobrecarregado.",
+      "question": "O que é \"Quran em um Ano\"?"
+    },
+    {
+      "answer": "Você está convidado a reservar um tempo a cada semana para ler apenas algumas páginas do Quran em um idioma que você entenda. Há 46 leituras no total, uma para cada semana do calendário islâmico de Shawwal a Sha'ban. Esta divisão do Quran complementa outras divisões, como as famosas 30 partes que facilitam a leitura do Quran em um mês.",
+      "question": "Como o programa funciona?"
+    },
+    {
+      "answer": "De forma alguma. O ponto de partida neste programa é se envolver com os significados do Quran por meio de qualquer idioma (tradução) com o qual você se sinta confortável. O Quran.com oferece traduções em muitos idiomas para tornar isso acessível a todos. Nosso objetivo é inspirar os participantes a continuarem subindo de nível ano a ano.",
+      "question": "Preciso saber ler árabe para participar?"
+    },
+    {
+      "answer": "A cada semana, a tarefa de leitura atualizada estará disponível em Quran.com/calendar. Você pode ler diretamente no Quran.com, onde um link dedicado o levará diretamente para a leitura principal da semana. \\n \\n Você também pode abrir o PDF em inglês e imprimi-lo em casa. Ele contém uma tradução fluente adaptada principalmente do trabalho de MAS Abdel Haleem. O documento de cada semana é dividido em sete partes, facilitando a distribuição da leitura ao longo da semana, se você preferir. Há pequenas introduções às suras, cabeçalhos e notas para esclarecer alguns pontos essenciais, e cada porção diária tem uma pergunta de reflexão e ação sugerida.",
+      "question": "Onde encontro as tarefas de leitura semanais?"
+    },
+    {
+      "answer": "Você tem várias opções para permanecer no caminho certo. Recomendamos fortemente que você se inscreva para receber e-mails com as tarefas de leitura semanais anexadas. Também criamos canais comunitários no Telegram e WhatsApp que conterão lembretes e incentivos. Basta clicar nos botões de sua escolha em Quran.com/calendar para se inscrever. Você pode escolher todos os três, se desejar.",
+      "question": "Como posso receber lembretes semanais de leitura?"
+    },
+    {
+      "answer": "No Quran.com, acesse o menu de configurações para: \\n • Ajustar tamanhos e estilos de fonte \\n • Alternar entre os modos claro, escuro e sépia \\n • Escolher entre várias traduções disponíveis \\n \\n Isso facilita a participação de qualquer pessoa no idioma que melhor entende e com uma tradução clara e informativa.",
+      "question": "Como posso personalizar minha experiência de leitura?"
+    },
+    {
+      "answer": "Nós o encorajamos a navegar no QuranReflect.com para ver as reflexões de outras pessoas sobre as passagens lidas a cada semana, e assim que você se sentir pronto, poste para compartilhar seus próprios pensamentos! \\n \\n Certifique-se também de conferir o podcast The Divine Book Club: uma discussão perspicaz liderada por acadêmicos que segue esta programação. É apenas uma hora por semana, e fornece um contexto muito útil.",
+      "question": "Que recursos extras você fornece?"
+    },
+    {
+      "answer": "Sem problemas. Basta pegar a leitura da semana atual — não há necessidade de recuperar semanas perdidas. Mantenha a consistência e concentre-se em seguir em frente. Sempre há o próximo ano para pegar qualquer coisa que você perdeu.",
+      "question": "E se eu ficar para trás ou chegar tarde?"
+    },
+    {
+      "answer": "A melhor maneira de permanecer consistente é lendo com outras pessoas. Nós encorajamos você a começar um clube de leitura pessoal — com a família, amigos ou até mesmo online. Reúnam-se semanalmente, discutam o que leram e apoiem uns aos outros nessa jornada.",
+      "question": "Como posso aproveitar ao máximo essa jornada?"
+    },
+    {
+      "answer": "Planeamos promover os próximos passos e níveis mais altos. No ano atual, estamos a convidar o maior número de pessoas possível para começar, com uma abordagem simples: leia o Quran completo com entendimento básico. Depois de fazer isso, sentirá pronto para ler novamente e se aprofundar!",
+      "question": "Haverá opções de estudo mais aprofundado posteriormente?"
+    },
+    {
+      "answer": "Sim. \"Quran em um Ano\" é completamente gratuito, e encorajamos a compartilhá-lo com outros. Convide um amigo, comece um clube do livro e ajude mais pessoas a completar a sua primeira leitura completa do Quran.",
+      "question": "Isso é grátis? Posso compartilhar?"
+    }
+  ],
+  "hero": {
+    "description": "Um cronograma cuidadosamente elaborado que facilita a leitura e a compreensão de todo o Quran, de um Ramadan ao outro, em um ritmo constante e administrável.",
+    "line-1": "O Calendário Global do Quran é um cronograma de leitura projetado para incentivar a leitura reflexiva de todo o Quran, desde o final de um Ramadan até o início do próximo. Incentivamos você a reservar um tempo para compreender e refletir sobre os versículos, para que possa obter uma conexão mais profunda e sincera."
+  },
+  "interact-with-post": "Interaja com esta postagem no QuranReflect",
+  "islamic-months": {
+    "1": "Muharram",
+    "2": "Safar",
+    "3": "Rabi' al-Awwal",
+    "4": "Rabi' al-Thani",
+    "5": "Jumada al-Awwal",
+    "6": "Jumada al-Thani",
+    "7": "Rajabe",
+    "8": "Sha'ban",
+    "9": "Ramadan",
+    "10": "Shawwal",
+    "11": "Dhu al-Qi'dah",
+    "12": "Dhu al-Hijjah"
+  },
+  "join-qc": {
+    "line-1": "Estamos na <highlight> Semana {{weekNumber}} </highlight> do Calendário Alcorânico.",
+    "line-2": "<normal> Junte-se a nós na leitura desta semana, mesmo que seja sua primeira vez! </normal>"
+  },
+  "join-quranic-calendar": "Inscreva-se para receber atualizações e recursos via QuranReflect",
+  "join-quranic-calendar-success": "Juntou-se ao Quran em um Ano com sucesso!",
+  "join-telegram": "Junte-se ao nosso Telegram",
+  "join-telegram-mobile": "Telegrama",
+  "join-whatsapp": "Junte-se ao nosso Whatsapp",
+  "join-whatsapp-mobile": "Whatsapp",
+  "mark-as-completed": "Marcar como concluído",
+  "marked-as-completed": "Esta semana foi marcada como concluída com sucesso!",
+  "month": "Mês",
+  "my-progress": "Meu Progresso",
+  "progress-subtitle": "Sinta-se à vontade para voltar e completar as semanas que você perdeu!",
+  "quran-calendar-description": "Um plano de leitura estruturado para completar o Quran em um ano. Crie consistência, aprofunde seu entendimento e permaneça no caminho certo — sem se sentir sobrecarregado.",
+  "quran-calendar-title": "Quran em um Ano – Um plano simples para ler e entender todo o Quran",
+  "quran-reflect": "QuranReflect",
+  "quran-reflect-description": "Interaja com outras pessoas em relação aos versículos que você leu esta semana.",
+  "quranic-calendar": "Quran em um Ano",
+  "ramadan": "Ramadan",
+  "read-online": "Ler Online",
+  "read-this-weeks-verses": "Leia os Versículos desta Semana",
+  "reading-options": {
+    "default-settings": "Ler com minhas configurações padrão",
+    "en-and-ar": "Leia em inglês e árabe",
+    "en-only": "Leia apenas em inglês"
+  },
+  "reflection-prompts": "💭 Sugestões de REFLEXÃO da leitura desta semana <span> (Baixe o PDF para ver mais) </span> :",
+  "share-reflections": "Compartilhe suas reflexões",
+  "start-tracking": "Comece a rastrear",
+  "supplemental-resources": "Recursos de apoio",
+  "today": "A data de hoje é: <highlight> {{month}} {{day}} {{year}} , {{gregorianDate}} </highlight>",
+  "verse": "Verso",
+  "verses-subtitle": "Recomendamos que você se concentre em entender os significados básicos, então selecione o idioma que funciona para você.",
+  "watch-episode": "Assistir Episódio {{weekNumber}}",
+  "week": "Semana",
+  "week-completed": "Concluído",
+  "week-title": "Semana {{weekNumber}} ( {{month}} ) abrangendo os versículos {{rangeStart}} a {{rangeEnd}}",
+  "weekly-verses-help-description-1": "Este PDF contém uma tradução fluente adaptada principalmente do trabalho de MAS Abdel Haleem. O documento de cada semana é dividido em sete partes, facilitando a distribuição da leitura ao longo da semana, se você preferir. Há pequenas introduções às suras, cabeçalhos e notas para esclarecer alguns pontos essenciais, e cada porção diária tem uma pergunta de reflexão e ação sugerida"
+}

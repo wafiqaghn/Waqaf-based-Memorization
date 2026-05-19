@@ -1,0 +1,267 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/utility';
+
+.cellContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding-block: var(--spacing-medium2-px);
+  --gap-size: calc(0.5 * var(--spacing-mega));
+
+  @include breakpoints.tablet {
+    padding-block: var(--spacing-large-px);
+  }
+}
+
+.firstCellWithHeader {
+  padding-block-start: 0;
+}
+
+.highlightedContainer {
+  background: var(--color-background-alternative-faded);
+}
+
+.contentContainer {
+  @include utility.edgeHorizontalPadding;
+  flex: 1;
+  position: relative;
+}
+
+.actionContainer {
+  @include utility.edgeHorizontalPadding;
+  display: flex;
+  direction: ltr;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xxsmall-px);
+  block-size: var(--spacing-medium2-px);
+}
+
+.arabicVerseContainer {
+  direction: rtl;
+  margin-block-start: var(--spacing-large-px);
+  margin-block-end: var(--spacing-medium-plus-px);
+
+  @include breakpoints.tablet {
+    margin-block-start: var(--spacing-xxlarge-px);
+  }
+}
+
+.verseTranslationsContainer {
+  margin-block-end: var(--spacing-large-px);
+
+  @include breakpoints.tablet {
+    margin-block-end: var(--spacing-xxlarge-px);
+  }
+}
+
+.verseTranslationContainer {
+  margin-block-end: var(--spacing-mega);
+}
+
+.actionContainerLeft,
+.actionContainerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xxsmall-px);
+}
+
+.actionContainerLeft {
+  justify-content: flex-start;
+}
+
+.actionContainerRight {
+  justify-content: flex-end;
+}
+
+.iconContainer.verseAction {
+  color: var(--color-text-default);
+  block-size: calc(2.2 * var(--spacing-medium));
+  inline-size: calc(2.2 * var(--spacing-medium));
+
+  &:hover {
+    color: var(--color-text-default);
+    background-color: transparent;
+    background-image: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-success-medium);
+      background-color: var(--color-success-medium);
+      @include utility.lighten-background-color;
+    }
+
+    &:hover:not(.bookmarkAction) {
+      .icon span {
+        svg {
+          color: var(--color-success-medium) !important;
+        }
+      }
+    }
+  }
+}
+
+.bookmarkAction {
+  &:hover {
+    color: var(--color-bookmark-icon);
+
+    .icon svg,
+    .icon span svg {
+      color: var(--color-bookmark-icon) !important;
+      fill: var(--color-bookmark-icon);
+    }
+  }
+}
+
+.bookmarkActionActive {
+  .icon svg,
+  .icon span svg {
+    color: var(--color-bookmark-icon);
+    fill: var(--color-bookmark-icon);
+  }
+}
+
+.overlayModal {
+  z-index: var(--z-index-header);
+}
+
+.menuOffset {
+  margin-inline-end: 10vw;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    inline-size: var(--spacing-medium);
+    block-size: var(--spacing-medium);
+
+    @include breakpoints.tablet {
+      inline-size: var(--spacing-medium2);
+      block-size: var(--spacing-medium2);
+    }
+  }
+}
+
+.actionItem {
+  &:hover {
+    svg {
+      color: var(--color-success-medium);
+    }
+  }
+}
+
+// fix optical illussion for triangle icon inside circle button
+.playIcon {
+  /* stylelint-disable-next-line csstools/use-logical */
+  margin-left: calc(0.5 * var(--spacing-xxsmall));
+}
+
+.actionContainerLeft .actionItem {
+  display: inline-block;
+}
+
+.bottomActionsContainer {
+  inline-size: 100%;
+}
+
+.tabContainerWrapper {
+  @include breakpoints.tablet {
+    margin-inline: var(--spacing-medium2-px);
+  }
+}
+
+.tabsContainer {
+  @include breakpoints.smallerThanTablet {
+    @include utility.edgeHorizontalPadding;
+  }
+  box-sizing: border-box;
+  gap: var(--spacing-medium);
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-large);
+  }
+}
+
+.tabsContainerRTL {
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+}
+
+.center {
+  justify-content: center;
+}
+
+.separatorContainer {
+  display: flex;
+  block-size: var(--spacing-medium);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tabItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(var(--spacing-xsmall) / 2);
+  cursor: pointer;
+  color: var(--color-grey-icons-new);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+
+  @include breakpoints.smallerThanTablet {
+    flex-shrink: 0;
+    justify-content: center;
+    min-inline-size: 0;
+  }
+
+  &:hover {
+    color: var(--color-success-medium);
+  }
+}
+
+.tabItemRTL {
+  flex-direction: row-reverse;
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    inline-size: var(--spacing-medium2);
+    block-size: var(--spacing-medium2);
+    color: currentColor;
+
+    &:hover {
+      color: currentColor;
+    }
+
+    @include breakpoints.smallerThanTablet {
+      inline-size: var(--spacing-medium);
+      block-size: var(--spacing-medium);
+    }
+  }
+}
+
+.tabLabel {
+  font-size: var(--font-size-medium);
+  white-space: nowrap;
+
+  @include breakpoints.smallerThanTablet {
+    font-size: var(--font-size-small);
+  }
+}
+
+.ayahSeparatorContainer {
+  @include utility.edgeHorizontalPadding;
+}
+
+.semibold {
+  font-weight: var(--font-weight-semibold);
+}

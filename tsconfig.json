@@ -1,0 +1,62 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "ignoreDeprecations": "6.0",
+    "jsx": "react-jsx",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "ES2017",
+    "incremental": true,
+    "paths": {
+      "@/icons/*": [
+        "./public/icons/*"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/dls/*": [
+        "./src/components/dls/*"
+      ],
+      "@/data/*": [
+        "./data/*"
+      ],
+      "@/types/*": [
+        "./types/*"
+      ],
+      "@/tests/*": [
+        "./tests/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "tests"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".svg"
+  ]
+}

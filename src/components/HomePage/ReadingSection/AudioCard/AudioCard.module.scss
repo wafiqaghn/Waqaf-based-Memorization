@@ -1,0 +1,159 @@
+@use 'src/styles/breakpoints';
+
+.audioCard {
+  --player-accent: var(--color-blue-buttons-and-icons);
+  --player-muted: var(--color-text-faded-new);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  block-size: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--color-background-elevated-new);
+  color: var(--color-text-default);
+
+  @include breakpoints.smallerThanTablet {
+    min-block-size: 156px;
+    padding: var(--spacing-small-px) var(--spacing-medium-px);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-small);
+
+  h2 {
+    margin: 0;
+    color: var(--color-text-default);
+    font-size: var(--font-size-large-px);
+    font-weight: var(--font-weight-bold);
+
+    @include breakpoints.tablet {
+      font-size: var(--font-size-xlarge-px);
+    }
+  }
+}
+
+.eyebrow {
+  margin: 0 0 var(--spacing-micro-px);
+  color: var(--player-accent);
+  font-size: var(--font-size-xsmall-px);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+}
+
+.nowPlaying {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  block-size: 22px;
+  padding-block-start: var(--spacing-micro-px);
+
+  span {
+    inline-size: 3px;
+    border-radius: var(--border-radius-rounded);
+    background: var(--player-accent);
+
+    &:nth-child(1) {
+      block-size: 10px;
+    }
+
+    &:nth-child(2) {
+      block-size: 18px;
+    }
+
+    &:nth-child(3) {
+      block-size: 13px;
+    }
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-medium-px);
+  color: var(--player-muted);
+
+  button {
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+  }
+
+  svg {
+    inline-size: 18px;
+    block-size: 18px;
+    fill: currentColor;
+  }
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: 50%;
+  background: transparent;
+  color: currentColor;
+}
+
+.pauseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  background: var(--color-primary-medium);
+  color: var(--color-text-inverse);
+
+  svg {
+    inline-size: 18px;
+    block-size: 18px;
+    fill: currentColor;
+  }
+}
+
+.spinner {
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: 7ch minmax(0, 1fr) 7ch;
+  align-items: center;
+  gap: var(--spacing-small-px);
+  margin-block-start: var(--spacing-medium-px);
+  color: var(--color-text-default);
+  font-size: var(--font-size-xsmall-px);
+  font-variant-numeric: tabular-nums;
+
+  span:first-child {
+    text-align: start;
+  }
+
+  span:last-child {
+    text-align: end;
+  }
+
+  input {
+    min-inline-size: 0;
+    accent-color: var(--player-accent);
+    cursor: pointer;
+  }
+
+  input:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}

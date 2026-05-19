@@ -1,0 +1,103 @@
+{
+  "achieve-quran-goals": "Bereik uw Koran doelen",
+  "apps": {
+    "description": "Verbonden apps om je groei met de Koran te bevorderen.",
+    "featured-apps": "Aanbevolen apps",
+    "qariah": {
+      "description": "Vrouwelijke Koranreciteerders",
+      "name": "Qariah"
+    },
+    "quran-android": {
+      "description": "Quran.com voor Android",
+      "name": "Koran Android"
+    },
+    "quran-ios": {
+      "description": "Quran.com voor iPhone",
+      "name": "Koran iOS"
+    },
+    "quran-space": {
+      "description": "Live studiekring",
+      "name": "Koranruimte"
+    },
+    "quranreflect": {
+      "description": "Lees en deel je reflecties",
+      "name": "KoranReflectie"
+    },
+    "see-more": "Meer bekijken",
+    "title": "Koran-apps"
+  },
+  "begin": "Beginnen",
+  "calendar-cta": "Kalender",
+  "chapters-and-verses": "Hoofdstukken en verzen",
+  "continue-learning-plan": "Blijf leren",
+  "continue-read": "Lees verder",
+  "explore-topics": "Onderwerpen verkennen",
+  "first-time-reading": "Nieuw in de Koran? <link> Begin hier </link>",
+  "grow-beyond-ramadan": "Groei met ons mee <modalLink> Na de Ramadan </modalLink>",
+  "know-someone": "Groei met ons mee deze <modalLink> Ramadan </modalLink>",
+  "learning-plan": "Leerplannen",
+  "listen-to-radio": "Luister naar Koran Radio",
+  "my-quran": "Mijn Koran",
+  "navigate-quran": "Navigeer door de Koran",
+  "no-bookmarks": "U heeft nog geen bladwijzers",
+  "no-page-bookmarks": "Je hebt nog geen bladwijzers",
+  "no-recently-read": "Je hebt nog geen leessessies",
+  "noble-quran": "De Edele Koran",
+  "popular": "Populair",
+  "qgj": {
+    "learning-plans": {
+      "cta": {
+        "all-plans": "Bekijk alle plannen",
+        "my-plans": "Mijn plannen"
+      },
+      "desc": {
+        "logged-in": "Ooit aan een leerprogramma begonnen en halverwege het traject verlaten? Leerplannen zijn opgedeeld in overzichtelijke stukken en we volgen je voortgang tot je de eindstreep bereikt. Ontdek vandaag nog ons huidige cursus aanbod",
+        "logged-in-no-plans": "Ooit aan een leerprogramma begonnen en halverwege het traject verlaten? Leerplannen zijn opgedeeld in overzichtelijke brokken en we volgen je voortgang tot je de eindstreep bereikt. Ontdek vandaag nog ons huidige cursus aanbod",
+        "logged-out": "Ooit aan een leerprogramma begonnen en halverwege het traject verlaten? Leerplannen zijn opgedeeld in overzichtelijke stukken en we volgen je voortgang tot je de eindstreep bereikt. Ontdek vandaag nog ons huidige cursus aanbod"
+      },
+      "title": "Leer plannen"
+    },
+    "quran-reading-goals": {
+      "desc": {
+        "logged-out": "Wil je 10 minuten per dag lezen, een Djoez in een maand voltooien, of de hele Koran in een jaar uitlezen? Het is gemakkelijk om een aangepast doel te maken en jouw voortgang bij te houden."
+      },
+      "title": "Aangepaste koran lees doelen"
+    },
+    "title": "Koran groei-reis"
+  },
+  "qr-community": "Lees de aanbevolen verzen en reflecties van vandaag.",
+  "quran-in-year": "Koran in een jaar",
+  "quran-in-year-cta": "De lezing van deze week",
+  "quran-in-year-verse-title": "Een vers uit de lezing van deze week",
+  "ramadan-activities-cta": "<link> Volg de <b> Global Quranic Calendar </b> voor wekelijkse lezingen, inspirerende podcasts en een oproep tot reflectie! </link>",
+  "ramadan-challenge": "Doe mee aan de Ramadan-uitdaging",
+  "ramadan": {
+    "header": "Hulpmiddelen om je verbinding met de Koran te verdiepen",
+    "title": "Klaar voor de Ramadan?"
+  },
+  "read-juz": "Lees Juz",
+  "recently-read": "Recent gelezen",
+  "revelation-order-disclaimer": "Deze weergave toont de chronologische volgorde van soera's in de koran op basis van wanneer ze werden geopenbaard aan de profeet Mohammed <hover> ﷺ </hover> . De chronologie is een onderwerp van wetenschappelijke mening en sommige soera's zijn op verschillende tijdstippen in delen geopenbaard. De volgorde hier is gebaseerd op het werk van <link> Tanzil.net </link> . [Opmerking: de samengestelde Mushaf-volgorde van al-Fatiha tot al-Nas is een kwestie van consensus.]",
+  "see-more-learning-plans": "Meer zien",
+  "set-custom-goal": "Stel een doel",
+  "share-quran": {
+    "description": "Help de Koran te verspreiden onder nieuwe leerlingen",
+    "title": "Deel de Koran!"
+  },
+  "start-learning-plan": "Begin met leren",
+  "start-read": "Begin met lezen",
+  "stay-consistent": "Volg Stappen, Creëer Aangepaste Doelen, Blijf Consistent",
+  "tab": {
+    "bookmarks": "Bladwijzers",
+    "page-bookmarks": "Pagina's",
+    "popular": "Populair"
+  },
+  "take-notes": "Heb je iets gemist <modalLink> Notities ? </modalLink>",
+  "view-all-bookmarks": "Bekijk alle bladwijzers",
+  "voice": {
+    "trigger": "Snelle toegang tot alles"
+  },
+  "welcome": {
+    "title": "Het is de maand van de Koran! Help miljoenen gebruikers toegang te krijgen tot de begeleiding van de koran."
+  }
+}

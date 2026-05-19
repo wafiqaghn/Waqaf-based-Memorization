@@ -1,0 +1,369 @@
+@use 'src/styles/theme';
+@use 'src/styles/breakpoints';
+@use 'src/styles/constants';
+
+$container-width: 370px;
+
+.outerContainer {
+  min-block-size: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-inline: auto;
+  max-inline-size: $container-width;
+  padding-block: calc(var(--spacing-xsmall) * 4);
+  box-sizing: border-box;
+
+  @include breakpoints.smallerThanMobileL {
+    padding-inline: var(--spacing-small-px);
+  }
+}
+
+.title {
+  font-size: var(--font-size-normal-px);
+  color: var(--color-text-default);
+  text-align: center;
+  margin-block-end: var(--spacing-xsmall-px);
+  @include breakpoints.desktop {
+    font-size: var(--font-size-xlarge-px);
+    margin-block-end: var(--spacing-large);
+  }
+}
+
+.subtitle {
+  text-align: center;
+  margin-block-end: var(--spacing-medium3-px);
+  color: var(--color-text-default);
+  max-inline-size: 400px;
+  font-size: var(--font-size-xsmall-px);
+}
+
+.inlineText {
+  display: inline;
+}
+
+.boldText {
+  font-weight: var(--font-weight-bold);
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-medium);
+  inline-size: 100%;
+
+  & > * {
+    flex: 1;
+  }
+}
+
+.loginButton {
+  inline-size: 100%;
+  block-size: constants.$oauth-social-button-height;
+  justify-content: center;
+  padding: var(--spacing-medium);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-medium-px);
+  border: 1px solid var(--color-border-gray-lighter);
+  background-color: var(--color-background-default);
+  color: var(--color-text-default);
+
+  &:hover {
+    background-color: var(--color-background-elevated);
+  }
+
+  span {
+    margin: 0;
+  }
+
+  svg {
+    inline-size: 24px !important;
+    block-size: 24px !important;
+  }
+}
+
+.googleButton {
+  --themed-bg: var(--color-primary-faded);
+  --themed-fg: var(--shade-9);
+  @include theme.sepia {
+    --themed-border: transparent;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      --themed-bg: var(--color-text-default);
+      --themed-border: var(--color-text-default);
+    }
+  }
+}
+
+.facebookButton {
+  --facebook-brand-color: #4267b2;
+
+  --themed-bg: var(--facebook-brand-color);
+  --themed-fg: var(--shade-0);
+  --themed-border: var(--facebook-brand-color);
+  @media (hover: hover) {
+    &:hover {
+      --themed-bg: var(--color-text-default);
+      --themed-border: var(--color-text-default);
+    }
+  }
+}
+
+.emailSentContainer {
+  text-align: center;
+}
+
+.paragraphContainer {
+  margin-block-end: var(--spacing-medium);
+}
+
+.emailContainer {
+  font-weight: var(--font-weight-bold);
+}
+
+.verificationCode {
+  padding: var(--spacing-medium);
+  background-color: var(--color-background-alternative-faint);
+  border: 1px solid var(--color-secondary-faded);
+  text-align: center;
+  border-radius: var(--border-radius-rounded);
+}
+
+.resendButton {
+  margin-block-start: var(--spacing-small);
+}
+
+.privacyText {
+  text-align: center;
+  font-size: var(--font-size-small);
+  color: var(--color-text-faded);
+  margin-block-start: var(--spacing-medium2-px);
+}
+
+.authContainer {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family-figtree);
+}
+
+.authTabs {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.authSwitchContainer {
+  inline-size: 100%;
+  margin-inline: auto;
+  margin-block-end: var(--spacing-large-px);
+}
+
+.authTitle {
+  font-size: var(--font-size-xlarge);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  text-align: center;
+  color: var(--color-text-default);
+  margin-block: calc(var(--spacing-medium2-px) * 3);
+}
+
+.description {
+  text-align: center;
+  color: var(--color-text-default);
+  margin-block-end: var(--spacing-large);
+  font-size: var(--font-size-small);
+}
+
+.formContainer {
+  inline-size: 100%;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: var(--spacing-small-px);
+
+  form {
+    inline-size: 100%;
+  }
+
+  input {
+    border: none;
+    inline-size: 100%;
+    background: transparent;
+    color: var(--color-text-default);
+
+    &::placeholder {
+      color: var(--color-text-faded);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.generalError {
+  padding: calc(var(--spacing-xsmall-px) * 1.5);
+  margin-block-end: var(--spacing-xsmall-px);
+  font-size: var(--font-size-small);
+  color: white;
+  background-color: var(--color-error-medium2);
+  border-radius: calc(var(--border-radius-default) * 2);
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+
+.submitButton {
+  inline-size: 100%;
+  padding: var(--spacing-medium);
+  font-size: var(--font-size-normal);
+  border-radius: var(--border-radius-medium-px);
+  background-color: var(--color-success-medium);
+  color: var(--color-text-inverse);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:not(:disabled):not(.disabled):hover {
+    background-color: var(--color-success-medium);
+    color: var(--color-text-inverse);
+  }
+}
+
+.smallMarginTop {
+  margin-block-start: var(--spacing-small-px);
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-small-px);
+  margin-block: 0px !important;
+  margin-block-end: var(--spacing-small-px) !important;
+}
+
+.errorText {
+  color: var(--color-error-medium2) !important;
+}
+
+.forgotPassword {
+  color: var(--color-success-medium);
+  text-decoration: none;
+  font-size: var(--font-size-small);
+  text-align: end;
+  font-weight: var(--font-weight-bold);
+  margin-block-end: var(--spacing-small-px);
+
+  &:hover {
+    opacity: var(--opacity-75);
+    text-decoration: none;
+  }
+}
+
+.backButton {
+  align-self: center;
+  color: var(--color-text-default);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-normal);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-block-start: var(--spacing-medium2-px);
+
+  svg {
+    inline-size: 20px;
+    block-size: 20px;
+  }
+
+  &:hover {
+    opacity: var(--opacity-75);
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-mega);
+  gap: var(--spacing-medium);
+  inline-size: 400px;
+  margin: 0 auto;
+}
+
+.orSeparator {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  margin-block: var(--spacing-large-px);
+  gap: var(--spacing-small);
+}
+
+.orLine {
+  flex: 1;
+  border: none;
+  border-block-start: 1px solid var(--color-border-gray-lighter);
+  margin: 0;
+}
+
+.orText {
+  font-size: var(--font-size-small);
+  color: var(--color-border-gray-medium);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  padding-inline: var(--spacing-small);
+}
+
+.authHeader {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcomeTitle {
+  font-size: var(--font-size-large2);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-default);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.subtitleAndLogoGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xsmall);
+  margin-block-start: var(--spacing-xxlarge-px);
+  margin-block-end: var(--spacing-large-px);
+  inline-size: 100%;
+}
+
+.welcomeSubtitle {
+  font-size: var(--font-size-small);
+  color: var(--color-text-default);
+  text-align: center;
+  margin: 0;
+  font-weight: var(--font-weight-normal);
+}
+
+.quranLogoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quranLogo {
+  inline-size: auto;
+  block-size: 18px;
+}

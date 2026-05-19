@@ -1,0 +1,44 @@
+@use 'src/styles/utility';
+
+.counter {
+  margin-block-end: var(--spacing-xsmall);
+  font-size: initial;
+  [dir='rtl'] & {
+    direction: rtl;
+  }
+}
+
+.text {
+  @include utility.kitabFontLang;
+}
+
+.xs {
+  font-size: var(--font-size-xsmall);
+}
+.sm {
+  font-size: var(--font-size-normal);
+}
+.md {
+  font-size: var(--font-size-large);
+}
+.lg {
+  font-size: var(--font-size-xlarge);
+}
+.xl {
+  font-size: var(--font-size-xlarge-px);
+}
+.xxl {
+  font-size: var(--font-size-xxlarge-px);
+}
+.xxxl {
+  font-size: var(--font-size-xxxlarge-px);
+}
+.jumbo {
+  font-size: var(--font-size-jumbo-px);
+}
+.jumbo2 {
+  font-size: var(--font-size-jumbo2-px);
+}
+.xjumbo {
+  font-size: var(--font-size-xjumbo-px);
+}

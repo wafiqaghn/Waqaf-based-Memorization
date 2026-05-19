@@ -1,0 +1,64 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/theme';
+@use 'src/styles/utility';
+
+// Layout constants
+$container-max-width: 1230px;
+$cards-grid-min-height: 321px;
+
+.container {
+  @include utility.edgeHorizontalPadding;
+  max-inline-size: $container-max-width;
+  margin: 0 auto;
+  padding-block: var(--spacing-medium3-px);
+
+  @include breakpoints.smallerThanTablet {
+    padding-block: var(--spacing-medium-plus-px);
+  }
+}
+
+.ctaContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xlarge-px);
+  color: var(--color-grey-icons-new);
+  margin: auto auto var(--spacing-xlarge-px);
+
+  @include breakpoints.smallerThanTablet {
+    margin: auto auto var(--spacing-medium2-px);
+  }
+}
+
+.header {
+  text-align: center;
+}
+
+.cta {
+  text-decoration: underline;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-medium2-px);
+  min-block-size: $cards-grid-min-height;
+
+  @include breakpoints.smallerThanTablet {
+    gap: var(--spacing-medium);
+    min-block-size: auto;
+  }
+
+  @include breakpoints.tablet {
+    @include breakpoints.smallerThanDesktop {
+      gap: var(--spacing-medium);
+      min-block-size: auto;
+    }
+  }
+}
+
+// Shared card wrapper styles for End of Surah cards
+.container .cardsGrid .card {
+  border-radius: var(--border-radius-rounded);
+  box-shadow: var(--shadow-end-surah-card);
+}

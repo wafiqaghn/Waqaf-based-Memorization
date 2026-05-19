@@ -1,0 +1,26 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/constants';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-inline: auto;
+  inline-size: 100%;
+  max-inline-size: 450px;
+  margin-block-start: var(--spacing-medium2-px);
+  margin-block-end: var(--spacing-medium2-px);
+
+  @include breakpoints.smallerThanTablet {
+    margin-block-start: constants.$reading-view-container-top-margin-mobile;
+  }
+}
+
+.topControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inline-size: 100%;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+}

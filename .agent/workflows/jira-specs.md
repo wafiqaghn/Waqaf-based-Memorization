@@ -1,0 +1,1 @@
+../../.agents/quran/workflows/jira-specs.md

@@ -1,0 +1,250 @@
+/* eslint-disable max-lines */
+import React, {
+  MouseEventHandler,
+  PointerEventHandler,
+  ButtonHTMLAttributes,
+  forwardRef,
+} from 'react';
+
+import classNames from 'classnames';
+
+import styles from './Button.module.scss';
+
+import Wrapper from '@/components/Wrapper/Wrapper';
+import Link from '@/dls/Link/Link';
+import Spinner, { SpinnerSize } from '@/dls/Spinner/Spinner';
+import Tooltip, { ContentSide } from '@/dls/Tooltip';
+import useDirection from '@/hooks/useDirection';
+
+export enum ButtonSize {
+  XXSmall = 'xxsmall',
+  XSmall = 'xsmall',
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
+}
+
+export enum ButtonShape {
+  Square = 'square',
+  Circle = 'circle',
+  Pill = 'pill',
+  Rounded = 'rounded',
+}
+
+export enum ButtonType {
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Success = 'success',
+  Error = 'error',
+  Warning = 'warning',
+  Inverse = 'inverse',
+}
+
+export enum ButtonVariant {
+  Shadow = 'shadow',
+  Ghost = 'ghost',
+  Compact = 'compact',
+  Outlined = 'outlined',
+  Simplified = 'simplified',
+  Rounded = 'rounded',
+  SimplifiedAccent = 'simplified_accent',
+  Accent = 'accent',
+  ModeToggle = 'mode_toggle',
+}
+
+/**
+ * Props for the Button component.
+ *
+ * **Important**: When `href` is provided, the component renders a `<Link>` with a `<div>` inside instead of a `<button>`.
+ * In this case, the `ref` parameter will not be forwarded and will be `null` when accessed by consumers.
+ * If you need to access the underlying element via ref, avoid using the `href` prop.
+ */
+export type ButtonProps = {
+  size?: ButtonSize;
+  shape?: ButtonShape;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
+  type?: ButtonType;
+  variant?: ButtonVariant;
+  isLoading?: boolean;
+  href?: string;
+  isDisabled?: boolean;
+  isSelected?: boolean;
+  onClick?: MouseEventHandler;
+  onPointerDown?: PointerEventHandler<HTMLButtonElement>;
+  tooltip?: string | React.ReactNode;
+  tooltipContentSide?: ContentSide;
+  className?: string;
+  contentClassName?: string;
+  hasSidePadding?: boolean;
+  shouldFlipOnRTL?: boolean;
+  shouldShallowRoute?: boolean;
+  shouldPrefetch?: boolean;
+  isNewTab?: boolean;
+  ariaLabel?: string;
+  htmlType?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  children?: React.ReactNode;
+  id?: string;
+};
+
+/**
+ * Button component that can render as either a button or a link.
+ *
+ * @param ref - Forwarded ref to the underlying button element.
+ *   **Important**: When `href` is provided, the component renders a `<Link>` with a `<div>` inside,
+ *   and the ref will not be forwarded. In this scenario, accessing the ref will return `null`.
+ *   If you need ref access, avoid using the `href` prop.
+ */
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      href,
+      onClick,
+      onPointerDown,
+      children,
+      isDisabled: disabled = false,
+      isLoading,
+      isSelected = false,
+      type = ButtonType.Primary,
+      size = ButtonSize.Medium,
+      shape,
+      prefix,
+      suffix,
+      variant,
+      tooltip,
+      tooltipContentSide = ContentSide.BOTTOM,
+      className,
+      contentClassName,
+      hasSidePadding = true,
+      shouldFlipOnRTL = true,
+      shouldShallowRoute: shallowRouting = false,
+      shouldPrefetch: prefetch = true,
+      isNewTab: newTab,
+      ariaLabel,
+      htmlType,
+      ...props
+    },
+    ref,
+  ) => {
+    const direction = useDirection();
+    const classes = classNames(styles.base, className, {
+      [styles.withText]: typeof children === 'string',
+      [styles.withIcon]: typeof children !== 'string',
+      // type
+      [styles.primary]: type === ButtonType.Primary,
+      [styles.secondary]: type === ButtonType.Secondary,
+      [styles.success]: type === ButtonType.Success,
+      [styles.warning]: type === ButtonType.Warning,
+      [styles.error]: type === ButtonType.Error,
+      [styles.inverse]: type === ButtonType.Inverse,
+
+      // size
+      [styles.large]: size === ButtonSize.Large,
+      [styles.normal]: size === ButtonSize.Medium,
+      [styles.small]: size === ButtonSize.Small,
+      [styles.xsmall]: size === ButtonSize.XSmall,
+      [styles.xxsmall]: size === ButtonSize.XXSmall,
+
+      // shape
+      [styles.square]: shape === ButtonShape.Square,
+      [styles.circle]: shape === ButtonShape.Circle,
+      [styles.pill]: shape === ButtonShape.Pill,
+      [styles.rounded]: shape === ButtonShape.Rounded,
+
+      // variant
+      [styles.shadow]: variant === ButtonVariant.Shadow,
+      [styles.ghost]: variant === ButtonVariant.Ghost,
+      [styles.compact]: variant === ButtonVariant.Compact,
+      [styles.outlined]: variant === ButtonVariant.Outlined,
+      [styles.roundedVariant]: variant === ButtonVariant.Rounded,
+      [styles.simplified]: variant === ButtonVariant.Simplified,
+      [styles.simplified_accent]: variant === ButtonVariant.SimplifiedAccent,
+      [styles.accent]: variant === ButtonVariant.Accent,
+      [styles.mode_toggle]: variant === ButtonVariant.ModeToggle,
+      [styles.selected]: isSelected,
+      [styles.disabled]: disabled || isLoading,
+      [styles.noSidePadding]: !hasSidePadding,
+    });
+
+    // when loading, replace the prefix icon with loading icon
+    let prefixFinal;
+    if (isLoading) prefixFinal = <Spinner size={size.toString() as SpinnerSize} />;
+    else prefixFinal = prefix;
+
+    let content;
+
+    if (href && !disabled) {
+      content = (
+        <Link
+          href={href}
+          isNewTab={newTab}
+          shouldPrefetch={prefetch}
+          isShallow={shallowRouting}
+          {...(onClick && { onClick })}
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          {...(ariaLabel && { ariaLabel })}
+        >
+          <div dir={direction} className={classes} data-auto-flip-icon={shouldFlipOnRTL} {...props}>
+            {prefixFinal && (
+              <span dir={direction} className={styles.prefix} data-auto-flip-icon={shouldFlipOnRTL}>
+                {prefixFinal}
+              </span>
+            )}
+            <span className={classNames(styles.content, contentClassName)}>{children}</span>
+            {suffix && (
+              <span dir={direction} className={styles.suffix} data-auto-flip-icon={shouldFlipOnRTL}>
+                {suffix}
+              </span>
+            )}
+          </div>
+        </Link>
+      );
+    } else {
+      content = (
+        <button
+          ref={ref}
+          // eslint-disable-next-line react/button-has-type
+          type={htmlType || 'button'}
+          dir={direction}
+          className={classes}
+          disabled={disabled}
+          onClick={onClick}
+          onPointerDown={onPointerDown}
+          data-auto-flip-icon={shouldFlipOnRTL}
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          {...(ariaLabel && { 'aria-label': ariaLabel })}
+          {...props}
+        >
+          {prefixFinal && (
+            <span dir={direction} className={styles.prefix} data-auto-flip-icon={shouldFlipOnRTL}>
+              {prefixFinal}
+            </span>
+          )}
+          <span className={classNames(styles.content, contentClassName)}>{children}</span>
+          {suffix && (
+            <span dir={direction} className={styles.suffix} data-auto-flip-icon={shouldFlipOnRTL}>
+              {suffix}
+            </span>
+          )}
+        </button>
+      );
+    }
+
+    return (
+      <Wrapper
+        shouldWrap={!!tooltip}
+        wrapper={(tooltipChildren) => (
+          <Tooltip text={tooltip} contentSide={tooltipContentSide}>
+            {tooltipChildren}
+          </Tooltip>
+        )}
+      >
+        {content}
+      </Wrapper>
+    );
+  },
+);
+
+Button.displayName = 'Button';
+
+export default Button;

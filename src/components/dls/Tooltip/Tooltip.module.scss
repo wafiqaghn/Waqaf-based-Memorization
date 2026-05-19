@@ -1,0 +1,112 @@
+@use '../_tooltip-info.mixin' as *;
+@use 'src/styles/theme';
+.trigger {
+  all: unset;
+  display: inline-block;
+}
+
+.content {
+  z-index: var(--z-index-sticky);
+  font-size: var(--font-size-normal);
+  border-radius: var(--border-radius-default);
+  padding-block-start: var(--spacing-xxsmall);
+  padding-block-end: var(--spacing-xxsmall);
+  padding-inline-start: var(--spacing-xxsmall);
+  padding-inline-end: var(--spacing-xxsmall);
+  color: var(--color-text-inverse);
+  background-color: var(--color-background-inverse);
+  max-inline-size: calc(10 * var(--spacing-mega));
+  display: flex;
+  direction: ltr;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-micro2-px);
+  & > span {
+    fill: var(--color-background-inverse);
+  }
+}
+
+.noInverse {
+  background-color: var(--color-background-default);
+  & > span {
+    fill: var(--color-background-default);
+  }
+}
+.noCenter {
+  text-align: initial;
+}
+.secondary {
+  background-color: var(--color-secondary-medium);
+  & > span {
+    fill: var(--color-secondary-medium);
+  }
+}
+.success {
+  background-color: var(--color-success-medium);
+  color: var(--color-text-white);
+  & > span {
+    fill: var(--color-success-medium);
+  }
+}
+
+.success .icon {
+  color: var(--color-text-white);
+}
+.warning {
+  background-color: var(--color-warning-medium);
+  & > span {
+    fill: var(--color-warning-medium);
+  }
+}
+.error {
+  background-color: var(--color-error-medium);
+  & > span {
+    fill: var(--color-error-medium);
+  }
+}
+.info {
+  @include infoTooltipStyles;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  cursor: pointer;
+
+  [dir='rtl'] & svg {
+    transform: scaleX(1);
+  }
+}
+
+.contentWithPrefix {
+  z-index: var(--z-index-sticky);
+  display: flex;
+  direction: ltr;
+  align-items: center;
+  gap: var(--spacing-xxsmall2-px);
+
+  & > span {
+    fill: var(--color-success-medium);
+  }
+}
+
+.clickableContent {
+  cursor: pointer;
+  display: flex;
+  direction: ltr;
+  align-items: center;
+  gap: var(--spacing-micro2-px);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-medium);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-default);
+  }
+}

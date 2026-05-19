@@ -1,0 +1,35 @@
+{
+  "api-docs": {
+    "cta": "View API Docs",
+    "header": "API Documentation",
+    "sub-header": "Integrate Quran.com data into your applications with our comprehensive API",
+    "title": "API Documentation"
+  },
+  "app-portal": {
+    "cta-explore": "Explore Apps",
+    "cta-oauth": "See OAuth2 guide",
+    "description": "Explore transformative Apps addressing unique needs and various segments of society.",
+    "heading": "Connected Quran Apps",
+    "oauth-pitch": "Utilize Quran.Foundation's OAuth2.0 to allow user to find their data and continue where they left off on Quran.com and integrated Apps.",
+    "tagline": "Showcase your Quran apps"
+  },
+  "careers": {
+    "career": "Career Opportunities",
+    "cta": "View Positions",
+    "header": "Explore our current job openings"
+  },
+  "footer": "- Quran.com team",
+  "header": "Development Help",
+  "hero": {
+    "subtitle": "Resources, tools, and guidance for developers building Quran experiences.",
+    "title": "Build with Quran.com"
+  },
+  "issues-cta": "Should you have any questions or want to contact maintainers, just write an issue. We will get back to you as soon as we can, insha'Allah.",
+  "issues-guide": "Typically we use <0>Github projects</0> as the source for what to work on next, what's coming up and what bugs exist that need to be solved. For example <1>this url</1> has list of bugs, things we need help with, and upcoming features.",
+  "labs": "Quran Labs",
+  "labs-cta": "Explore Labs",
+  "labs-description": "Discover community driven experimental features and upcoming innovations.",
+  "labs-pitch": "Share your ideas and participate in the future of Quranic engagement and experiences.",
+  "main-desc": "Explore the programs, tools, and documentation designed to help you extend the Quran.com ecosystem.",
+  "thanks": "We look forward to your contribution!"
+}

@@ -1,0 +1,104 @@
+{
+  "browse": {
+    "apps": {
+      "muhaffidh": {
+        "caption": "Hafalkan dan pelajari Al-Quran secara efisien.",
+        "description": "Aplikasi Al-Quran yang dirancang untuk membantu Anda menghafal dan mengulang Al-Quran dengan cara yang inovatif.",
+        "tagline": "Aplikasi pendamping inovatif untuk menghafal dan mempelajari Al-Quran.",
+        "title": "Muhaffidh"
+      },
+      "quran_android": {
+        "caption": "Baca, tandai, dan dengarkan Al-Quran di perangkat Android.",
+        "description": "Fitur-fiturnya meliputi halaman bergaya Madani, audio tanpa jeda, penandaan/penandaan/berbagi, pencarian, mode malam, pengulangan audio, dan terjemahan/tafsir dalam banyak bahasa.",
+        "tagline": "Aplikasi Al-Quran gratis dan sumber terbuka untuk Android.",
+        "title": "Quran untuk Android"
+      },
+      "quran_ios": {
+        "caption": "Aplikasi membaca dan mendengarkan Al-Quran yang indah dan bebas iklan untuk iPhone & iPad",
+        "description": "Dari pembuat Quran.com: baca Al-Quran di mana saja, hafalkan, dan dengarkan qari favorit Anda dalam pengalaman yang bersih dan tanpa iklan.",
+        "tagline": "Aplikasi Mushaf yang indah dan bebas iklan.",
+        "title": "Quran untuk iOS (oleh quran.com)"
+      },
+      "quranmeet": {
+        "caption": "Sesi belajar Al-Quran secara langsung",
+        "description": "Sebuah platform yang menghubungkan siswa dengan guru dan kelompok belajar untuk sesi pembelajaran Al-Quran secara individual dan kelompok kecil.",
+        "tagline": "Sesi belajar Al-Quran secara individu dan kelompok kecil.",
+        "title": "QuranMeet"
+      },
+      "quranreflect": {
+        "caption": "Bagikan refleksi Anda",
+        "description": "Sebuah platform sosial untuk menumbuhkan budaya refleksi atas Al-Quran.",
+        "tagline": "Baca & Bagikan Refleksi",
+        "title": "QuranReflect"
+      },
+      "readtafsir": {
+        "caption": "Cari dan bandingkan tafsir-tafsir klasik.",
+        "description": "Baca dan dengarkan berbagai sumber tafsir klasik di satu tempat, sehingga memudahkan untuk menelusuri, mencari, dan membandingkan interpretasi.",
+        "tagline": "Membaca dan mendengarkan tafsir interaktif.",
+        "title": "Baca Tafsir"
+      },
+      "sunnah": {
+        "caption": "Kumpulan Hadits",
+        "description": "Sebuah perpustakaan hadits dengan koleksi utama yang tersedia secara daring, termasuk terjemahan dalam berbagai bahasa dan alat pencarian.",
+        "tagline": "Hadits di ujung jari Anda",
+        "title": "Sunnah.com"
+      },
+      "tafsirapp": {
+        "caption": "Tafsir interaktif dengan berbagai sumber.",
+        "description": "Portal penelitian Al-Qur'an yang mempertemukan tafsir, qira'at, mushaf, i'rab, ilmu-ilmu Al-Qur'an, asbab al-nuzul, hukum, dan kamus.",
+        "tagline": "Pusat penelitian Al-Quran",
+        "title": "Aplikasi Tafsir"
+      }
+    },
+    "filters": {
+      "all": "Semua aplikasi",
+      "community": "Masyarakat",
+      "hadith-sunnah": "Hadits dan Sunnah",
+      "popular": "Populer",
+      "quran-reader": "Pembaca Al-Quran",
+      "reflections": "Refleksi",
+      "study-tools": "Alat belajar"
+    },
+    "title": "Jelajahi Semua Aplikasi"
+  },
+  "cta": {
+    "app-store": "Unduh di App Store",
+    "google-play": "Unduh di Google Play",
+    "visit": "Mengunjungi"
+  },
+  "featured": {
+    "apps": {
+      "qariah": {
+        "headline": "Dengarkan lebih dari 60 wanita dari seluruh dunia membacakan Al-Quran dengan berbagai gaya bacaan!",
+        "name": "Qariah",
+        "tagline": "Pembaca Al-Quran wanita"
+      },
+      "quran-kareem": {
+        "headline": "Gerbang baru Anda untuk terhubung dengan Kitab Allah",
+        "name": "Quran Kareem",
+        "tagline": "Baca, dengarkan, dan renungkan."
+      },
+      "quran-link": {
+        "headline": "Jelajahi 25+ tafsir dan 100+ terjemahan di satu tempat.",
+        "name": "Tautan Al-Quran",
+        "tagline": "Tafsir & pendamping belajar"
+      },
+      "quran-space": {
+        "headline": "Terhubunglah dengan guru, siswa, atau teman sebaya secara langsung melalui audio dan video untuk membaca, merenungkan, dan mempelajari Al-Quran bersama-sama.",
+        "name": "Ruang Al-Quran",
+        "tagline": "Ruang Pertemuan Al-Quran Langsung"
+      }
+    },
+    "learn-more": "Pelajari selengkapnya",
+    "title": "Aplikasi Unggulan",
+    "view-all": "Lihat semua"
+  },
+  "footer": {
+    "disclaimer": "Setiap aplikasi dimiliki dan dikelola secara independen oleh pengembangnya. Untuk dukungan, laporan bug, atau permintaan fitur, silakan hubungi pembuat aplikasi secara langsung."
+  },
+  "hero": {
+    "description": "Jelajahi aplikasi unik yang didukung oleh konten terverifikasi dan fitur pengguna dari Quran Foundation, sementara akun, kemajuan, dan perjalanan Anda tetap terhubung.",
+    "title": "Temukan Ekosistem Aplikasi Kami"
+  },
+  "quran-apps-portal": "Aplikasi Al-Quran Terhubung"
+}

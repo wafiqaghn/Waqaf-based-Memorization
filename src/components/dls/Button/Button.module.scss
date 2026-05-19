@@ -1,0 +1,331 @@
+@use '@/styles/constants';
+
+// we are using this mixin ase using the one from utility.scss will break the remotion build
+@mixin lighten-background-color {
+  background-image: linear-gradient(
+    to right,
+    var(--color-background-lighten),
+    var(--color-background-lighten)
+  );
+}
+
+.base {
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: transform var(--transition-fast);
+  color: var(--themed-fg, var(--color-text-default));
+  background-color: var(--themed-bg, var(--color-background-default));
+  font-weight: var(--font-weight-medium);
+  border: var(--spacing-hairline-px) solid var(--themed-border);
+  block-size: var(--button-size);
+  justify-content: center;
+  border-radius: var(--border-radius-default);
+  padding-inline: var(--spacing-small);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: transparent;
+      color: var(--themed-bg);
+    }
+  }
+  &:active {
+    transform: scale(constants.$button-active-scale);
+    &.disabled {
+      transform: none;
+    }
+  }
+}
+
+// type
+.primary {
+  --themed-bg: var(--color-primary-medium);
+  --themed-fg: var(--color-text-inverse);
+  --themed-border: var(--color-primary-medium);
+}
+
+.secondary {
+  --themed-bg: var(--color-background-default);
+  --themed-fg: var(--color-text-faded);
+  --themed-border: var(--color-borders-hairline);
+
+  @media (hover: hover) {
+    &:hover {
+      --themed-bg: var(--color-text-default);
+      --themed-border: var(--color-primary-medium);
+    }
+  }
+}
+
+.success {
+  --themed-bg: var(--color-success-medium);
+  --themed-fg: var(--shade-0);
+  --themed-border: var(--color-success-medium);
+}
+
+.warning {
+  --themed-bg: var(--color-warning-medium);
+  --themed-fg: var(--shade-0);
+  --themed-border: var(--color-warning-medium);
+}
+
+.error {
+  --themed-bg: var(--color-error-medium);
+  --themed-fg: var(--shade-0);
+  --themed-border: var(--color-error-medium);
+}
+
+.inverse {
+  --themed-bg: var(--color-text-inverse);
+  --themed-fg: var(--color-primary-medium);
+  --themed-border: var(--color-text-inverse);
+
+  &.ghost {
+    @media (hover: hover) {
+      &:hover {
+        color: var(--color-text-default);
+      }
+    }
+  }
+}
+
+// size
+.large {
+  font-size: var(--font-size-large);
+  --button-size: calc(3 * var(--spacing-medium));
+}
+.normal {
+  font-size: var(--font-size-normal);
+  --button-size: calc(2.5 * var(--spacing-medium));
+}
+.small {
+  font-size: var(--font-size-normal);
+  --button-size: calc(2 * var(--spacing-medium));
+}
+.xsmall {
+  font-size: var(--font-size-small);
+  --button-size: 27px;
+}
+.xxsmall {
+  font-size: var(--font-size-xsmall);
+  --button-size: var(--spacing-medium2-px);
+}
+
+// shape
+.square {
+  border-radius: var(--border-radius-default);
+  inline-size: var(--button-size);
+  padding: 0;
+}
+.circle {
+  border-radius: var(--border-radius-circle);
+  inline-size: var(--button-size);
+  padding: 0;
+}
+.pill {
+  border-radius: var(--border-radius-pill);
+}
+.rounded {
+  border-radius: calc(var(--border-radius-default) * 3);
+}
+
+// variant
+.shadow {
+  box-shadow: var(--shadow-large);
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--themed-bg);
+      color: var(--themed-fg);
+      position: relative;
+      inset-block-start: -1px;
+    }
+  }
+}
+
+.ghost {
+  background-color: transparent;
+  border: none;
+  color: var(--themed-bg);
+  &:hover {
+    background-color: var(--themed-bg);
+    @include lighten-background-color;
+  }
+}
+// corner case for secondary ghost button
+.ghost.secondary {
+  --themed-bg: var(--color-text-faded);
+}
+
+.outlined {
+  background-color: transparent;
+  color: var(--themed-bg);
+  &:hover {
+    background-color: var(--themed-bg);
+    color: var(--themed-fg);
+  }
+}
+// corner case for secondary ghost button
+.ghost.secondary {
+  --themed-bg: var(--color-text-faded);
+}
+
+.compact {
+  padding-inline: 0;
+  background-color: transparent;
+  color: var(--themed-bg);
+  border: none;
+  &:hover {
+    opacity: var(--opacity-50);
+  }
+}
+
+// suffix, prefix and content contaniner
+.suffix {
+  display: flex;
+  align-items: center;
+  margin-inline-start: calc(0.5 * var(--spacing-medium));
+}
+.prefix {
+  display: flex;
+  align-items: center;
+  margin-inline-end: calc(0.5 * var(--spacing-medium));
+}
+.content {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+}
+
+// svg sizes
+.base > span > svg {
+  block-size: calc(0.5 * var(--button-size));
+  inline-size: calc(0.5 * var(--button-size));
+}
+.base[dir='rtl'][data-auto-flip-icon='true'] svg {
+  transform: scaleX(-1);
+}
+
+.base.disabled {
+  cursor: not-allowed;
+  background-color: var(--color-background-alternative-medium);
+  border: var(--spacing-hairline-px) solid var(--color-secondary-medium);
+  color: var(--color-text-default);
+  opacity: 0.7;
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--color-background-alternative-medium);
+      opacity: 0.7;
+    }
+  }
+}
+.ghost.disabled {
+  border: none;
+  background: inherit;
+  @media (hover: hover) {
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
+// TODO: remove .noSidePadding usage
+.noSidePadding {
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+}
+
+.simplified_base {
+  background-color: transparent;
+  color: var(--themed-bg);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-rounded);
+  border: var(--spacing-hairline-px) solid var(--themed-bg);
+  font-size: var(--font-size-small);
+  padding: var(--spacing-xxsmall);
+}
+
+.simplified {
+  @extend .simplified_base;
+  --themed-bg: var(--color-qdc-blue);
+}
+
+.simplified_accent {
+  @extend .simplified_base;
+  --themed-bg: var(--color-success-medium);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--color-success-deep);
+      color: var(--color-text-inverse);
+      opacity: var(--opacity-85);
+    }
+  }
+}
+
+.accent {
+  background-color: var(--color-success-medium);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-rounded);
+  border: none;
+  font-size: var(--font-size-small-px);
+  padding: var(--spacing-xxsmall-px);
+
+  .prefix svg path {
+    fill: var(--color-text-inverse);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--color-success-deep);
+      color: var(--color-text-inverse);
+      opacity: var(--opacity-85);
+    }
+  }
+}
+
+.roundedVariant {
+  color: var(--color-text-white);
+  background-color: var(--color-streaks-dark);
+  border: none;
+  border-radius: calc(var(--border-radius-default) * 3);
+
+  &:hover {
+    color: var(--color-text-white);
+    background-color: var(--color-streaks-dark);
+    opacity: 0.9;
+  }
+}
+
+.mode_toggle {
+  background-color: var(--color-background-elevated-new);
+  color: var(--color-text-faded-new);
+  border: none;
+  box-shadow: var(--shadow-chapter-header-actions);
+
+  // Disable the default button scale effect on click
+  &:active {
+    transform: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-text-default-new);
+      background-color: var(--color-background-elevated-new);
+    }
+  }
+
+  &.selected {
+    background-color: var(--color-text-default-new);
+    color: var(--color-background-elevated);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--color-text-default-new);
+        color: var(--color-background-elevated);
+      }
+    }
+  }
+}

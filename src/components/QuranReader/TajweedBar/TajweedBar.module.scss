@@ -1,0 +1,202 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/theme';
+
+$pixel: 1px;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inline-size: 100%;
+  color: var(--color-text-default);
+  text-align: center;
+  transition: var(--transition-regular);
+  @include breakpoints.smallerThanTablet {
+    margin-block-start: 0px;
+  }
+  z-index: var(--z-index-min);
+}
+
+.withSidebarNavigation {
+  @include breakpoints.tablet {
+    margin-inline-start: calc(10 * var(--spacing-mega));
+    inline-size: calc(100% - calc(10 * var(--spacing-mega)));
+  }
+}
+
+.hiddenContainer {
+  transform: translateY(calc(-100% + var(--tajweed-trigger-height)));
+}
+
+.tajweedContainer {
+  display: flex;
+  inline-size: 100%;
+  justify-content: center;
+  background: var(--color-background-elevated);
+}
+
+.shadow {
+  box-shadow: var(--shadow-small);
+}
+
+.switcher {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  inline-size: fit-content;
+  block-size: var(--tajweed-trigger-height);
+  font-size: var(--font-size-small);
+  padding-inline: var(--spacing-xsmall);
+  border-end-start-radius: var(--spacing-xsmall);
+  border-end-end-radius: var(--spacing-xsmall);
+  justify-content: center;
+  background: var(--color-background-default);
+  background: var(--color-background-elevated);
+  box-shadow: var(--shadow-tajweed-trigger);
+  cursor: pointer;
+  user-select: none;
+  margin-block-start: calc($pixel * -1);
+}
+
+.rulesContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 90%;
+  flex-wrap: wrap;
+  column-gap: var(--spacing-mega);
+  @include breakpoints.smallerThanTablet {
+    inline-size: 95%;
+    column-gap: var(--spacing-medium);
+  }
+}
+
+.ruleContainer {
+  display: flex;
+  align-items: center;
+  block-size: var(--spacing-mega);
+}
+
+.circle {
+  block-size: var(--spacing-large);
+  inline-size: var(--spacing-large);
+  border-radius: var(--border-radius-circle);
+  display: inline-block;
+  margin-inline-end: var(--spacing-xxsmall);
+}
+
+.chevronIconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-inline-start: var(--spacing-xxsmall);
+}
+
+.rotate180 {
+  transition: var(--transition-regular);
+  transform: rotate(180deg);
+}
+
+.rotate {
+  transition: var(--transition-regular);
+  transform: rotate(0);
+}
+
+.light-edgham {
+  background-color: #a5a5a5;
+}
+
+.light-mad-2 {
+  background-color: #ce9e00;
+}
+
+.light-mad-6 {
+  background-color: #b50000;
+}
+
+.light-mad-2-4-6 {
+  background-color: #ff7b00;
+}
+
+.light-mad-4-5 {
+  background-color: #f40000;
+}
+
+.light-ekhfa {
+  background-color: #09b000;
+}
+
+.light-qalqala {
+  background-color: #2fadff;
+}
+
+.light-tafkhim {
+  background-color: #3f48e6;
+}
+
+.dark-edgham {
+  background-color: #999999;
+}
+
+.dark-mad-2 {
+  background-color: #ffc1e0;
+}
+
+.dark-mad-6 {
+  background-color: #e30000;
+}
+
+.dark-mad-2-4-6 {
+  background-color: #ff8e3b;
+}
+
+.dark-mad-4-5 {
+  background-color: #ff5e8e;
+}
+
+.dark-ekhfa {
+  background-color: #26b55d;
+}
+
+.dark-qalqala {
+  background-color: #00deff;
+}
+
+.dark-tafkhim {
+  background-color: #3c84d5;
+}
+
+.sepia-edgham {
+  background-color: #ababab;
+}
+
+.sepia-mad-2 {
+  background-color: #c09725;
+}
+
+.sepia-mad-6 {
+  background-color: #b7001c;
+}
+
+.sepia-mad-2-4-6 {
+  background-color: #e67b00;
+}
+
+.sepia-mad-4-5 {
+  background-color: #ff0000;
+}
+
+.sepia-ekhfa {
+  background-color: #09b000;
+}
+
+.sepia-qalqala {
+  background-color: #00b4e0;
+}
+
+.sepia-tafkhim {
+  background-color: #134fe1;
+}

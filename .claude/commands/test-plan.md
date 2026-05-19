@@ -1,0 +1,1 @@
+../../.agents/quran/commands/test-plan.md

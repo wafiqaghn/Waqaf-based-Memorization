@@ -1,0 +1,10 @@
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-small);
+  margin-block: var(--spacing-small);
+}
+
+.progressBar {
+  block-size: var(--spacing-xxsmall) !important;
+}

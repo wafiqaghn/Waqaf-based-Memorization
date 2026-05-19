@@ -1,0 +1,134 @@
+{
+  "achieve-quran-goals": "实现你的古兰经目标",
+  "continue-reading": "继续阅读",
+  "continuous": {
+    "description": "您的目标将计算您在几天内的进度",
+    "title": "在一段时间内"
+  },
+  "create-plan": "创建计划",
+  "create-reading-goal": "创建目标",
+  "daily-progress": "每日进度",
+  "daily-progress-completed": "完成！🎉",
+  "daily": {
+    "description": "您的目标每天都会重置",
+    "title": "每日目标"
+  },
+  "day-streak": "连胜",
+  "day-x": "第{{day}}天",
+  "days": "天",
+  "days-remaining": "剩余天数",
+  "duration": "持续时间（天）",
+  "ending-chapter": "结束古兰经",
+  "ending-verse": "结束 Ayah",
+  "examples-subtitle": "以下是共同目标的列表。您也可以创建自己的目标。",
+  "examples-title": "选择一个预设目标或创建您自己的目标",
+  "examples": {
+    "custom": {
+      "description": "设定适合您的自定义目标",
+      "title": "风俗"
+    },
+    "khatm": {
+      "description": "一个经典的 Khatm 目标。每天阅读 1 Juz",
+      "title": "在 30 天内阅读古兰经"
+    },
+    "time": {
+      "description": "一个简单的初学者友好的目标",
+      "title": "每天阅读10分钟"
+    },
+    "year": {
+      "description": "明年按照自己的节奏阅读《古兰经》",
+      "title": "一年内阅读古兰经"
+    }
+  },
+  "frequency-tab": {
+    "description": "您的目标应该每天重置还是每隔几天重置一次？别担心，无论您选择的频率如何，我们都会跟踪您的进度。",
+    "title": "为您的目标选择一个频率"
+  },
+  "goal-completed": "目标完成！🎉 ",
+  "goal-done": {
+    "description": "任何额外的读数仍将被记录",
+    "title": "你完成了今天的目标"
+  },
+  "goal-target": {
+    "description": "您应该阅读多少时间、页数或经文来完成您的目标？",
+    "title": "为你的目标设定目标"
+  },
+  "goal-type": {
+    "description": "您的目标应该基于时间、页数还是自定义范围（即 3 Juzs of the Quran）？",
+    "title": "为您的目标选择一个标准"
+  },
+  "goal-types": {
+    "pages": {
+      "description": "您的目标将基于页面",
+      "title": "页数"
+    },
+    "range": {
+      "description": "您的目标将基于一系列自定义的经文（这可以是古兰经、经文，甚至是整本古兰经）",
+      "title": "自定义范围"
+    },
+    "time": {
+      "description": "你的目标将取决于时间",
+      "title": "时间"
+    }
+  },
+  "plus-x-more-days": {
+    "other": "+{{days}} 天"
+  },
+  "preview-schedule": {
+    "description": "这就是您的目标的样子。您以后可以随时更改它。",
+    "title": "这是您的日程安排的预览"
+  },
+  "progress": {
+    "complete": "今天的目标完成啦🎉",
+    "goal-complete": "您的整个目标已完成 🎉",
+    "pages-goal": "阅读《古兰经》的{{pages}}页",
+    "range-goal": "阅读{{from}}到{{to}}",
+    "time-goal": "阅读《古兰经》 {{time}}"
+  },
+  "reading-goal": "阅读目标",
+  "reading-goal-description": "您是否发现坚持阅读《古兰经》的目标很困难？ <br/> <br/> 《古兰经成长之旅》是一项动态功能，旨在帮助您坚持阅读《古兰经》。无论您的目标是每天阅读 10 分钟、在一个月内读完一卷还是在一年内读完整本《古兰经》，等等，Quran.com 现在都可以帮助您设定自定义目标并跟踪您的每日阅读进度，同时随着您的进步进行调整。它完全免费使用，我们希望它能帮助您保持动力，实现目标！",
+  "reading-goal-label": "你在一个",
+  "reading-goal-title": "介绍《古兰经》成长之旅",
+  "recommended": "受到推崇的",
+  "remaining": "今天剩余",
+  "remaining-base": "其余的",
+  "remaining-days": {
+    "other": "还剩 {{days}} 天"
+  },
+  "set-a-new-goal": "设定新目标",
+  "set-custom-goal": "设定自定义目标",
+  "set-reading-goal-success": "您的阅读目标已成功设定。",
+  "start-journey": "开始你的旅程！",
+  "start-reading": "开始阅读",
+  "starting-chapter": "开始古兰经",
+  "starting-verse": "启动 Ayah",
+  "streak": "条纹",
+  "streak-definition": "连胜是您连续阅读《古兰经》的天数。",
+  "timeline-meaning": "你的时间表是什么意思？",
+  "timeline-states": {
+    "checked": "你已经完成了你的目标",
+    "filled": "您已经阅读了一些内容，但还不足以完成您的目标",
+    "none": "那天你还没有读过任何东西",
+    "stroked": "你今天什么都没读"
+  },
+  "todays-goal": "今天的目标",
+  "track-your-streak": "追踪连胜纪录，创建自定义目标，保持稳定",
+  "view-progress": "查看进度",
+  "week-progress": "本周进展",
+  "x-days": {
+    "other": "{{days}} 天"
+  },
+  "x-days-streak": "{{days}}天连续",
+  "x-hours": {
+    "other": "{{hours}} 小时"
+  },
+  "x-minutes": {
+    "other": "{{minutes}} 分钟"
+  },
+  "x-pages": {
+    "other": "{{pages}} 页数"
+  },
+  "x-seconds": {
+    "other": "{{seconds}} 秒"
+  }
+}

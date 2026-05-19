@@ -1,0 +1,1 @@
+../../.agents/quran/prompts/pre-pr-review.md

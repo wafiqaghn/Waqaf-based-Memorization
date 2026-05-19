@@ -1,0 +1,68 @@
+@use 'src/styles/breakpoints';
+
+.modalContent {
+  max-block-size: 90dvh;
+  overflow-y: auto;
+}
+
+.inputs {
+  inline-size: 100%;
+}
+
+.inputContainer {
+  display: flex;
+  inline-size: 100%;
+  flex-direction: column;
+  justify-content: center;
+  margin-block: var(--spacing-large);
+
+  select {
+    inline-size: 100%;
+  }
+}
+
+.label {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  margin-block-end: var(--spacing-small);
+}
+
+.actionButton {
+  inline-size: 100%;
+}
+
+.confirmationText {
+  font-weight: var(--font-weight-bold);
+}
+
+.instructionText {
+  padding-block: var(--spacing-medium);
+}
+
+.radioGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block: var(--spacing-large) !important;
+  inline-size: 100%;
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xsmall);
+}
+
+.footerCtaContainer {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-micro);
+}
+
+.editGoalButton {
+  font-weight: var(--font-weight-semibold);
+  @include breakpoints.tablet {
+    color: var(--color-streaks-dark);
+  }
+}

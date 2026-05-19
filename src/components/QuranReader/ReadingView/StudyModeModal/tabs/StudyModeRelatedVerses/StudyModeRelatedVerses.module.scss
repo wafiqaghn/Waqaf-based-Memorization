@@ -1,0 +1,32 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/utility';
+
+.relatedVerse {
+  padding-block: var(--spacing-medium2-px);
+}
+
+.relatedVerseSeparatorContainer {
+  @include utility.edgeHorizontalPadding;
+}
+
+.goToVerseButton {
+  color: var(--color-grey-icons-new);
+  font-size: var(--font-size-xsmall-px);
+}
+
+.skeletonContainer {
+  @include utility.edgeHorizontalPadding;
+  margin-block: var(--spacing-medium2-px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small-px);
+
+  .skeleton {
+    inline-size: 100%;
+    block-size: var(--spacing-xxxlarge-px);
+  }
+}
+
+.relatedVerseCta {
+  @include utility.edgeHorizontalPadding;
+}

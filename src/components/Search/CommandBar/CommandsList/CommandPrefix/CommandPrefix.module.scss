@@ -1,0 +1,33 @@
+.commandPrefix {
+  margin-inline-end: var(--spacing-small);
+  margin-block-start: var(--spacing-micro);
+  display: flex;
+  align-items: center;
+  > svg {
+    inline-size: var(--spacing-medium);
+    block-size: var(--spacing-medium);
+  }
+}
+
+.container {
+  display: flex;
+  align-items: flex-start;
+  inline-size: 100%;
+}
+
+.name {
+  flex-grow: 1;
+  em {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-highlight-dark);
+  }
+  sup {
+    display: none;
+  }
+}
+
+.rtlText {
+  font-family: UthmanicHafs;
+  text-align: end;
+  direction: rtl;
+}

@@ -1,0 +1,544 @@
+/* eslint-disable max-lines */
+import React, { useState, useCallback, useContext, useEffect, useMemo } from 'react';
+
+import { useSelector as useXStateSelector } from '@xstate/react';
+import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import useTranslation from 'next-translate/useTranslation';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import useSWR from 'swr';
+
+import PinnedVersesSection from './PinnedVersesSection';
+import SearchableVerseSelector from './SearchableVerseSelector';
+import StudyModeBody from './StudyModeBody';
+import { StudyModeTabId } from './StudyModeBottomActions';
+import styles from './StudyModeModal.module.scss';
+import StudyModeSkeleton from './StudyModeSkeleton';
+
+import { fetcher } from '@/api';
+import Error from '@/components/Error';
+import DataContext from '@/contexts/DataContext';
+import Button, { ButtonShape, ButtonSize, ButtonVariant } from '@/dls/Button/Button';
+import ContentModal from '@/dls/ContentModal/ContentModal';
+import Separator from '@/dls/Separator/Separator';
+import usePinnedVerseSync from '@/hooks/usePinnedVerseSync';
+import useQcfFont from '@/hooks/useQcfFont';
+import ArrowIcon from '@/icons/arrow.svg';
+import ChevronLeftIcon from '@/icons/chevron-left.svg';
+import CloseIcon from '@/icons/close.svg';
+import PinFilledIcon from '@/icons/pin-filled.svg';
+import PinIcon from '@/icons/pin.svg';
+import { selectPinnedVerseKeysSet } from '@/redux/slices/QuranReader/pinnedVerses';
+import { selectWordByWordLocale } from '@/redux/slices/QuranReader/readingPreferences';
+import {
+  setActiveTab,
+  setHighlightedWordLocation,
+  setVerseKey,
+} from '@/redux/slices/QuranReader/studyMode';
+import { selectQuranReaderStyles } from '@/redux/slices/QuranReader/styles';
+import { selectSelectedTafsirs } from '@/redux/slices/QuranReader/tafsirs';
+import { selectSelectedTranslations } from '@/redux/slices/QuranReader/translations';
+import Language from '@/types/Language';
+import Verse from '@/types/Verse';
+import Word, { CharType } from '@/types/Word';
+import { getDefaultWordFields, getMushafId } from '@/utils/api';
+import { makeByVerseKeyUrl } from '@/utils/apiPaths';
+import { logButtonClick, logValueChange } from '@/utils/eventLogger';
+import { toLocalizedVerseKeyAuto } from '@/utils/locale';
+import { fakeNavigate, getVerseSelectedTafsirNavigationUrl } from '@/utils/navigation';
+import { getChapterNumberFromKey, getVerseNumberFromKey } from '@/utils/verse';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
+
+const AudioPlayerBody = dynamic(() => import('@/components/AudioPlayer/AudioPlayerBody'), {
+  ssr: false,
+});
+
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  word?: Word;
+  verseKey?: string;
+  verse?: Verse;
+  highlightedWordLocation?: string;
+  initialActiveTab?: StudyModeTabId | null;
+}
+
+interface VerseResponse {
+  verse: Verse;
+}
+
+const isAllowedStudyModeTab = (tab: StudyModeTabId | null | undefined): tab is StudyModeTabId =>
+  tab === StudyModeTabId.TAFSIR;
+
+const StudyModeModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  word,
+  verseKey: verseKeyProp,
+  verse: initialVerse,
+  highlightedWordLocation,
+  initialActiveTab,
+}) => {
+  const { t, lang } = useTranslation('quran-reader');
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const chaptersData = useContext(DataContext);
+  const audioService = useContext(AudioPlayerMachineContext);
+  const isAudioVisible = useXStateSelector(audioService, (state) => state.matches('VISIBLE'));
+  const quranReaderStyles = useSelector(selectQuranReaderStyles, shallowEqual);
+  const selectedTranslations = useSelector(selectSelectedTranslations, shallowEqual);
+  const tafsirs = useSelector(selectSelectedTafsirs, shallowEqual);
+  const wordByWordLocale = useSelector(selectWordByWordLocale);
+  const pinnedVerseKeysSet = useSelector(selectPinnedVerseKeysSet);
+  const { pinVerseWithSync, unpinVerseWithSync } = usePinnedVerseSync();
+
+  const derivedVerseKey = word?.verseKey ?? verseKeyProp ?? '1:1';
+  const initialChapterId = getChapterNumberFromKey(derivedVerseKey).toString();
+  const initialVerseNumber = getVerseNumberFromKey(derivedVerseKey).toString();
+  const [selectedChapterId, setSelectedChapterId] = useState(initialChapterId);
+  const [selectedVerseNumber, setSelectedVerseNumber] = useState(initialVerseNumber);
+  const [originalUrl, setOriginalUrl] = useState<string>('');
+  const [activeContentTab, setActiveContentTab] = useState<StudyModeTabId | null>(
+    isAllowedStudyModeTab(initialActiveTab) ? initialActiveTab : null,
+  );
+  const [selectedWordLocation, setSelectedWordLocation] = useState<string | undefined>(
+    highlightedWordLocation,
+  );
+  const [showWordBox, setShowWordBox] = useState<boolean>(!!highlightedWordLocation);
+  const [versesHistory, setVersesHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isOpen && isMounted) {
+      const currentVerseKey = word?.verseKey ?? verseKeyProp ?? '1:1';
+      setSelectedChapterId(getChapterNumberFromKey(currentVerseKey).toString());
+      setSelectedVerseNumber(getVerseNumberFromKey(currentVerseKey).toString());
+      setSelectedWordLocation(highlightedWordLocation);
+      setShowWordBox(!!highlightedWordLocation);
+      setOriginalUrl(router.asPath);
+      setActiveContentTab(isAllowedStudyModeTab(initialActiveTab) ? initialActiveTab : null);
+      dispatch(setVerseKey(currentVerseKey));
+      dispatch(setActiveTab(isAllowedStudyModeTab(initialActiveTab) ? initialActiveTab : null));
+      dispatch(setHighlightedWordLocation(highlightedWordLocation ?? null));
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    isOpen,
+    word?.verseKey,
+    verseKeyProp,
+    highlightedWordLocation,
+    router.asPath,
+    initialActiveTab,
+    dispatch,
+  ]);
+
+  // Helper function to update URL based on active tab
+  const updateUrlForActiveTab = useCallback(
+    (chapterId: string, verseNumber: string, tab: StudyModeTabId | null) => {
+      if (!tab) return;
+
+      if (tab === StudyModeTabId.TAFSIR && tafsirs.length > 0) {
+        fakeNavigate(
+          getVerseSelectedTafsirNavigationUrl(chapterId, Number(verseNumber), tafsirs[0]),
+          router.locale || Language.EN,
+        );
+      }
+    },
+    [tafsirs, router.locale],
+  );
+
+  const verseKey = `${selectedChapterId}:${selectedVerseNumber}`;
+  const queryKey = isOpen
+    ? makeByVerseKeyUrl(verseKey, {
+        words: true,
+        translationFields: 'resource_name,language_id',
+        translations: selectedTranslations.join(','),
+        ...getDefaultWordFields(quranReaderStyles.quranFont),
+        ...getMushafId(quranReaderStyles.quranFont, quranReaderStyles.mushafLines),
+        wordTranslationLanguage: wordByWordLocale,
+        wordTransliteration: 'true',
+      })
+    : null;
+
+  const { data, isValidating, error, mutate } = useSWR<VerseResponse>(queryKey, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 2000,
+  });
+
+  const rawVerse =
+    data?.verse ||
+    (verseKey === `${initialChapterId}:${initialVerseNumber}` ? initialVerse : undefined);
+
+  // Ensure chapterId is set on the verse (required for bookmarking)
+  const currentVerse = useMemo(() => {
+    if (!rawVerse) return undefined;
+    return {
+      ...rawVerse,
+      chapterId: rawVerse.chapterId ?? Number(selectedChapterId),
+    };
+  }, [rawVerse, selectedChapterId]);
+
+  const versesForFont = useMemo(() => (currentVerse ? [currentVerse] : []), [currentVerse]);
+  useQcfFont(quranReaderStyles.quranFont, versesForFont);
+
+  const handleChapterChange = useCallback(
+    (newChapterId: string) => {
+      setSelectedChapterId(newChapterId);
+      setSelectedVerseNumber('1');
+      dispatch(setVerseKey(`${newChapterId}:1`));
+      updateUrlForActiveTab(newChapterId, '1', activeContentTab);
+    },
+    [dispatch, activeContentTab, updateUrlForActiveTab],
+  );
+
+  const handleVerseChange = useCallback(
+    (newVerseNumber: string) => {
+      setSelectedVerseNumber(newVerseNumber);
+      dispatch(setVerseKey(`${selectedChapterId}:${newVerseNumber}`));
+      updateUrlForActiveTab(selectedChapterId, newVerseNumber, activeContentTab);
+    },
+    [dispatch, selectedChapterId, activeContentTab, updateUrlForActiveTab],
+  );
+
+  const handlePreviousVerse = useCallback(() => {
+    const currentVerseNum = Number(selectedVerseNumber);
+    const newVerseNumber = String(currentVerseNum - 1);
+    const newVerseKey = `${selectedChapterId}:${newVerseNumber}`;
+    logButtonClick('study_mode_previous_verse', { verseKey: newVerseKey });
+    setSelectedVerseNumber(newVerseNumber);
+    dispatch(setVerseKey(newVerseKey));
+    updateUrlForActiveTab(selectedChapterId, newVerseNumber, activeContentTab);
+  }, [selectedVerseNumber, selectedChapterId, dispatch, activeContentTab, updateUrlForActiveTab]);
+
+  const handleNextVerse = useCallback(() => {
+    const currentVerseNum = Number(selectedVerseNumber);
+    const newVerseNumber = String(currentVerseNum + 1);
+    const newVerseKey = `${selectedChapterId}:${newVerseNumber}`;
+    logButtonClick('study_mode_next_verse', { verseKey: newVerseKey });
+    setSelectedVerseNumber(newVerseNumber);
+    dispatch(setVerseKey(newVerseKey));
+    updateUrlForActiveTab(selectedChapterId, newVerseNumber, activeContentTab);
+  }, [selectedVerseNumber, selectedChapterId, dispatch, activeContentTab, updateUrlForActiveTab]);
+
+  const handleGoToVerse = useCallback(
+    (newChapterId: string, newVerseNumber: string, previousVerseKey?: string) => {
+      const newVerseKey = `${newChapterId}:${newVerseNumber}`;
+      logButtonClick('study_mode_goto_verse', { verseKey: newVerseKey, previousVerseKey });
+      setSelectedChapterId(newChapterId);
+      setSelectedVerseNumber(newVerseNumber);
+      dispatch(setVerseKey(newVerseKey));
+      updateUrlForActiveTab(newChapterId, newVerseNumber, activeContentTab);
+
+      if (previousVerseKey) {
+        setVersesHistory((prev) => [...prev, previousVerseKey]);
+      }
+    },
+    [dispatch, activeContentTab, updateUrlForActiveTab],
+  );
+
+  const handleGoBack = useCallback(() => {
+    if (versesHistory.length === 0) return;
+
+    const previousVerseKey = versesHistory[versesHistory.length - 1];
+    logButtonClick('study_mode_go_back', { verseKey: previousVerseKey });
+
+    setVersesHistory((prev) => prev.slice(0, -1));
+
+    const [prevChapterId, prevVerseNumber] = previousVerseKey.split(':');
+    setSelectedChapterId(prevChapterId);
+    setSelectedVerseNumber(prevVerseNumber);
+    dispatch(setVerseKey(previousVerseKey));
+    updateUrlForActiveTab(prevChapterId, prevVerseNumber, activeContentTab);
+  }, [versesHistory, dispatch, activeContentTab, updateUrlForActiveTab]);
+
+  const canNavigatePrev = Number(selectedVerseNumber) > 1;
+  const currentChapter = chaptersData[Number(selectedChapterId)];
+  const canNavigateNext =
+    currentChapter && Number(selectedVerseNumber) < currentChapter.versesCount;
+
+  const quranWords = useMemo(() => {
+    if (!currentVerse?.words) return [];
+    return currentVerse.words.filter((w) => w.charTypeName === CharType.Word);
+  }, [currentVerse?.words]);
+
+  const selectedWord = useMemo(() => {
+    if (!selectedWordLocation) return undefined;
+    return quranWords.find((w) => w.location === selectedWordLocation);
+  }, [quranWords, selectedWordLocation]);
+
+  const currentWordIndex = useMemo(() => {
+    if (!selectedWordLocation) return -1;
+    return quranWords.findIndex((w) => w.location === selectedWordLocation);
+  }, [quranWords, selectedWordLocation]);
+
+  const handleWordClick = useCallback(
+    (clickedWord: Word) => {
+      logButtonClick('study_mode_word', { wordLocation: clickedWord.location });
+      setSelectedWordLocation(clickedWord.location);
+      setShowWordBox(true);
+      dispatch(setHighlightedWordLocation(clickedWord.location));
+    },
+    [dispatch],
+  );
+
+  const handlePreviousWord = useCallback(() => {
+    if (currentWordIndex > 0) {
+      const newLocation = quranWords[currentWordIndex - 1].location;
+      logButtonClick('study_mode_previous_word', { wordLocation: newLocation });
+      setSelectedWordLocation(newLocation);
+      dispatch(setHighlightedWordLocation(newLocation));
+    }
+  }, [currentWordIndex, quranWords, dispatch]);
+
+  const handleNextWord = useCallback(() => {
+    if (currentWordIndex < quranWords.length - 1) {
+      const newLocation = quranWords[currentWordIndex + 1].location;
+      logButtonClick('study_mode_next_word', { wordLocation: newLocation });
+      setSelectedWordLocation(newLocation);
+      dispatch(setHighlightedWordLocation(newLocation));
+    }
+  }, [currentWordIndex, quranWords, dispatch]);
+
+  const handleCloseWordBox = useCallback(() => {
+    logButtonClick('study_mode_word_box_close');
+    setShowWordBox(false);
+    setSelectedWordLocation(undefined);
+    dispatch(setHighlightedWordLocation(null));
+  }, [dispatch]);
+
+  const canNavigateWordPrev = currentWordIndex > 0;
+  const canNavigateWordNext = currentWordIndex < quranWords.length - 1;
+
+  const handleTabChange = useCallback(
+    (tabId: StudyModeTabId | null) => {
+      const currentVerseKey = `${selectedChapterId}:${selectedVerseNumber}`;
+      logValueChange('study_mode_tab', activeContentTab, tabId, { verseKey: currentVerseKey });
+      setActiveContentTab(tabId);
+      dispatch(setActiveTab(tabId));
+
+      if (tabId === StudyModeTabId.TAFSIR && tafsirs.length > 0) {
+        fakeNavigate(
+          getVerseSelectedTafsirNavigationUrl(
+            selectedChapterId,
+            Number(selectedVerseNumber),
+            tafsirs[0],
+          ),
+          router.locale,
+        );
+      } else if (tabId === null) {
+        fakeNavigate(originalUrl, router.locale);
+      }
+    },
+    [
+      selectedChapterId,
+      selectedVerseNumber,
+      tafsirs,
+      router.locale,
+      originalUrl,
+      dispatch,
+      activeContentTab,
+    ],
+  );
+
+  const handleClose = useCallback(() => {
+    logButtonClick('study_mode_close', {
+      verseKey: `${selectedChapterId}:${selectedVerseNumber}`,
+    });
+    if (originalUrl) {
+      fakeNavigate(originalUrl, router.locale);
+    }
+    onClose();
+  }, [originalUrl, router.locale, onClose, selectedChapterId, selectedVerseNumber]);
+
+  const isPinned = useMemo(() => pinnedVerseKeysSet.has(verseKey), [pinnedVerseKeysSet, verseKey]);
+
+  const handlePinClick = useCallback(() => {
+    logButtonClick('study_mode_pin_verse', { verseKey, isPinned });
+    if (isPinned) {
+      unpinVerseWithSync(verseKey);
+    } else {
+      pinVerseWithSync(verseKey);
+    }
+  }, [isPinned, verseKey, pinVerseWithSync, unpinVerseWithSync]);
+
+  const verseHistory = useMemo(() => {
+    if (versesHistory.length === 0) return null;
+    const prevVerseKey = versesHistory[versesHistory.length - 1];
+    const chapter = chaptersData?.[getChapterNumberFromKey(prevVerseKey)];
+    const localizedVerseKey = toLocalizedVerseKeyAuto(prevVerseKey, lang);
+    return {
+      localizedVerseKey,
+      chapterName: chapter?.transliteratedName || '',
+    };
+  }, [versesHistory, chaptersData, lang]);
+
+  const showHeaderLeftControls = versesHistory.length > 0;
+
+  const isContentTabActive = activeContentTab && [StudyModeTabId.TAFSIR].includes(activeContentTab);
+
+  const header = (
+    <div className={styles.headerContainer}>
+      <div
+        className={classNames(styles.header, {
+          [styles.hideHeaderLeftControls]: !showHeaderLeftControls,
+        })}
+      >
+        {showHeaderLeftControls && (
+          <div className={styles.headerLeftControls}>
+            <Button
+              className={styles.previousRelatedVerseButton}
+              contentClassName={styles.previousRelatedVerseButtonContent}
+              size={ButtonSize.Small}
+              variant={ButtonVariant.Compact}
+              onClick={handleGoBack}
+              ariaLabel={t('aria.previous-related-verse')}
+            >
+              <ChevronLeftIcon />
+              <p>
+                {verseHistory?.chapterName} {verseHistory?.localizedVerseKey}
+              </p>
+            </Button>
+          </div>
+        )}
+        <div className={styles.headerMiddleControls}>
+          <div className={styles.selectionWrapper}>
+            <SearchableVerseSelector
+              selectedChapterId={selectedChapterId}
+              selectedVerseNumber={selectedVerseNumber}
+              onChapterChange={handleChapterChange}
+              onVerseChange={handleVerseChange}
+            />
+          </div>
+          <Button
+            size={ButtonSize.Small}
+            variant={ButtonVariant.Ghost}
+            onClick={handlePreviousVerse}
+            className={classNames(styles.navButton, styles.prevButton)}
+            ariaLabel={t('aria.previous-verse')}
+            isDisabled={!canNavigatePrev}
+            shouldFlipOnRTL={false}
+          >
+            <ArrowIcon />
+          </Button>
+          <Button
+            size={ButtonSize.Small}
+            variant={ButtonVariant.Ghost}
+            onClick={handleNextVerse}
+            className={classNames(styles.navButton, styles.nextButton)}
+            ariaLabel={t('aria.next-verse')}
+            isDisabled={!canNavigateNext}
+            shouldFlipOnRTL={false}
+          >
+            <ArrowIcon />
+          </Button>
+          <Button
+            size={ButtonSize.Small}
+            variant={ButtonVariant.Ghost}
+            shape={ButtonShape.Circle}
+            onClick={handlePinClick}
+            className={styles.pinButton}
+            ariaLabel={isPinned ? t('unpin-verse') : t('pin-verse')}
+            tooltip={isPinned ? t('unpin-verse') : t('pin-verse')}
+          >
+            {isPinned ? (
+              <PinFilledIcon className={classNames(styles.pinIcon, styles.pinIconFilled)} />
+            ) : (
+              <PinIcon className={styles.pinIcon} />
+            )}
+          </Button>
+        </div>
+        <div className={styles.headerRightControls}>
+          <Button
+            variant={ButtonVariant.Ghost}
+            shape={ButtonShape.Circle}
+            onClick={handleClose}
+            className={styles.closeButton}
+            ariaLabel={t('aria.close')}
+          >
+            <CloseIcon />
+          </Button>
+        </div>
+      </div>
+      <div className={styles.separatorContainer}>
+        <Separator />
+      </div>
+    </div>
+  );
+
+  if (!isOpen || !chaptersData) return null;
+
+  const handleRetry = () => {
+    logButtonClick('study_mode_retry', { verseKey });
+    mutate();
+  };
+
+  const renderContent = () => {
+    if (isValidating && !data) {
+      return <StudyModeSkeleton />;
+    }
+    if (error) {
+      return (
+        <div className={styles.errorContainer}>
+          <Error error={error} onRetryClicked={handleRetry} />
+        </div>
+      );
+    }
+    if (currentVerse) {
+      return (
+        <StudyModeBody
+          verse={currentVerse}
+          selectedWord={selectedWord}
+          selectedWordLocation={selectedWordLocation}
+          showWordBox={showWordBox}
+          onWordClick={handleWordClick}
+          onWordBoxClose={handleCloseWordBox}
+          onNavigatePreviousWord={handlePreviousWord}
+          onNavigateNextWord={handleNextWord}
+          canNavigateWordPrev={canNavigateWordPrev}
+          canNavigateWordNext={canNavigateWordNext}
+          selectedChapterId={selectedChapterId}
+          selectedVerseNumber={selectedVerseNumber}
+          activeTab={activeContentTab}
+          onTabChange={handleTabChange}
+        />
+      );
+    }
+    return <StudyModeSkeleton />;
+  };
+
+  return (
+    <ContentModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      onEscapeKeyDown={handleClose}
+      header={header}
+      headerClassName={styles.modalHeader}
+      hasCloseButton={false}
+      contentClassName={classNames(styles.contentModal, {
+        [styles.bottomSheetContent]: isContentTabActive,
+      })}
+      overlayClassName={classNames(styles.mobileBottomSheetOverlay, {
+        [styles.bottomSheetOverlay]: isContentTabActive,
+      })}
+      innerContentClassName={classNames(styles.innerContent, {
+        [styles.bottomSheetInnerContent]: isContentTabActive,
+      })}
+      footer={
+        isAudioVisible ? (
+          <div className={styles.audioPlayerFooter}>
+            <AudioPlayerBody isEmbedded />
+          </div>
+        ) : undefined
+      }
+    >
+      <PinnedVersesSection onGoToVerse={handleGoToVerse} />
+      {renderContent()}
+    </ContentModal>
+  );
+};
+
+export default StudyModeModal;

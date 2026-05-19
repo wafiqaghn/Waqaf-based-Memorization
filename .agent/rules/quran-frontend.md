@@ -1,0 +1,1 @@
+../../.agents/quran/standards/quran-frontend.md
