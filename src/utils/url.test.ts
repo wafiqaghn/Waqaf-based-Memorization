@@ -51,4 +51,20 @@ describe('getProxiedServiceUrl', () => {
       clearEnv();
     }
   });
+
+  it('uses the Vercel deployment URL when available', async () => {
+    const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
+    process.env.VERCEL_URL = 'quran-example.vercel.app';
+    vi.stubGlobal('window', undefined);
+
+    try {
+      expect(
+        getProxiedServiceUrl(QuranFoundationService.CONTENT, '/api/qdc/resources/translations'),
+      ).toBe('https://quran-example.vercel.app/api/proxy/content/api/qdc/resources/translations');
+    } finally {
+      vi.unstubAllGlobals();
+      delete process.env.VERCEL_URL;
+      clearEnv();
+    }
+  });
 });

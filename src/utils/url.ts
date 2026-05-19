@@ -69,10 +69,20 @@ export const navigateToExternalUrl = (url: string) => {
  * @see https://vercel.com/docs/concepts/projects/environment-variables
  * @returns {string}
  */
-export const getBasePath = (): string =>
-  `${process.env.NEXT_PUBLIC_VERCEL_ENV === 'development' ? 'http' : 'https'}://${
-    process.env.NEXT_PUBLIC_VERCEL_URL
-  }`;
+const getDeploymentHost = (): string =>
+  process.env.VERCEL_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'localhost:3000';
+
+export const getBasePath = (): string => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+
+  const isDevelopment =
+    process.env.NEXT_PUBLIC_VERCEL_ENV === 'development' || process.env.VERCEL_ENV === 'development';
+  const protocol = isDevelopment && !process.env.VERCEL_URL ? 'http' : 'https';
+
+  return `${protocol}://${getDeploymentHost()}`;
+};
 
 export const getProxiedServiceUrl = (service: QuranFoundationService, path: string): string => {
   const PROXY_PATH = `/api/proxy/${service}`;
