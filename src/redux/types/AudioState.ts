@@ -17,6 +17,7 @@ export interface RepeatSettings {
   repeatRange?: number; // Times to repeat range (-1 = Infinity)
   repeatEachVerse?: number; // Times to repeat each verse (-1 = Infinity)
   delayMultiplier?: number; // Delay multiplier between verses
+  repeatMode?: 'ayah' | 'waqaf'; // Boundary mode for repeat playback
 }
 
 type AudioState = {

@@ -100,6 +100,10 @@ const getWidgetFontStyles = (): string => `
     font-size: ${WIDGET_ARABIC_FONT_SIZE} !important;
     line-height: var(--line-height) !important;
   }
+  .quran-widget .quran-widget-word--active {
+    background: var(--color-background-alternative-medium);
+    border-radius: 4px;
+  }
   .quran-widget [class*="translation-font-size-"] {
     font-size: ${WIDGET_TRANSLATION_FONT_SIZE} !important;
   }

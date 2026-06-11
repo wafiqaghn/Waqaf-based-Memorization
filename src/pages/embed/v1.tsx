@@ -15,10 +15,17 @@ import {
   getAyahWidgetData,
 } from '@/components/AyahWidget/getAyahWidgetData';
 import {
+  DEFAULT_REPEAT_COUNT,
+  DEFAULT_WORD_HIGHLIGHT,
+  MAX_AUDIO_REPEAT_COUNT,
+} from '@/components/AyahWidget/widget-defaults';
+import {
   parseBool,
+  parseClampedInteger,
   parseNumber,
   parseString,
   parseVersesParam,
+  parseWidgetAudioMode,
 } from '@/components/AyahWidget/queryParsing';
 import QuranWidget from '@/components/AyahWidget/QuranWidget';
 import useEmbedAutoResize from '@/hooks/widget/useEmbedAutoResize';
@@ -149,6 +156,23 @@ export const getServerSideProps: GetServerSideProps<EmbedProps> = async (
     const mergeVerses = parseBool(query.mergeVerses as string | string[] | undefined, false);
     const clientId = parseString(query.clientId) || undefined;
     const lpMode = parseBool(query.lp as string | string[] | undefined, false);
+    const audioMode = parseWidgetAudioMode(query.audioMode as string | string[] | undefined);
+    const startWordIndex = parseClampedInteger(
+      query.startWord as string | string[] | undefined,
+      0,
+    );
+    const endWordIndex = parseClampedInteger(query.endWord as string | string[] | undefined, 0);
+    const waqafIndex = parseClampedInteger(query.waqaf as string | string[] | undefined, 0);
+    const repeatCount = parseClampedInteger(
+      query.repeat as string | string[] | undefined,
+      DEFAULT_REPEAT_COUNT,
+      MAX_AUDIO_REPEAT_COUNT,
+    );
+    const wordHighlightParam = query.wordHighlight as string | string[] | undefined;
+    const enableWordHighlight =
+      wordHighlightParam === undefined
+        ? undefined
+        : parseBool(wordHighlightParam, DEFAULT_WORD_HIGHLIGHT);
 
     const data = await getAyahWidgetData({
       ayah,
@@ -174,6 +198,12 @@ export const getServerSideProps: GetServerSideProps<EmbedProps> = async (
       referer: String(referer),
       embedViewId,
       lp: lpMode,
+      audioMode,
+      startWordIndex,
+      endWordIndex,
+      waqafIndex,
+      repeatCount,
+      enableWordHighlight,
     });
 
     const serializable = JSON.parse(JSON.stringify({ verses: data.verses, options: data.options }));

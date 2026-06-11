@@ -46,6 +46,53 @@ export type WidgetTrimOptions = {
   translations?: Record<string, WordTrimRange>;
 };
 
+export type WidgetAudioMode = 'ayah' | 'waqaf' | 'custom';
+
+export type WidgetSegmentType = 'AYAH' | 'WAQAF' | 'CUSTOM' | 'WORD';
+
+export type WidgetSegmentSource =
+  | 'QURAN_CDN'
+  | 'MANUAL'
+  | 'MFA'
+  | 'WHISPERX'
+  | 'DTW'
+  | 'GENERATED'
+  | 'SAMPLE';
+
+export type WidgetWordTimestamp = {
+  surahId: number;
+  ayahNumber: number;
+  wordIndex: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  confidence?: number;
+  source?: WidgetSegmentSource;
+};
+
+export type WidgetAudioSegment = {
+  audioUrl?: string;
+  segmentType: WidgetSegmentType;
+  surahId: number;
+  ayahStart: number;
+  ayahEnd: number;
+  startWordIndex?: number;
+  endWordIndex?: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  confidence?: number;
+  source?: WidgetSegmentSource;
+};
+
+export type WidgetWaqafMarker = {
+  surahId: number;
+  ayahNumber: number;
+  wordIndex: number;
+  symbol: string;
+  type: string;
+  description?: string;
+  priorWeight?: number;
+};
+
 /**
  * Options for configuring the Ayah Widget.
  */
@@ -127,6 +174,33 @@ export type WidgetOptions = {
 
   // End time (seconds) for the selected ayah audio segment
   audioEnd?: number;
+
+  // Optional timestamp-based audio segment mode. Defaults to existing ayah behavior when omitted.
+  audioMode?: WidgetAudioMode;
+
+  // Optional custom segment start word index from /embed/v1 query params.
+  startWordIndex?: number;
+
+  // Optional custom segment end word index from /embed/v1 query params.
+  endWordIndex?: number;
+
+  // Optional waqaf segment selector from /embed/v1 query params.
+  waqafIndex?: number;
+
+  // Optional resolved audio segment for future ayah/waqaf/custom playback modes.
+  audioSegment?: WidgetAudioSegment;
+
+  // Optional word-level timestamps used for custom segment resolution and highlighting.
+  wordTimestamps?: WidgetWordTimestamp[];
+
+  // Optional waqaf markers used as helper/prior metadata, not as ayah boundary ground truth.
+  waqafMarkers?: WidgetWaqafMarker[];
+
+  // Optional segment repeat count. Future parsing should clamp this to a safe range.
+  repeatCount?: number;
+
+  // Optional synchronized word highlighting toggle.
+  enableWordHighlight?: boolean;
 };
 
 export type WidgetColors = {

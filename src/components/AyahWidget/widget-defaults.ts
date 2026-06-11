@@ -8,6 +8,11 @@ import ThemeType from '@/redux/types/ThemeType';
 import type { MushafType } from '@/types/Embed';
 import { QuranFont } from '@/types/QuranReader';
 
+export const DEFAULT_AUDIO_MODE = 'ayah' as const;
+export const DEFAULT_REPEAT_COUNT = 1;
+export const DEFAULT_WORD_HIGHLIGHT = false;
+export const MAX_AUDIO_REPEAT_COUNT = 20;
+
 /**
  * Static default values for the Ayah Widget Builder.
  */
@@ -46,6 +51,12 @@ export const INITIAL_PREFERENCES: Preferences = {
   rangeEnabled: false,
   rangeEnd: DEFAULTS.ayah + 1,
   mergeVerses: false,
+  audioMode: DEFAULT_AUDIO_MODE,
+  startWordIndex: undefined,
+  endWordIndex: undefined,
+  waqafIndex: undefined,
+  repeatCount: DEFAULT_REPEAT_COUNT,
+  enableWordHighlight: DEFAULT_WORD_HIGHLIGHT,
   customSize: {
     width: '100%',
     height: '',

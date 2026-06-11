@@ -2,12 +2,21 @@
 /* eslint-disable react-func/max-lines-per-function */
 import { useEffect, useRef } from 'react';
 
+import {
+  clampWidgetRepeatCount,
+  getPlaybackBounds,
+  shouldTrackActiveWords,
+} from './widgetAudioPlayback';
+
+import { getActiveWordIndexFromTime } from '@/components/AyahWidget/audio-segments';
 import { logErrorToSentry } from '@/lib/sentry';
 import type { WidgetOptions } from '@/types/Embed';
 import { logEvent } from '@/utils/eventLogger';
 import { toLocalizedNumber } from '@/utils/locale';
 
 type WidgetRootRef = { current: HTMLDivElement | null };
+
+const ACTIVE_WORD_CLASS_NAME = 'quran-widget-word--active';
 
 /**
  * Build quran.com URL for this widget configuration.
@@ -306,9 +315,14 @@ const useWidgetInteractions = (options?: WidgetOptions, widgetRef?: WidgetRootRe
     if (audioButton && audioElement) {
       const playIcon = audioButton.querySelector('[data-play-icon]') as HTMLElement | null;
       const pauseIcon = audioButton.querySelector('[data-pause-icon]') as HTMLElement | null;
-
-      const audioStart = Number(audioElement.dataset.audioStart || 0);
-      const audioEnd = Number(audioElement.dataset.audioEnd || 0);
+      const playbackBounds = getPlaybackBounds(audioElement, options);
+      const repeatLimit = clampWidgetRepeatCount(options.repeatCount);
+      const shouldHighlightWords = shouldTrackActiveWords(options);
+      const shouldLogSegmentEvents =
+        playbackBounds.source === 'segment' && (options.audioMode !== undefined || repeatLimit > 1);
+      let completedPlayCount = 0;
+      let pauseReason: 'user' | 'segment' | null = null;
+      let activeWordElement: Element | null = null;
 
       const setPlayingUi = (isPlaying: boolean) => {
         if (playIcon) playIcon.style.display = isPlaying ? 'none' : 'inline-flex';
@@ -316,36 +330,142 @@ const useWidgetInteractions = (options?: WidgetOptions, widgetRef?: WidgetRootRe
       };
 
       const resetToStart = () => {
-        audioElement.currentTime = audioStart || 0;
+        audioElement.currentTime = playbackBounds.startSeconds || 0;
+      };
+
+      const clearActiveWord = () => {
+        if (!activeWordElement) return;
+        activeWordElement.classList.remove(ACTIVE_WORD_CLASS_NAME);
+        activeWordElement.removeAttribute('data-active-word');
+        activeWordElement = null;
+      };
+
+      const updateActiveWord = () => {
+        if (!shouldHighlightWords || !options.wordTimestamps?.length) return;
+
+        const currentTimeMs = audioElement.currentTime * 1000;
+        const activeWordIndex = getActiveWordIndexFromTime(options.wordTimestamps, currentTimeMs);
+        const activeTimestamp =
+          activeWordIndex === undefined
+            ? undefined
+            : options.wordTimestamps.find(
+                (timestamp) =>
+                  timestamp.wordIndex === activeWordIndex &&
+                  currentTimeMs >= timestamp.startTimeMs &&
+                  currentTimeMs < timestamp.endTimeMs,
+              );
+
+        if (!activeTimestamp) {
+          clearActiveWord();
+          return;
+        }
+
+        const wordLocation = `${activeTimestamp.surahId}:${activeTimestamp.ayahNumber}:${
+          activeTimestamp.wordIndex + 1
+        }`;
+        const nextActiveWordElement = widgetRoot.querySelector(
+          `[data-word-location="${wordLocation}"]`,
+        );
+
+        if (nextActiveWordElement === activeWordElement) return;
+        clearActiveWord();
+        activeWordElement = nextActiveWordElement;
+        activeWordElement?.classList.add(ACTIVE_WORD_CLASS_NAME);
+        activeWordElement?.setAttribute('data-active-word', 'true');
+      };
+
+      const resetRepeatState = () => {
+        completedPlayCount = 0;
+      };
+
+      const buildSegmentEventParams = () => ({
+        audioMode: options.audioMode,
+        segmentType: playbackBounds.segmentType,
+        playbackBoundsSource: playbackBounds.source,
+        repeatCount: repeatLimit,
+      });
+
+      const replaySegment = async () => {
+        resetToStart();
+        try {
+          await audioElement.play();
+        } catch (error) {
+          logErrorToSentry(error as Error);
+        }
+      };
+
+      const finishSegmentPlayback = () => {
+        pauseReason = 'segment';
+        audioElement.pause();
+        resetToStart();
+        resetRepeatState();
+        clearActiveWord();
+        if (shouldLogSegmentEvents) {
+          logWidgetEvent('embed_audio_segment_ended', buildSegmentEventParams());
+        }
+      };
+
+      const handleSegmentBoundary = () => {
+        completedPlayCount += 1;
+
+        if (completedPlayCount < repeatLimit) {
+          if (shouldLogSegmentEvents) {
+            logWidgetEvent('embed_audio_segment_repeated', {
+              ...buildSegmentEventParams(),
+              completedPlayCount,
+            });
+          }
+          replaySegment();
+          return;
+        }
+
+        finishSegmentPlayback();
       };
 
       const handleToggle = async () => {
         if (audioElement.paused) {
-          if (audioStart) resetToStart();
+          resetRepeatState();
+          resetToStart();
           try {
             await audioElement.play();
             logWidgetEvent('embed_audio_played');
+            if (shouldLogSegmentEvents) {
+              logWidgetEvent('embed_audio_segment_played', buildSegmentEventParams());
+            }
           } catch (error) {
             logErrorToSentry(error as Error);
           }
         } else {
+          pauseReason = 'user';
           audioElement.pause();
+          resetRepeatState();
+          clearActiveWord();
           logWidgetEvent('embed_audio_paused');
         }
       };
 
       const handleTimeUpdate = () => {
-        if (!audioEnd) return;
-        if (audioElement.currentTime >= audioEnd) {
-          audioElement.pause();
-          resetToStart();
+        updateActiveWord();
+
+        if (!playbackBounds.endSeconds) return;
+        if (audioElement.currentTime >= playbackBounds.endSeconds) {
+          handleSegmentBoundary();
         }
       };
 
       const handlePlay = () => setPlayingUi(true);
-      const handlePause = () => setPlayingUi(false);
+      const handlePause = () => {
+        setPlayingUi(false);
+        if (pauseReason === 'user') {
+          resetRepeatState();
+          clearActiveWord();
+        }
+        pauseReason = null;
+      };
       const handleEnded = () => {
         setPlayingUi(false);
+        resetRepeatState();
+        clearActiveWord();
         logWidgetEvent('embed_audio_ended');
       };
 
@@ -363,6 +483,8 @@ const useWidgetInteractions = (options?: WidgetOptions, widgetRef?: WidgetRootRe
         audioElement.removeEventListener('play', handlePlay);
         audioElement.removeEventListener('pause', handlePause);
         audioElement.removeEventListener('ended', handleEnded);
+        resetRepeatState();
+        clearActiveWord();
       };
     }
 

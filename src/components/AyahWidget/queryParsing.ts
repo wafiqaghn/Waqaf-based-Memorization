@@ -1,4 +1,6 @@
-import { WidgetInputError } from '@/components/AyahWidget/getAyahWidgetData';
+import { WidgetInputError } from './widget-errors';
+
+import type { WidgetAudioMode } from '@/types/Embed';
 
 export type VerseRangeParam = {
   ayah: string;
@@ -39,6 +41,46 @@ export const parseNumber = (value: string | undefined): number | undefined => {
   if (!value) return undefined;
   const num = Number(value);
   return Number.isFinite(num) ? num : undefined;
+};
+
+/**
+ * Parse the optional audio segment mode query param.
+ *
+ * @param {string | string[] | undefined} value - The query param value.
+ * @returns {WidgetAudioMode | undefined} The parsed mode, or undefined for invalid input.
+ */
+export const parseWidgetAudioMode = (
+  value: string | string[] | undefined,
+): WidgetAudioMode | undefined => {
+  const normalized = parseString(value);
+  if (normalized === 'ayah' || normalized === 'waqaf' || normalized === 'custom') {
+    return normalized;
+  }
+  return undefined;
+};
+
+/**
+ * Parse an integer and clamp it into the provided range.
+ *
+ * @param {string | string[] | undefined} value - The query param value.
+ * @param {number} min - Inclusive lower bound.
+ * @param {number | undefined} max - Optional inclusive upper bound.
+ * @returns {number | undefined} Clamped integer, or undefined for invalid input.
+ */
+export const parseClampedInteger = (
+  value: string | string[] | undefined,
+  min: number,
+  max?: number,
+): number | undefined => {
+  const normalized = parseString(value);
+  if (normalized === undefined || normalized.trim() === '') return undefined;
+
+  const parsed = Number(normalized);
+  if (!Number.isInteger(parsed)) return undefined;
+
+  if (parsed < min) return min;
+  if (max !== undefined && parsed > max) return max;
+  return parsed;
 };
 
 /**

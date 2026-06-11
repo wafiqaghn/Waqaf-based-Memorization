@@ -15,6 +15,7 @@
     "tafsirs": "Show Tafsirs button",
     "translator": "Show translator name",
     "verseRange": "Enable verse range",
+    "wordHighlight": "Highlight active word",
     "wordByWord": "Enable word-by-word translation",
     "wordByWordTransliteration": "Enable word-by-word transliteration"
   },
@@ -26,16 +27,26 @@
     "loadTranslations": "Unable to load translations"
   },
   "fields": {
+    "audioMode": "Audio mode",
     "ayah": "Ayah",
     "clientId": "Client Id",
+    "endWordIndex": "End word index",
     "height": "Height",
     "language": "Language",
     "mushaf": "Mushaf",
     "reciter": "Reciter",
+    "repeatCount": "Repeat count",
+    "startWordIndex": "Start word index",
     "surah": "Surah",
     "theme": "Theme",
     "translations": "Translations",
+    "waqafIndex": "Waqaf index",
     "width": "Width"
+  },
+  "audioModes": {
+    "ayah": "Full Ayah",
+    "custom": "Custom Word Range",
+    "waqaf": "Waqaf Segment"
   },
   "header": {
     "subtitle": "<bold>A higher-quality, customizable way to include Quran verses in your content.</bold><br />Create an embed you can easily customize, with <bold>accurate Arabic rendering, built-in recitation</bold> and more, so readers can listen as they engage with the verse.",

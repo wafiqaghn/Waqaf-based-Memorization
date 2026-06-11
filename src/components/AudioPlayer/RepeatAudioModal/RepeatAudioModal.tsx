@@ -43,6 +43,9 @@ type RepeatAudioModalProps = {
   selectedVerseKey?: string;
 };
 
+const isSingleVerseRepetitionMode = (mode: RepetitionMode): boolean =>
+  mode === RepetitionMode.Single || mode === RepetitionMode.Waqaf;
+
 const RepeatAudioModal = ({
   chapterId,
   isOpen,
@@ -62,7 +65,13 @@ const RepeatAudioModal = ({
   const persistedSettings = useReduxSelector(selectRepeatSettings);
 
   // Hooks
-  const [repetitionMode, setRepetitionMode] = useState(defaultRepetitionMode);
+  const getInitialRepetitionMode = () => {
+    const activeRepeatMode = repeatActorContext?.repeatMode ?? persistedSettings?.repeatMode;
+    if (activeRepeatMode === 'waqaf') return RepetitionMode.Waqaf;
+    return defaultRepetitionMode;
+  };
+
+  const [repetitionMode, setRepetitionMode] = useState(getInitialRepetitionMode);
   const chaptersData = useGetChaptersData(lang);
   const {
     actions: { onSettingsChange },
@@ -124,12 +133,19 @@ const RepeatAudioModal = ({
       ? persistedSettings?.to
       : undefined;
 
+    const initialFrom =
+      isSingleVerseRepetitionMode(repetitionMode) && selectedVerseKey
+        ? selectedVerseKey
+        : persistedFrom ?? firstVerseKeyInThisChapter;
+
     return {
       repeatRange,
       repeatEachVerse,
       delayMultiplier,
-      from: selectedVerseKey ?? persistedFrom ?? firstVerseKeyInThisChapter,
-      to: selectedVerseKey ?? persistedTo ?? lastVerseKeyInThisChapter,
+      from: initialFrom,
+      to: isSingleVerseRepetitionMode(repetitionMode)
+        ? initialFrom
+        : persistedTo ?? lastVerseKeyInThisChapter,
     };
   };
 
@@ -145,17 +161,22 @@ const RepeatAudioModal = ({
       ? persistedSettings?.to
       : undefined;
 
+    const nextFrom = selectedVerseKey ?? persistedFrom ?? firstVerseKeyInThisChapter;
+
     setVerseRepetition((prev) => ({
       ...prev,
       // Priority: selectedVerseKey (explicit selection) > persisted > chapter defaults
-      from: selectedVerseKey ?? persistedFrom ?? firstVerseKeyInThisChapter,
-      to: selectedVerseKey ?? persistedTo ?? lastVerseKeyInThisChapter,
+      from: nextFrom,
+      to: isSingleVerseRepetitionMode(repetitionMode)
+        ? nextFrom
+        : selectedVerseKey ?? persistedTo ?? lastVerseKeyInThisChapter,
     }));
   }, [
     chapterId,
     chapterNumber,
     firstVerseKeyInThisChapter,
     lastVerseKeyInThisChapter,
+    repetitionMode,
     selectedVerseKey,
     persistedSettings?.from,
     persistedSettings?.to,
@@ -176,6 +197,7 @@ const RepeatAudioModal = ({
       to: Number(getVerseNumberFromKey(normalized.to)),
       repeatRange: Number(verseRepetition.repeatRange),
       surah: Number(getChapterNumberFromKey(normalized.from)),
+      repeatMode: repetitionMode === RepetitionMode.Waqaf ? 'waqaf' : 'ayah',
     });
     onClose();
   };
@@ -196,6 +218,7 @@ const RepeatAudioModal = ({
       repeatRange: toPersistedValue(verseRepetition.repeatRange),
       repeatEachVerse: toPersistedValue(verseRepetition.repeatEachVerse),
       delayMultiplier: verseRepetition.delayMultiplier,
+      repeatMode: repetitionMode === RepetitionMode.Waqaf ? 'waqaf' : 'ayah',
     };
 
     // onSettingsChange:
@@ -224,10 +247,12 @@ const RepeatAudioModal = ({
 
   const onRepetitionModeChange = (mode: RepetitionMode) => {
     logValueChange('repitition_mode', repetitionMode, mode);
+    const isSingleVerseMode = isSingleVerseRepetitionMode(mode);
+    const nextSingleVerseKey = selectedVerseKey ?? firstVerseKeyInThisChapter;
     setVerseRepetition((prevVerseRepetition) => ({
       ...prevVerseRepetition,
-      from: mode === RepetitionMode.Single ? selectedVerseKey : firstVerseKeyInThisChapter,
-      to: mode === RepetitionMode.Single ? selectedVerseKey : lastVerseKeyInThisChapter,
+      from: isSingleVerseMode ? nextSingleVerseKey : firstVerseKeyInThisChapter,
+      to: isSingleVerseMode ? nextSingleVerseKey : lastVerseKeyInThisChapter,
     }));
     setRepetitionMode(mode);
   };

@@ -14,6 +14,8 @@ export interface Typegen0 {
     delays: never;
   };
   eventsCausingActions: {
+    forwardAdvanceToBoundary: "ADVANCE_TO_BOUNDARY";
+    forwardRecalibrateBoundary: "RECALIBRATE_BOUNDARY";
     forwardtimestampToVerseActor: "TIMESTAMP_UPDATED";
     repeatCycle: "";
     repeatNextAyah: "REPEAT_NEXT_AYAH";

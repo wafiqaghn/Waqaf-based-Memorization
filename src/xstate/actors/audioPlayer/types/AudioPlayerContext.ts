@@ -19,6 +19,8 @@ interface AudioPlayerContext {
   playbackRate: number;
   shouldPlayFromRandomTimeStamp: boolean;
   verseDelay: number;
+  pendingSeekTimestamp?: number;
+  activeBoundaryId?: string;
   repeatActor: InterpreterFrom<ReturnType<typeof createRepeatMachine>>;
   radioActor: RadioActorRef;
   volume: number;

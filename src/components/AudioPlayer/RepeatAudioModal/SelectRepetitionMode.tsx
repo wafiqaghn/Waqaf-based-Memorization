@@ -14,6 +14,7 @@ export enum RepetitionMode {
   Single = 'single',
   Range = 'range',
   Chapter = 'chapter',
+  Waqaf = 'waqaf',
 }
 
 const SelectRepetitionMode = ({
@@ -42,9 +43,16 @@ const SelectRepetitionMode = ({
         value: RepetitionMode.Chapter,
         name: t('audio.player.full-surah'),
       },
+      {
+        value: RepetitionMode.Waqaf,
+        name: t('audio.player.waqaf-segment'),
+      },
     ],
     [t],
   );
+
+  const shouldShowSingleVerseSelector =
+    repetitionMode === RepetitionMode.Single || repetitionMode === RepetitionMode.Waqaf;
 
   return (
     <>
@@ -55,10 +63,10 @@ const SelectRepetitionMode = ({
           onSelect={onRepetitionModeChange}
         />
       </div>
-      {repetitionMode === RepetitionMode.Single && (
+      {shouldShowSingleVerseSelector && (
         <Combobox
           clearable={false}
-          id={RepetitionMode.Single}
+          id={repetitionMode}
           value={verseKey}
           items={comboboxVerseItems}
           onChange={(val) => onSingleVerseChange(val)}

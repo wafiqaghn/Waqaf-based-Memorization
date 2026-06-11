@@ -33,6 +33,10 @@ export type {
 // Re-export defaults
 export {
   DEFAULTS,
+  DEFAULT_AUDIO_MODE,
+  DEFAULT_REPEAT_COUNT,
+  DEFAULT_WORD_HIGHLIGHT,
+  MAX_AUDIO_REPEAT_COUNT,
   getBasePreferences,
   getMushafFromQuranFont,
   INITIAL_PREFERENCES,

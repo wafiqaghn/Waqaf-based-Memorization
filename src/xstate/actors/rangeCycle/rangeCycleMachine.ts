@@ -6,7 +6,10 @@
 import { createMachine, ActorRefFrom, spawn } from 'xstate';
 import { forwardTo, pure, sendParent, stop, assign, send } from 'xstate/lib/actions';
 
-import { createVerseCycleMachine } from '../verseCycle/verseCycleMachine';
+import { createBoundaryCycleMachine } from '../boundaryCycle/boundaryCycleMachine';
+import type { RepeatMode } from '../repeatMachine/types';
+
+import { buildBoundariesForVerse, ReciterWaqafConfig } from './rangeCycleBoundaryHelpers';
 
 import VerseTiming from 'types/VerseTiming';
 
@@ -16,12 +19,14 @@ export const createRangeCycleMachine = ({
   verseTimings,
   fromVerseNumber,
   toVerseNumber,
+  repeatMode = 'ayah' as RepeatMode,
+  reciterConfig = {} as ReciterWaqafConfig,
 }) =>
   /** @xstate-layout N4IgpgJg5mDOIC5QCcCGA7GBhAngYwBswBBPAFwHtkA6AS3QAVkKpk5YBiAFQEkBZAKIBlLsT4MA+gFUGAEWJcBsxKAAOFWLTK0K6FSAAeiAGwB2AIzUALACZTAVnMAOZ1fsAGYwBoQORI+pjAGYnKwBOELdw+2NjAF84nzRMMFxCEnIqOkZmVnYOACUBBgEFCSExAQliAE1iAAl9dU1tXX0jBCszajCnd3cnIKtPczDzUysfPwQAWnGransxoLD3GydTTatxhKSMbHwiUkoaeiYWNlhOIpKygDkBAA0uarrGpBBmrR09D46YsLUCY2MZhexDGz2KxOKaIWyWcxQjaOdzbIJBey7EDJA7pY5ZM65S7XYqlF4MIoANVeDSaGm+bT+-mMgOBoPBtiRsIQQVMQWoiOhDnMqPM6MxiWx+1ShwyJ2y5zyVw4lIEBSEVRuZIkADEeHceEJ6ko6S0fu1EDMbCyBcEgu4xZs7PZuXN3IFrWZwqZUT6nMYbFicTK8ZkaMGBOgIJAOKaGb9QB0hvyHGEbNb7FD3B5Jr44TbBciRWiMQlJegKNH4B9g2kjmGFUT2HHWgnDIh1gtzFYgnYwsZtmYzNzTE5Ar2QRYwtEVk4g9K63KshGo5AW+ambMMQswhFeQN+k5kdyzGPjODwTYMU4bOZ5ylF-iaAAzei0WAACzXHy+rYtW+zRZwhZUxgncXsb25MFLD6exIWCMUYicMJ71xesTnXRlE0tXkx13dE-UPY881mGwrFMRZQNCOw3HMMj1jLOIgA */
   createMachine(
     {
       context: {
-        verseCycleActor: null as ActorRefFrom<ReturnType<typeof createVerseCycleMachine>>,
+        verseCycleActor: null as ActorRefFrom<ReturnType<typeof createBoundaryCycleMachine>>,
         totalVerseCycle,
         totalRangeCycle,
         currentRangeCycle: 1,
@@ -29,6 +34,8 @@ export const createRangeCycleMachine = ({
         toVerseNumber,
         currentVerseNumber: fromVerseNumber,
         verseTimings: verseTimings as VerseTiming[],
+        repeatMode,
+        reciterConfig,
       },
       tsTypes: {} as import('./rangeCycleMachine.typegen').Typegen0,
       id: 'rangeCycleActor',
@@ -48,6 +55,12 @@ export const createRangeCycleMachine = ({
             REPEAT_SAME_AYAH: {
               actions: 'repeatSameAyah',
               description: 'Event from verseCycleActor. forward sendParent(REPEAT_SAME_AYAH)',
+            },
+            ADVANCE_TO_BOUNDARY: {
+              actions: 'forwardAdvanceToBoundary',
+            },
+            RECALIBRATE_BOUNDARY: {
+              actions: 'forwardRecalibrateBoundary',
             },
             REPEAT_NEXT_AYAH: {
               actions: 'repeatNextAyah',
@@ -110,16 +123,20 @@ export const createRangeCycleMachine = ({
         repeatSelectedAyah: pure((context, event: any) => {
           const { ayahNumber } = event;
           const selectedVerseTiming: VerseTiming = context.verseTimings[ayahNumber - 1];
+          const boundaries = buildBoundariesForVerse(
+            selectedVerseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
 
           return [
             stop(context.verseCycleActor.id),
             assign({
               currentVerseNumber: ayahNumber,
               verseCycleActor: spawn(
-                createVerseCycleMachine({
-                  timestampFrom: selectedVerseTiming.timestampFrom,
-                  timestampTo: selectedVerseTiming.timestampTo,
-                  totalVerseCycle: context.totalVerseCycle,
+                createBoundaryCycleMachine({
+                  boundaries,
+                  totalRepeatCycle: context.totalVerseCycle,
                 }),
               ),
             }),
@@ -128,6 +145,11 @@ export const createRangeCycleMachine = ({
         // @ts-ignore
         updateVerseTimings: pure((context, event: any) => {
           const curentVerseTiming = event.verseTimings[context.currentVerseNumber - 1];
+          const boundaries = buildBoundariesForVerse(
+            curentVerseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
           return [
             assign({
               verseTimings: event.verseTimings,
@@ -135,8 +157,7 @@ export const createRangeCycleMachine = ({
             send(
               {
                 type: 'UPDATE_VERSE_TIMING',
-                timestampFrom: curentVerseTiming.timestampFrom,
-                timestampTo: curentVerseTiming.timestampTo,
+                boundaries,
               },
               {
                 to: context.verseCycleActor.id,
@@ -156,15 +177,20 @@ export const createRangeCycleMachine = ({
             ];
           }
 
+          const boundaries = buildBoundariesForVerse(
+            nextVerseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
+
           return [
             stop(context.verseCycleActor.id),
             assign({
               currentVerseNumber: nextVerseNumber,
               verseCycleActor: spawn(
-                createVerseCycleMachine({
-                  timestampFrom: nextVerseTiming.timestampFrom,
-                  timestampTo: nextVerseTiming.timestampTo,
-                  totalVerseCycle: context.totalVerseCycle,
+                createBoundaryCycleMachine({
+                  boundaries,
+                  totalRepeatCycle: context.totalVerseCycle,
                 }),
               ),
             }),
@@ -174,16 +200,20 @@ export const createRangeCycleMachine = ({
           const currentIndex = context.currentVerseNumber - 1;
           const prevVerseTiming: VerseTiming = context.verseTimings[currentIndex - 1];
           const prevVerseNumber = context.currentVerseNumber - 1;
+          const boundaries = buildBoundariesForVerse(
+            prevVerseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
 
           return [
             stop(context.verseCycleActor.id),
             assign({
               currentVerseNumber: prevVerseNumber,
               verseCycleActor: spawn(
-                createVerseCycleMachine({
-                  timestampFrom: prevVerseTiming.timestampFrom,
-                  timestampTo: prevVerseTiming.timestampTo,
-                  totalVerseCycle: context.totalVerseCycle,
+                createBoundaryCycleMachine({
+                  boundaries,
+                  totalRepeatCycle: context.totalVerseCycle,
                 }),
               ),
             }),
@@ -196,6 +226,11 @@ export const createRangeCycleMachine = ({
 
           const nextVerseNumber = context.currentVerseNumber + 1;
           const previousVerseDuration = Math.abs(currentVerseTiming.duration);
+          const boundaries = buildBoundariesForVerse(
+            nextVerseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
 
           return [
             stop(context.verseCycleActor.id),
@@ -206,10 +241,9 @@ export const createRangeCycleMachine = ({
             }),
             assign({
               verseCycleActor: spawn(
-                createVerseCycleMachine({
-                  timestampFrom: nextVerseTiming.timestampFrom,
-                  timestampTo: nextVerseTiming.timestampTo,
-                  totalVerseCycle: context.totalVerseCycle,
+                createBoundaryCycleMachine({
+                  boundaries,
+                  totalRepeatCycle: context.totalVerseCycle,
                 }),
               ),
               currentVerseNumber: nextVerseNumber,
@@ -223,14 +257,14 @@ export const createRangeCycleMachine = ({
           return context.verseCycleActor;
         }),
 
+        forwardAdvanceToBoundary: sendParent((_context, event) => event),
+
+        forwardRecalibrateBoundary: forwardTo((context) => context.verseCycleActor),
+
         /**
-         * Forward the event to parent
+         * Forward boundary repeat to parent (payload from boundaryCycleActor).
          */
-        repeatSameAyah: sendParent((context) => {
-          const verseTiming = context.verseTimings[context.currentVerseNumber - 1];
-          const verseDuration = verseTiming.duration;
-          return { type: 'REPEAT_AYAH', verseNumber: context.currentVerseNumber, verseDuration };
-        }),
+        repeatSameAyah: sendParent((_context, event: any) => event),
 
         /**
          * Repeat Cycle
@@ -241,15 +275,19 @@ export const createRangeCycleMachine = ({
         repeatCycle: pure((context) => {
           const verseTiming = context.verseTimings[fromVerseNumber - 1];
           const verseDuration = verseTiming.duration;
+          const boundaries = buildBoundariesForVerse(
+            verseTiming,
+            context.repeatMode,
+            context.reciterConfig,
+          );
           return [
             stop(context.verseCycleActor.id), // stop verseCycleActor
             assign({
               currentRangeCycle: context.currentRangeCycle + 1,
               verseCycleActor: spawn(
-                createVerseCycleMachine({
-                  timestampFrom: verseTiming.timestampFrom,
-                  timestampTo: verseTiming.timestampTo,
-                  totalVerseCycle: context.totalVerseCycle,
+                createBoundaryCycleMachine({
+                  boundaries,
+                  totalRepeatCycle: context.totalVerseCycle,
                 }),
               ),
               currentVerseNumber: fromVerseNumber,
@@ -272,11 +310,15 @@ export const createRangeCycleMachine = ({
         spawnVerseCycleActor: assign({
           verseCycleActor: (context) => {
             const curentVerseTiming = context.verseTimings[context.currentVerseNumber - 1];
+            const boundaries = buildBoundariesForVerse(
+              curentVerseTiming,
+              context.repeatMode,
+              context.reciterConfig,
+            );
             return spawn(
-              createVerseCycleMachine({
-                timestampFrom: curentVerseTiming.timestampFrom,
-                timestampTo: curentVerseTiming.timestampTo,
-                totalVerseCycle: context.totalVerseCycle,
+              createBoundaryCycleMachine({
+                boundaries,
+                totalRepeatCycle: context.totalVerseCycle,
               }),
             );
           },

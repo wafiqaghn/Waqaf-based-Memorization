@@ -1,5 +1,5 @@
 import type ThemeTypeVariant from '@/redux/types/ThemeTypeVariant';
-import type { MushafType } from '@/types/Embed';
+import type { MushafType, WidgetAudioMode } from '@/types/Embed';
 import type AvailableTranslation from 'types/AvailableTranslation';
 
 /**
@@ -30,6 +30,12 @@ export type Preferences = {
     width: string;
     height: string;
   };
+  audioMode?: WidgetAudioMode;
+  startWordIndex?: number;
+  endWordIndex?: number;
+  waqafIndex?: number;
+  repeatCount?: number;
+  enableWordHighlight?: boolean;
 };
 
 export type AyahWidgetOverrides = Partial<Omit<Preferences, 'translations' | 'customSize'>> & {

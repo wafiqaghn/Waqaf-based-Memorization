@@ -36,6 +36,9 @@ export interface Typegen0 {
     'xstate.after(VERSE_DELAY)#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.DELAYING': {
       type: 'xstate.after(VERSE_DELAY)#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.DELAYING';
     };
+    'xstate.after(BOUNDARY_HOLD_MS)#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.boundaryHold': {
+      type: 'xstate.after(BOUNDARY_HOLD_MS)#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.boundaryHold';
+    };
     'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {
@@ -54,6 +57,8 @@ export interface Typegen0 {
   eventsCausingActions: {
     continueFromLastTimestamp: 'END';
     decrementAyah: 'PREV_AYAH';
+    seekToPendingTimestamp:
+      'xstate.after(BOUNDARY_HOLD_MS)#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.boundaryHold';
     exitRadio: 'CLOSE_RADIO' | 'PLAY_AYAH' | 'PLAY_SURAH' | 'SET_REPEAT_SETTING';
     forwardChangeReciterToRadioMachine: 'CHANGE_RECITER';
     forwardEndedToRadioMachine: 'END';
@@ -108,6 +113,7 @@ export interface Typegen0 {
     updateVolume: 'UPDATE_VOLUME';
   };
   eventsCausingDelays: {
+    BOUNDARY_HOLD_MS: 'REPEAT_SAME_AYAH';
     VERSE_DELAY: 'REPEAT_AYAH';
   };
   eventsCausingGuards: {
@@ -164,6 +170,8 @@ export interface Typegen0 {
     | 'VISIBLE.AUDIO_PLAYER_INITIATED.PLAYING'
     | 'VISIBLE.AUDIO_PLAYER_INITIATED.PLAYING.ACTIVE'
     | 'VISIBLE.AUDIO_PLAYER_INITIATED.PLAYING.LOADING'
+    | 'VISIBLE.AUDIO_PLAYER_INITIATED.boundaryHold'
+    | 'VISIBLE.AUDIO_PLAYER_INITIATED.pausing'
     | 'VISIBLE.FAILED'
     | 'VISIBLE.LOADING_CUSTOM_RECITER_DATA'
     | 'VISIBLE.LOADING_RECITER_DATA'
@@ -183,6 +191,8 @@ export interface Typegen0 {
                 | 'ENDED'
                 | 'PAUSED'
                 | 'PLAYING'
+                | 'boundaryHold'
+                | 'pausing'
                 | { PAUSED?: 'ACTIVE' | 'LOADING'; PLAYING?: 'ACTIVE' | 'LOADING' };
             };
       };

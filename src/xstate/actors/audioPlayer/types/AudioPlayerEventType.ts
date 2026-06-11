@@ -30,8 +30,22 @@ type AudioPlayerEventType =
       repeatEachVerse: number;
       delayMultiplier: number;
       surah: number;
+      repeatMode?: 'ayah' | 'waqaf';
     }
   | { type: 'REPEAT_AYAH'; ayahNumber: number; verseDelay: number }
+  | {
+      type: 'REPEAT_SAME_AYAH';
+      timestampFrom: number;
+      verseDuration: number;
+      verseDelay: number;
+    }
+  | {
+      type: 'ADVANCE_TO_BOUNDARY';
+      boundaryId: string;
+      timestampFrom: number;
+      timestampTo: number;
+    }
+  | { type: 'RECALIBRATE_BOUNDARY'; timestamp: number }
   | { type: 'PLAY_RADIO'; stationType: StationType; stationId: number }
   | { type: 'CLOSE_RADIO' }
   | {

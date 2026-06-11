@@ -18,6 +18,25 @@ import { toLocalizedNumber, getLocaleName } from '@/utils/locale';
 import type AvailableTranslation from 'types/AvailableTranslation';
 import type Reciter from 'types/Reciter';
 
+const MIN_AUDIO_REPEAT_COUNT = 1;
+const MAX_AUDIO_REPEAT_COUNT = 20;
+
+const parseOptionalNonNegativeInteger = (
+  value: string | number | boolean | null,
+): number | undefined => {
+  if (value === null || String(value).trim() === '') return undefined;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 0) return undefined;
+  return parsed;
+};
+
+const parseRepeatCount = (value: string | number | boolean | null): number => {
+  if (value === null || String(value).trim() === '') return MIN_AUDIO_REPEAT_COUNT;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed)) return MIN_AUDIO_REPEAT_COUNT;
+  return Math.min(MAX_AUDIO_REPEAT_COUNT, Math.max(MIN_AUDIO_REPEAT_COUNT, parsed));
+};
+
 /**
  * Configuration for a single form field in the widget builder.
  */
@@ -27,6 +46,9 @@ export type WidgetFieldConfig = {
   labelKey: string;
   controlId: string;
   inputVariant?: 'default' | 'size';
+  inputType?: 'text' | 'number';
+  min?: number;
+  max?: number;
   preferenceKey?: SimpleOverrideKey;
   options?: (context: WidgetFormContext) => WidgetSelectOptions;
   parseValue?: (raw: string, context: WidgetFormContext) => string | number | boolean | null;
@@ -329,6 +351,100 @@ export const WIDGET_FIELDS: Record<string, WidgetFieldConfig> = {
     preferenceKey: 'enableAudio',
   },
 
+  audioMode: {
+    id: 'audioMode',
+    type: 'select',
+    labelKey: 'fields.audioMode',
+    controlId: 'audio-mode-select',
+    preferenceKey: 'audioMode',
+    isVisible: (preferences) => preferences.enableAudio,
+    options: () => ({
+      items: [
+        { value: 'ayah', labelKey: 'audioModes.ayah' },
+        { value: 'waqaf', labelKey: 'audioModes.waqaf' },
+        { value: 'custom', labelKey: 'audioModes.custom' },
+      ],
+    }),
+    setValue: (value, prev) => ({
+      ...prev,
+      audioMode: value === 'waqaf' || value === 'custom' ? value : 'ayah',
+    }),
+  },
+
+  repeatCount: {
+    id: 'repeatCount',
+    type: 'text',
+    labelKey: 'fields.repeatCount',
+    controlId: 'repeat-count',
+    inputType: 'number',
+    min: MIN_AUDIO_REPEAT_COUNT,
+    max: MAX_AUDIO_REPEAT_COUNT,
+    preferenceKey: 'repeatCount',
+    isVisible: (preferences) => preferences.enableAudio,
+    getValue: (preferences) => preferences.repeatCount ?? MIN_AUDIO_REPEAT_COUNT,
+    setValue: (value, prev) => ({
+      ...prev,
+      repeatCount: parseRepeatCount(value),
+    }),
+  },
+
+  enableWordHighlight: {
+    id: 'enableWordHighlight',
+    type: 'checkbox',
+    labelKey: 'checkboxes.wordHighlight',
+    controlId: 'word-highlight-toggle',
+    preferenceKey: 'enableWordHighlight',
+    isVisible: (preferences) => preferences.enableAudio,
+  },
+
+  startWordIndex: {
+    id: 'startWordIndex',
+    type: 'text',
+    labelKey: 'fields.startWordIndex',
+    controlId: 'start-word-index',
+    inputType: 'number',
+    min: 0,
+    preferenceKey: 'startWordIndex',
+    isVisible: (preferences) => preferences.enableAudio && preferences.audioMode === 'custom',
+    getValue: (preferences) => preferences.startWordIndex ?? '',
+    setValue: (value, prev) => ({
+      ...prev,
+      startWordIndex: parseOptionalNonNegativeInteger(value),
+    }),
+  },
+
+  endWordIndex: {
+    id: 'endWordIndex',
+    type: 'text',
+    labelKey: 'fields.endWordIndex',
+    controlId: 'end-word-index',
+    inputType: 'number',
+    min: 0,
+    preferenceKey: 'endWordIndex',
+    isVisible: (preferences) => preferences.enableAudio && preferences.audioMode === 'custom',
+    getValue: (preferences) => preferences.endWordIndex ?? '',
+    setValue: (value, prev) => ({
+      ...prev,
+      endWordIndex: parseOptionalNonNegativeInteger(value),
+    }),
+  },
+
+  waqafIndex: {
+    id: 'waqafIndex',
+    type: 'text',
+    labelKey: 'fields.waqafIndex',
+    controlId: 'waqaf-index',
+    inputType: 'number',
+    min: 0,
+    preferenceKey: 'waqafIndex',
+    isVisible: (preferences) => preferences.enableAudio && preferences.audioMode === 'waqaf',
+    getValue: (preferences) => preferences.waqafIndex ?? '',
+    setValue: (value, prev) => ({
+      ...prev,
+      waqafIndex: parseOptionalNonNegativeInteger(value),
+    }),
+  },
+
   enableWbwTranslation: {
     id: 'enableWbwTranslation',
     type: 'checkbox',
@@ -435,6 +551,11 @@ export const WIDGET_FORM_BLOCKS: WidgetFormBlock[] = [
   { kind: 'translations' },
   { kind: 'field', field: WIDGET_FIELDS.reciter },
   { kind: 'field', field: WIDGET_FIELDS.enableAudio },
+  { kind: 'field', field: WIDGET_FIELDS.audioMode },
+  { kind: 'field', field: WIDGET_FIELDS.repeatCount },
+  { kind: 'field', field: WIDGET_FIELDS.enableWordHighlight },
+  { kind: 'twoColumn', fields: [WIDGET_FIELDS.startWordIndex, WIDGET_FIELDS.endWordIndex] },
+  { kind: 'field', field: WIDGET_FIELDS.waqafIndex },
   { kind: 'field', field: WIDGET_FIELDS.enableWbwTranslation },
   { kind: 'field', field: WIDGET_FIELDS.enableWbwTransliteration },
   { kind: 'field', field: WIDGET_FIELDS.showTranslatorName },

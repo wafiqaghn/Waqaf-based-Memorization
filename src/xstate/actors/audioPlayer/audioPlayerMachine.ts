@@ -76,6 +76,8 @@ export const audioPlayerMachine =
         repeatActor: null,
         radioActor: null,
         verseDelay: 0,
+        pendingSeekTimestamp: undefined,
+        activeBoundaryId: undefined,
         volume: 1,
       },
       tsTypes: {} as import('./audioPlayerMachine.typegen').Typegen0,
@@ -244,6 +246,28 @@ export const audioPlayerMachine =
                     },
                   },
                 },
+                boundaryHold: {
+                  description:
+                    'Brief hold before pause so the last syllable can finish (acoustic tail)',
+                  after: {
+                    BOUNDARY_HOLD_MS: {
+                      target: 'pausing',
+                    },
+                  },
+                  on: {
+                    SEEK_TO: {
+                      actions: 'seekToAndRepeat',
+                      target: '#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.PLAYING.LOADING',
+                    },
+                  },
+                },
+                pausing: {
+                  description: 'Pause and seek after boundary hold',
+                  entry: ['pauseAudio', 'seekToPendingTimestamp'],
+                  always: {
+                    target: 'DELAYING',
+                  },
+                },
                 DELAYING: {
                   after: {
                     VERSE_DELAY: {
@@ -339,6 +363,21 @@ export const audioPlayerMachine =
                           ],
                           description: 'Repeat the current ayah',
                           target: '#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.DELAYING',
+                        },
+                        REPEAT_SAME_AYAH: {
+                          actions: assign({
+                            pendingSeekTimestamp: (_context, event: any) =>
+                              event.timestampFrom - 50,
+                            verseDelay: (_context, event: any) => event.verseDelay,
+                          }),
+                          description:
+                            'Repeat the current boundary; hold briefly before pause/seek',
+                          target: '#audioPlayer.VISIBLE.AUDIO_PLAYER_INITIATED.boundaryHold',
+                        },
+                        ADVANCE_TO_BOUNDARY: {
+                          actions: assign({
+                            activeBoundaryId: (_context, event: any) => event.boundaryId,
+                          }),
                         },
                         SEEKING: {
                           description:
@@ -492,6 +531,18 @@ export const audioPlayerMachine =
                   actions: ['stopRepeatActor', 'pauseAudio'],
                   target: '.PAUSED.ACTIVE',
                 },
+                REPEAT_SAME_AYAH: {
+                  actions: assign({
+                    pendingSeekTimestamp: (_context, event: any) => event.timestampFrom - 50,
+                    verseDelay: (_context, event: any) => event.verseDelay,
+                  }),
+                  target: '.boundaryHold',
+                },
+                ADVANCE_TO_BOUNDARY: {
+                  actions: assign({
+                    activeBoundaryId: (_context, event: any) => event.boundaryId,
+                  }),
+                },
                 NEXT_AYAH: [
                   {
                     actions: 'repeatNextAyah',
@@ -640,6 +691,7 @@ export const audioPlayerMachine =
                               totalVerseCycle: event.data.repeatEachVerse,
                               verseTimings: context.audioData.verseTimings,
                               delayMultiplier: event.data.delayMultiplier,
+                              repeatMode: event.data.repeatMode ?? 'ayah',
                             }),
                           ) as any;
                         },
@@ -1044,6 +1096,13 @@ export const audioPlayerMachine =
           if (context.repeatActor) {
             actions.push(
               send({ type: 'REPEAT_SELECTED_AYAH', ayahNumber }, { to: context.repeatActor.id }),
+              send(
+                {
+                  type: 'RECALIBRATE_BOUNDARY',
+                  timestamp: secondsToMilliSeconds(event.timestamp),
+                },
+                { to: context.repeatActor.id },
+              ),
             );
           }
 
@@ -1051,6 +1110,12 @@ export const audioPlayerMachine =
 
           return actions;
         }),
+        seekToPendingTimestamp: (context) => {
+          if (context.pendingSeekTimestamp != null) {
+            // eslint-disable-next-line no-param-reassign
+            context.audioPlayer.currentTime = milliSecondsToSeconds(context.pendingSeekTimestamp);
+          }
+        },
         updateVolume: pure((context, { volume }) => {
           context.audioPlayer.volume = volume;
           return assign({ volume });
@@ -1154,6 +1219,7 @@ export const audioPlayerMachine =
         VERSE_DELAY: (context) => {
           return context.verseDelay;
         },
+        BOUNDARY_HOLD_MS: () => 120,
       },
     },
   );

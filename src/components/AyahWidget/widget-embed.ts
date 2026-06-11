@@ -1,7 +1,14 @@
 /**
  * Widget Embed - Functions for building iframe embed URLs and snippets.
  */
-import { DEFAULTS, INITIAL_PREFERENCES } from './widget-defaults';
+/* eslint-disable react-func/max-lines-per-function */
+import {
+  DEFAULTS,
+  DEFAULT_AUDIO_MODE,
+  DEFAULT_REPEAT_COUNT,
+  INITIAL_PREFERENCES,
+  MAX_AUDIO_REPEAT_COUNT,
+} from './widget-defaults';
 import type { AyahWidgetOverrides, Preferences, WidgetIframeConfig } from './widget-types';
 
 import ThemeType from '@/redux/types/ThemeType';
@@ -130,6 +137,26 @@ export const buildEmbedIframeSrc = (
   setParam('lessons', String(preferences.showLessons), 'true');
   setParam('answers', String(preferences.showAnswers), 'true');
   setParam('mergeVerses', String(preferences.mergeVerses), 'false');
+
+  if (preferences.audioMode && preferences.audioMode !== DEFAULT_AUDIO_MODE) {
+    setParam('audioMode', preferences.audioMode);
+  }
+  if (preferences.startWordIndex !== undefined) {
+    setParam('startWord', String(preferences.startWordIndex));
+  }
+  if (preferences.endWordIndex !== undefined) {
+    setParam('endWord', String(preferences.endWordIndex));
+  }
+  if (preferences.waqafIndex !== undefined) {
+    setParam('waqaf', String(preferences.waqafIndex));
+  }
+  if (preferences.repeatCount !== undefined && preferences.repeatCount > DEFAULT_REPEAT_COUNT) {
+    const repeatCount = Math.min(preferences.repeatCount, MAX_AUDIO_REPEAT_COUNT);
+    setParam('repeat', String(repeatCount));
+  }
+  if (preferences.enableWordHighlight === true) {
+    setParam('wordHighlight', 'true');
+  }
 
   return url.toString();
 };

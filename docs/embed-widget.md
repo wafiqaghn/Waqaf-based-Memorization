@@ -153,6 +153,12 @@ If you are using a custom embed domain, load the script from the same origin as 
 | `translations`        | Comma-separated translation IDs                      | -             |
 | `audio`               | Enable audio (`true`/`false`)                        | `true`        |
 | `reciter`             | Reciter ID                                           | `7`           |
+| `audioMode`           | Audio segment mode: `ayah`, `waqaf`, or `custom`     | `ayah`        |
+| `startWord`           | Zero-based start word index for custom audio mode    | -             |
+| `endWord`             | Zero-based inclusive end word index for custom mode  | -             |
+| `waqaf`               | Zero-based waqaf marker index for waqaf mode         | -             |
+| `repeat`              | Repeat count, clamped 1-20                           | `1`           |
+| `wordHighlight`       | Enable active-word highlighting while audio plays    | `false`       |
 | `theme`               | Theme (`light`/`dark`/`sepia`)                       | `light`       |
 | `mushaf`              | Mushaf type (`qpc`, `kfgqpc_v1`, etc.)               | `qpc`         |
 | `locale`              | Widget locale                                        | `en`          |
@@ -167,6 +173,76 @@ If you are using a custom embed domain, load the script from the same origin as 
 | `lessons`             | Show lessons button                                  | `true`        |
 | `reflections`         | Show reflections button                              | `true`        |
 | `answers`             | Show answers button                                  | `true`        |
+
+Default values are omitted from generated embed URLs to keep iframe URLs clean. Invalid values are
+ignored or clamped safely where possible. The `startWord` and `endWord` params control custom audio
+playback ranges; they do not replace the prop-only text trimming API described below.
+
+## Audio Segment Playback
+
+The audio segment system is timestamp-based. The widget still uses one audio file URL for the
+selected reciter and surah/range; it does not create or require physical audio slices. Segment
+playback is modeled as an optional `audioSegment` object with `startTimeMs` and `endTimeMs`.
+
+Existing default ayah playback is preserved. The runtime prefers valid `audioSegment` metadata when
+it exists, then falls back to the legacy `audioStart` / `audioEnd` fields, which are seconds-based
+and already used by the audio element. If `audioSegment` is missing or invalid, the widget should
+continue using the legacy behavior.
+
+### Audio modes
+
+`ayah` is the default mode. It plays the full ayah or selected ayah range and preserves the existing
+behavior. Generated default URLs omit `audioMode=ayah`.
+
+`custom` plays a selected word range using `startWord` and `endWord`. Word indexes are zero-based,
+and `endWord` is inclusive. Custom mode requires word timing data. If the needed timestamps are
+missing or invalid, the resolver returns no custom segment and playback falls back safely.
+
+`waqaf` plays a segment ending at a waqaf marker selected by the zero-based `waqaf` index. Waqaf
+metadata is a helper signal only; it is not treated as absolute ayah boundary ground truth. Current
+waqaf support uses MVP/sample Al-Baqarah marker metadata and can safely resolve to no segment when
+marker data is unavailable.
+
+### Word timestamps
+
+QuranCDN timing tuples are converted into `WidgetWordTimestamp` records before they are exposed to
+the widget runtime. Internal widget word indexes are zero-based. QuranCDN segment indexes are treated
+as 1-based and converted once at the widget boundary.
+
+Timing values are kept in milliseconds internally. Runtime playback converts millisecond segment
+bounds into seconds before seeking the audio element.
+
+### Repeat playback
+
+`repeat=1` plays once. `repeat=3` plays three total passes of the same resolved segment. Repeat is
+clamped to `1..20` both during query parsing and defensively in the runtime helper. Repeat state is
+reset when the user pauses, starts replay from a stopped state, playback completes, or the widget
+cleans up its event listeners.
+
+### Active word highlighting
+
+Active-word highlighting only runs when all of these are true:
+
+- `wordHighlight=true`
+- word timestamps exist
+- matching word DOM elements exist
+
+When active, the runtime adds `quran-widget-word--active` and `data-active-word="true"` to the
+matching word element. This is intentionally conservative: it does not redesign Arabic rendering,
+and it preserves mushaf font rendering and verse-end glyph handling.
+
+### Builder audio segment controls
+
+The builder shows segment controls only when audio is enabled:
+
+- Audio mode dropdown: Full Ayah, Waqaf Segment, Custom Word Range
+- Repeat count input, clamped to `1..20`
+- Highlight active word toggle
+- Custom start/end word index inputs, shown only in custom mode
+- Waqaf index input, shown only in waqaf mode
+
+The default preview URL stays clean: it should not include `audioMode=ayah`, `repeat=1`, or
+`wordHighlight=false`.
 
 ## Prop-only trimming
 
@@ -229,6 +305,126 @@ Client-side interactions are handled by `src/hooks/widget/useWidgetInteractions.
   `embed_audio_played`, `embed_audio_paused`, `embed_audio_ended`, `embed_word_clicked`,
   `embed_translation_clicked`, `embed_verse_block_clicked`, `embed_merged_translation_clicked`,
   `embed_merged_content_clicked`
+
+Audio segment playback is implemented in the same interaction hook. It resolves playback bounds from
+`audioSegment` first and uses legacy `audioStart` / `audioEnd` as fallback. Segment-specific
+analytics events are emitted only when segment mode or repeat behavior is explicitly requested.
+
+## Audio Segment QA
+
+Use this checklist when validating timestamp-based audio segments. The widget should always use a
+single audio URL with timestamp seeking; it should not require sliced audio files.
+
+### Iframe URLs
+
+Default existing behavior:
+
+```text
+/embed/v1?verses=2:1&audio=true&reciter=7
+```
+
+Custom segment:
+
+```text
+/embed/v1?verses=2:1&audio=true&reciter=7&audioMode=custom&startWord=0&endWord=2
+```
+
+Repeat:
+
+```text
+/embed/v1?verses=2:1&audio=true&reciter=7&repeat=3
+```
+
+Word highlight:
+
+```text
+/embed/v1?verses=2:1&audio=true&reciter=7&wordHighlight=true
+```
+
+Custom + repeat + highlight:
+
+```text
+/embed/v1?verses=2:1&audio=true&reciter=7&audioMode=custom&startWord=0&endWord=2&repeat=3&wordHighlight=true
+```
+
+Direct Al-Baqarah waqaf cut check:
+
+```text
+/embed/v1?verses=2:2&audio=true&reciter=7&audioMode=waqaf&waqaf=0
+```
+
+Direct Al-Baqarah waqaf repeat check:
+
+```text
+/embed/v1?verses=2:2&audio=true&reciter=7&audioMode=waqaf&waqaf=0&repeat=3
+```
+
+Direct Al-Baqarah custom segment check:
+
+```text
+/embed/v1?verses=2:2&audio=true&reciter=7&audioMode=custom&startWord=0&endWord=3
+```
+
+### Builder Checklist
+
+- Open `/embed`.
+- Treat `/embed` as the configuration builder. Direct audio cutting verification should use
+  `/embed/v1` URLs such as `/embed/v1?verses=2:2&audio=true&reciter=7&audioMode=waqaf&waqaf=0`.
+- Confirm the default preview iframe URL does not include `audioMode=ayah`, `repeat=1`, or
+  `wordHighlight=false`.
+- Change audio mode to Custom Word Range.
+- Confirm custom start/end word inputs are visible in custom mode.
+- Set start/end word indexes and confirm `startWord` and `endWord` appear in the preview URL.
+- Set repeat to `3` and confirm `repeat=3`.
+- Enable word highlight and confirm `wordHighlight=true`.
+- Switch back to Full Ayah and confirm custom fields are hidden or ignored safely.
+- Confirm existing controls still serialize correctly: audio toggle, reciter, range, WBW,
+  translations, theme, mushaf, locale, and button toggles.
+
+### Playback Checklist
+
+- Default audio plays and clamps to the selected ayah/range.
+- Custom segment seeks to the selected word range when timestamps are available.
+- Repeat playback stops after the configured repeat count.
+- Word highlighting appears only when `wordHighlight=true` and matching word timestamps exist.
+- If segment metadata is missing or invalid, audio falls back to the legacy `audioStart`/`audioEnd`
+  behavior.
+- Waqaf mode should fail safely when no waqaf marker metadata is available; waqaf markers are helper
+  metadata, not ayah boundary ground truth.
+- Waqaf segment endings include a small post-roll padding and are clamped to the selected ayah end
+  timestamp to avoid sharper-than-necessary MVP cuts.
+
+## Testing audio segment behavior
+
+Run the pure widget audio segment tests with a single thread in the Node environment:
+
+```bash
+pnpm exec vitest run src/components/AyahWidget/audio-segments.test.ts src/components/AyahWidget/queryParsing.test.ts src/components/AyahWidget/widget-embed.test.ts src/components/AyahWidget/widget-form.test.ts src/hooks/widget/widgetAudioPlayback.test.ts --environment=node --pool=threads --maxWorkers=1 --no-file-parallelism --reporter=dot
+```
+
+These flags avoid the Vitest fork worker timeout seen in the sandbox while still running the pure
+feature tests. At the time this section was added:
+
+- `git diff --check` passed.
+- Targeted ESLint for the widget audio segment files passed.
+- The command above passed with 5 test files and 34 tests.
+- `pnpm exec tsc --noEmit --pretty false` still failed because of unrelated existing dirty
+  xstate/waqaf files, not the widget audio segment feature.
+
+The tests cover query parsing, embed URL serialization, QuranCDN timestamp conversion,
+ayah/custom/waqaf segment resolution, playback-bound fallback, repeat clamping, active-word tracking
+gates, and builder field visibility. Browser QA is still required for actual iframe audio playback.
+
+## Limitations and future work
+
+- Do not claim timestamp accuracy unless it has been measured against manual annotation.
+- Waqaf marker data is MVP/sample-only for Al-Baqarah and is not a complete canonical data source.
+- Browser QA is still needed for iframe audio playback, repeat behavior, and word highlighting.
+- More localization labels may be needed beyond English.
+- Future validation should start with Al-Baqarah 1-20 as the MVP scope, then Al-Baqarah 1-141 as
+  the prototype scope, then full Al-Baqarah.
+- Future alignment work should include a real forced-alignment pipeline, Quranic text
+  normalization, and more qari support.
 
 ## Analytics queries
 

@@ -4,11 +4,26 @@ import getT from 'next-translate/getT';
 
 import i18nConfig from '../../../i18n.json';
 
+import {
+  convertQuranCDNSegmentsToWordTimestamps,
+  resolveWidgetAudioSegment,
+} from './audio-segments';
+import { WidgetInputError } from './widget-errors';
+
 import { fetcher, getChapterAudioData } from '@/api';
 import { logErrorToSentry } from '@/lib/sentry';
 import ThemeType from '@/redux/types/ThemeType';
 import type ThemeTypeVariant from '@/redux/types/ThemeTypeVariant';
-import type { MushafType, WidgetLabels, WidgetOptions } from '@/types/Embed';
+import type {
+  MushafType,
+  WidgetAudioMode,
+  WidgetAudioSegment,
+  WidgetLabels,
+  WidgetOptions,
+  WidgetWaqafMarker,
+  WidgetWordTimestamp,
+} from '@/types/Embed';
+import { getWidgetWaqafMarkersForAyah } from '@/data/waqafMarks';
 import { getQuranFontForMushaf } from '@/types/Embed';
 import { MushafLines } from '@/types/QuranReader';
 import { getDefaultWordFields, getMushafId } from '@/utils/api';
@@ -34,27 +49,12 @@ import type Verse from 'types/Verse';
 
 export const DEFAULT_VERSE: string = '33:56';
 export const DEFAULT_RECITER: string = '7'; // Mishary Alafasy
+export { WidgetInputError } from './widget-errors';
+
 export const MAX_RANGE_SPAN: number = 10;
 
 const INCORRECT_SUKUN_REGEX: RegExp = /[\u06DF\u06E1\u06E2\u06E3\u06E4]/g; // Needed because of a font issue
 const FOOTNOTE_REGEX: RegExp = /<sup[^>]*>.*?<\/sup>/g; // Remove footnotes from translation text
-
-/**
- * User input error for the widget endpoint.
- * Use this to return a specific status code with a user-friendly message.
- */
-export class WidgetInputError extends Error {
-  status: number;
-
-  /**
-   * @param {number} status - HTTP status code.
-   * @param {string} message - Error message.
-   */
-  constructor(status: number, message: string) {
-    super(message);
-    this.status = status;
-  }
-}
 
 /**
  * Replace incorrect sukun characters that appear due to font issues.
@@ -110,6 +110,12 @@ const sanitizeVerse = (verse: Verse): Verse => ({
  * @param {string | undefined} params.customHeight - Custom height.
  * @param {boolean} params.showArabic - Show Arabic text.
  * @param {boolean} params.mergeVerses - Merge verses into a single block.
+ * @param {WidgetAudioMode | undefined} params.audioMode - Optional audio segment mode.
+ * @param {number | undefined} params.startWordIndex - Optional custom segment start word.
+ * @param {number | undefined} params.endWordIndex - Optional custom segment end word.
+ * @param {number | undefined} params.waqafIndex - Optional waqaf segment index.
+ * @param {number | undefined} params.repeatCount - Optional repeat count.
+ * @param {boolean | undefined} params.enableWordHighlight - Optional active-word highlighting.
  * @param {object | undefined} meta - Computed metadata.
  * @param {boolean} meta.hasAnyTranslations - Whether any translation exists for the fetched verses.
  * @param {string | undefined} meta.surahName - Resolved Surah name.
@@ -139,6 +145,12 @@ const buildWidgetOptions = (
     showArabic: boolean;
     mergeVerses?: boolean;
     lp?: boolean; // minimal learning plan mode
+    audioMode?: WidgetAudioMode;
+    startWordIndex?: number;
+    endWordIndex?: number;
+    waqafIndex?: number;
+    repeatCount?: number;
+    enableWordHighlight?: boolean;
   },
   meta?: {
     hasAnyTranslations: boolean;
@@ -148,6 +160,9 @@ const buildWidgetOptions = (
     audioUrl?: string;
     audioStart?: number;
     audioEnd?: number;
+    audioSegment?: WidgetAudioSegment;
+    wordTimestamps?: WidgetWordTimestamp[];
+    waqafMarkers?: WidgetWaqafMarker[];
   },
 ): WidgetOptions => ({
   enableAudio: params.enableAudio,
@@ -174,8 +189,17 @@ const buildWidgetOptions = (
   audioUrl: meta?.audioUrl,
   audioStart: meta?.audioStart,
   audioEnd: meta?.audioEnd,
+  audioSegment: meta?.audioSegment,
+  wordTimestamps: meta?.wordTimestamps,
+  waqafMarkers: meta?.waqafMarkers,
   mergeVerses: params.mergeVerses,
   lp: params.lp,
+  audioMode: params.audioMode,
+  startWordIndex: params.startWordIndex,
+  endWordIndex: params.endWordIndex,
+  waqafIndex: params.waqafIndex,
+  repeatCount: params.repeatCount,
+  enableWordHighlight: params.enableWordHighlight,
 });
 
 /**
@@ -344,6 +368,12 @@ export type AyahWidgetDataInput = {
   referer?: string; // url of the page hosting the widget iframe
   embedViewId?: string; // stable id for one iframe render
   lp?: boolean; // minimal learning plan mode
+  audioMode?: WidgetAudioMode;
+  startWordIndex?: number;
+  endWordIndex?: number;
+  waqafIndex?: number;
+  repeatCount?: number;
+  enableWordHighlight?: boolean;
 };
 
 export type AyahWidgetData = {
@@ -622,7 +652,7 @@ const fetchAndValidateChapter = async (
     }
 
     return chapterResponse.chapter;
-  } catch (error) {
+  } catch {
     throw new WidgetInputError(400, 'Invalid chapter requested.');
   }
 };
@@ -674,7 +704,7 @@ const enrichVerseTranslations = async (verses: Verse[]): Promise<Verse[]> => {
  * @param {boolean} params.enableAudio - Enable audio.
  * @param {number} params.reciterId - Numeric reciter id.
  * @param {ChapterResponse['chapter']} params.chapterData - Chapter data.
- * @returns {Promise<{ surahName?: string; audioUrl?: string; audioStart?: number; audioEnd?: number }>} Meta.
+ * @returns {Promise<object>} Widget metadata including optional audio boundaries and word timestamps.
  */
 const resolveWidgetMeta = async (params: {
   verses: Verse[];
@@ -683,7 +713,13 @@ const resolveWidgetMeta = async (params: {
   enableAudio: boolean;
   reciterId: number;
   chapterData: ChapterResponse['chapter'];
-}): Promise<{ surahName?: string; audioUrl?: string; audioStart?: number; audioEnd?: number }> => {
+}): Promise<{
+  surahName?: string;
+  audioUrl?: string;
+  audioStart?: number;
+  audioEnd?: number;
+  wordTimestamps?: WidgetWordTimestamp[];
+}> => {
   const firstVerse: Verse = params.verses[0];
   const lastVerse: Verse = params.verses[params.verses.length - 1];
 
@@ -700,13 +736,32 @@ const resolveWidgetMeta = async (params: {
 
     const startTiming = verseTimings?.find((t) => t.verseKey === firstVerse.verseKey);
     const endTiming = verseTimings?.find((t) => t.verseKey === lastVerse.verseKey);
+    const requestedVerseKeys = new Set(params.verses.map((verse) => verse.verseKey));
+    const wordTimestamps = (verseTimings ?? [])
+      .filter((timing) => requestedVerseKeys.has(timing.verseKey))
+      .flatMap((timing) => {
+        const [, ayahNumberSegment] = timing.verseKey.split(':');
+        const ayahNumber = Number(ayahNumberSegment);
+        if (!Number.isInteger(ayahNumber)) return [];
+        return convertQuranCDNSegmentsToWordTimestamps({
+          surahId: params.chapterNumber,
+          ayahNumber,
+          segments: timing.segments,
+        });
+      });
 
     const audioStart: number | undefined = startTiming
       ? startTiming.timestampFrom / 1000
       : undefined;
     const audioEnd: number | undefined = endTiming ? endTiming.timestampTo / 1000 : undefined;
 
-    return { surahName, audioUrl, audioStart, audioEnd };
+    return {
+      surahName,
+      audioUrl,
+      audioStart,
+      audioEnd,
+      wordTimestamps: wordTimestamps.length ? wordTimestamps : undefined,
+    };
   } catch (error) {
     logErrorToSentry('Ayah widget audio data load error', error);
     return { surahName };
@@ -832,6 +887,26 @@ export const getAyahWidgetData = async (input: AyahWidgetDataInput): Promise<Aya
     reciterId,
     chapterData,
   });
+  const waqafMarkers: WidgetWaqafMarker[] = verseKeys.flatMap((verseKey: string) => {
+    const [, ayahNumberSegment] = verseKey.split(':');
+    const ayahNumber = Number(ayahNumberSegment);
+    if (!Number.isInteger(ayahNumber)) return [];
+    return getWidgetWaqafMarkersForAyah(chapterNumber, ayahNumber);
+  });
+  const audioSegment = resolveWidgetAudioSegment({
+    audioUrl: meta.audioUrl,
+    surahId: chapterNumber,
+    ayahStart: verseNumber,
+    ayahEnd: normalizedRangeEnd ?? verseNumber,
+    audioStart: meta.audioStart,
+    audioEnd: meta.audioEnd,
+    audioMode: input.audioMode,
+    startWordIndex: input.startWordIndex,
+    endWordIndex: input.endWordIndex,
+    waqafIndex: input.waqafIndex,
+    wordTimestamps: meta.wordTimestamps,
+    waqafMarkers,
+  });
 
   const options: WidgetOptions = buildWidgetOptions(
     ayah,
@@ -854,6 +929,12 @@ export const getAyahWidgetData = async (input: AyahWidgetDataInput): Promise<Aya
       customHeight,
       mergeVerses,
       lp: input.lp,
+      audioMode: input.audioMode,
+      startWordIndex: input.startWordIndex,
+      endWordIndex: input.endWordIndex,
+      waqafIndex: input.waqafIndex,
+      repeatCount: input.repeatCount,
+      enableWordHighlight: input.enableWordHighlight,
     },
     {
       hasAnyTranslations,
@@ -863,6 +944,9 @@ export const getAyahWidgetData = async (input: AyahWidgetDataInput): Promise<Aya
       audioUrl: meta.audioUrl,
       audioStart: meta.audioStart,
       audioEnd: meta.audioEnd,
+      audioSegment,
+      wordTimestamps: meta.wordTimestamps,
+      waqafMarkers: waqafMarkers.length ? waqafMarkers : undefined,
     },
   );
 

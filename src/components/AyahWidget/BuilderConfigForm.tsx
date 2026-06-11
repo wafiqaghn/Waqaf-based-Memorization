@@ -234,6 +234,9 @@ const BuilderConfigForm = ({
           </label>
           <input
             id={field.controlId}
+            type={field.inputType ?? 'text'}
+            min={field.min}
+            max={field.max}
             className={inputClassName}
             value={String(resolveFieldValue(field) ?? '')}
             disabled={disabled}
@@ -260,7 +263,7 @@ const BuilderConfigForm = ({
         resolveFieldValue(field)) as any;
 
       const resolvedValue: string | number =
-        typeof rawValue === 'boolean' ? String(rawValue) : rawValue ?? '';
+        typeof rawValue === 'boolean' ? String(rawValue) : (rawValue ?? '');
 
       return (
         <select
@@ -497,14 +500,21 @@ const BuilderConfigForm = ({
   const renderBlock = useCallback(
     (block: WidgetFormBlock, index: number): JSX.Element | null => {
       switch (block.kind) {
-        case 'twoColumn':
+        case 'twoColumn': {
+          const renderedFields = block.fields
+            .map((field) => ({ field, element: renderField(field) }))
+            .filter((item) => Boolean(item.element));
+
+          if (!renderedFields.length) return null;
+
           return (
             <div className={styles.twoColumnGrid} key={`block-${index}`}>
-              {block.fields.map((field) => (
-                <React.Fragment key={field.id}>{renderField(field)}</React.Fragment>
+              {renderedFields.map(({ field, element }) => (
+                <React.Fragment key={field.id}>{element}</React.Fragment>
               ))}
             </div>
           );
+        }
 
         case 'translations':
           return (
