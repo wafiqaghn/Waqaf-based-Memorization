@@ -2,18 +2,11 @@
 @use 'src/styles/theme';
 
 .headerOuterContainer {
-  @include theme.light {
-    background: var(--color-background-elevated);
-  }
-  @include theme.sepia {
-    background: var(--color-background-elevated);
-  }
-  @include theme.dark {
-    background: rgba(52, 58, 64, 1);
-  }
+  background: rgba(245, 239, 230, 0.08);
   position: relative;
-  border-radius: var(--border-radius-pill);
-  box-shadow: var(--shadow-small);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
   inline-size: 100%;
   margin: 0 auto;
   z-index: 1;
@@ -25,7 +18,7 @@
 
 .prefixSuffixContainer {
   svg {
-    fill: var(--color-grey-icons) !important;
+    fill: var(--color-brand-primary) !important;
   }
 }
 
@@ -55,7 +48,7 @@
   }
 
   input::placeholder {
-    color: var(--color-text-faded-new);
+    color: var(--color-brand-text-muted);
     opacity: 1;
     font-size: var(--font-size-small-px);
     @include breakpoints.tablet {

@@ -1,19 +1,19 @@
 @use 'src/styles/shades';
 
 @mixin mode {
-  --color-brand-primary: #7fbab0;
-  --color-brand-primary-hover: #a6d6cc;
-  --color-brand-accent: #d6a85a;
-  --color-brand-background: #182020;
-  --color-brand-surface: #1f2929;
-  --color-brand-muted-surface: #263333;
+  --color-brand-primary: #c89b4a;
+  --color-brand-primary-hover: #d8ad63;
+  --color-brand-accent: #8faf9a;
+  --color-brand-background: #0e1116;
+  --color-brand-surface: #1c232b;
+  --color-brand-muted-surface: #151b21;
   --color-brand-text: #f8f5ee;
   --color-brand-text-muted: #b9c5c0;
-  --color-brand-border: #344443;
-  --color-brand-success: #8fb894;
+  --color-brand-border: #35404a;
+  --color-brand-success: #8faf9a;
 
   --color-primary-faded: var(--color-brand-muted-surface);
-  --color-primary-faint: #344443;
+  --color-primary-faint: #3a3225;
   --color-primary-medium: var(--color-brand-primary);
   --color-primary-deep: var(--color-brand-primary-hover);
 
@@ -102,14 +102,14 @@
   --color-separators: #1e2225;
   --color-separators-new: #1b1d20;
   --color-blue-buttons-and-icons: var(--color-brand-primary);
-  --color-faint-blue-icons: #344443;
+  --color-faint-blue-icons: #3a3225;
   --color-black-buttons: #ffffff;
   --color-topics-grey: #161616;
   --color-topics-gold: #56354c;
   --color-gqc: #cb955b;
   --color-qdc-blue: var(--color-brand-primary);
   --color-qdc-faded-blue: var(--color-brand-muted-surface);
-  --color-qdc-faint-blue: #344443;
+  --color-qdc-faint-blue: #3a3225;
   --color-qdc-deep-blue: var(--color-brand-primary-hover);
   --color-streaks-dark: #1c4428;
   --color-streaks-light: #93b69d;

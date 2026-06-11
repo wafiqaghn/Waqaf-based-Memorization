@@ -34,16 +34,59 @@
   "explore-topics": "Explore Topics",
   "first-time-reading": "New to the Quran? <link>Start here</link>",
   "grow-beyond-ramadan": "Grow with us <modalLink>Beyond Ramadan</modalLink>",
+  "hero": {
+    "eyebrow": "Waqaf-aware practice",
+    "mark": "ت",
+    "metric-mode-label": "Mode",
+    "metric-mode-value": "Waqaf segment",
+    "metric-repeat-label": "Repeat",
+    "metric-repeat-value": "1-20 loops",
+    "panel-kicker": "Audio-text alignment",
+    "panel-title": "Practice Al-Baqarah with guided stops",
+    "primary-cta": "Start Waqaf Practice",
+    "secondary-cta": "Open Surah Al-Baqarah",
+    "segment-preview-label": "Stylized waqaf audio segment timeline",
+    "subtitle": "Waqaf-aware Quran memorization and tartil practice",
+    "supporting-copy": "Listen, repeat, and stop at meaningful waqaf segments with word-level audio guidance.",
+    "title": "Tartila"
+  },
   "know-someone": "Grow with us this <modalLink>Ramadan</modalLink>",
   "learning-plan": "Learning Plans",
   "listen-to-radio": "Listen to Quran Radio",
   "my-quran": "My Quran",
+  "meta": {
+    "description": "Tartila is a Quran memorization and tartil practice app focused on waqaf-aware listening, repetition, and audio-text alignment.",
+    "title": "Tartila"
+  },
   "navigate-quran": "Navigate Quran",
   "no-bookmarks": "You do not have any bookmarks yet",
   "no-page-bookmarks": "You do not have any page bookmarks yet",
   "no-recently-read": "You do not have any reading sessions yet",
   "noble-quran": "The Noble Quran",
   "popular": "Popular",
+  "practice": {
+    "cards": {
+      "baqarah": {
+        "description": "Prototype waqaf data is currently available for selected Al-Baqarah verses.",
+        "title": "Al-Baqarah MVP"
+      },
+      "highlight": {
+        "description": "Follow the recitation with synchronized word timing when alignment data is present.",
+        "title": "Word-level Guidance"
+      },
+      "repeat": {
+        "description": "Loop a meaningful phrase until the stopping point and rhythm feel natural.",
+        "title": "Repeat by Segment"
+      },
+      "waqaf": {
+        "description": "Practice stopping at MVP waqaf markers without slicing the original recitation.",
+        "title": "Waqaf Segment Practice"
+      }
+    },
+    "eyebrow": "Practice toolkit",
+    "subtitle": "Designed around memorization workflows: repeat, listen, refine, and return to the same passage with clearer timing.",
+    "title": "Built for focused tartil"
+  },
   "qgj": {
     "learning-plans": {
       "cta": {
@@ -87,6 +130,10 @@
   "start-learning-plan": "Start Learning",
   "start-read": "Start Reading",
   "stay-consistent": "Track Streaks, Create Custom Goals, Stay Consistent",
+  "surah-list": {
+    "eyebrow": "Browse after practice",
+    "title": "Surahs and Juz"
+  },
   "tab": {
     "bookmarks": "Bookmarks",
     "page-bookmarks": "Pages",

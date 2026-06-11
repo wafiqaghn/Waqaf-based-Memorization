@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  border-block-end: 1px solid var(--color-borders-hairline);
+  border-block-end: 0;
 }
 
 .tabItem {
@@ -9,12 +9,15 @@
   padding-block-end: var(--spacing-xxsmall);
   padding-inline-start: var(--spacing-xxsmall);
   padding-inline-end: var(--spacing-xxsmall);
-  background-color: var(--color-background-default);
+  border-radius: var(--border-radius-pill);
+  background-color: transparent;
+  color: var(--color-text-faded-new);
 }
 .tabItem + .tabItem {
   margin-inline-start: var(--spacing-xxsmall);
 }
 
 .tabItemSelected {
-  border-block-end: 2px solid var(--color-text-default);
+  background: var(--color-brand-primary);
+  color: var(--color-text-inverse);
 }

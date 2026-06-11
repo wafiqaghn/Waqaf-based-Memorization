@@ -1,19 +1,19 @@
 @use 'src/styles/shades';
 
 @mixin mode {
-  --color-brand-primary: #0f4c4c;
-  --color-brand-primary-hover: #0b3d3d;
-  --color-brand-accent: #d6a85a;
-  --color-brand-background: #f8f5ee;
-  --color-brand-surface: #ffffff;
-  --color-brand-muted-surface: #eef3ef;
-  --color-brand-text: #1f2a2a;
-  --color-brand-text-muted: #66736f;
-  --color-brand-border: #d9e2dc;
-  --color-brand-success: #5d8a66;
+  --color-brand-primary: #c89b4a;
+  --color-brand-primary-hover: #d8ad63;
+  --color-brand-accent: #8faf9a;
+  --color-brand-background: #0e1116;
+  --color-brand-surface: #1c232b;
+  --color-brand-muted-surface: #151b21;
+  --color-brand-text: #f5efe6;
+  --color-brand-text-muted: #b9b2a8;
+  --color-brand-border: #35404a;
+  --color-brand-success: #8faf9a;
 
   --color-primary-faded: var(--color-brand-muted-surface);
-  --color-primary-faint: #dfe9e4;
+  --color-primary-faint: #3a3225;
   --color-primary-medium: var(--color-brand-primary);
   --color-primary-deep: var(--color-brand-primary-hover);
 
@@ -22,10 +22,10 @@
   --color-secondary-medium: #f2f2f2; // temporary placeholder for the beta.
   --color-secondary-deep: #333;
 
-  --color-success-faded: #eef3ef;
-  --color-success-faint: #d9e2dc;
+  --color-success-faded: #1d2a22;
+  --color-success-faint: #314738;
   --color-success-medium: var(--color-brand-success);
-  --color-success-deep: #42684b;
+  --color-success-deep: #5f7f6a;
 
   --color-error-faded: #f7d4d6;
   --color-error-faint: #ff1a1a;
@@ -42,7 +42,7 @@
   --color-text-default: var(--color-brand-text);
   --color-text-faded: var(--color-brand-text-muted);
   --color-text-faded-new: var(--color-brand-text-muted);
-  --color-text-inverse: #fff;
+  --color-text-inverse: #111820;
   --color-text-link: var(--color-brand-primary);
   --color-text-link-new: var(--color-brand-primary);
   --color-text-warning: #ab570a;
@@ -62,9 +62,9 @@
   --color-background-alternative-medium: var(--shade-2);
   --color-background-alternative-deep: var(--shade-6);
 
-  --color-background-inverse: #000;
+  --color-background-inverse: #f7f0e5;
   --color-background-backdrop: rgba(0, 0, 0, 0.6);
-  --color-background-lighten: hsla(0, 0%, 100%, 0.8);
+  --color-background-lighten: rgba(255, 255, 255, 0.08);
   // lighten the `background-color` by using it in `background-image`. check Button's ghost variant for example
 
   --color-borders-hairline: var(--color-brand-border);
@@ -74,8 +74,8 @@
   --color-border-gray-lighter: #cccccc;
   --color-border-gray-faded: #ededed;
 
-  --color-highlight: #ead6ad;
-  --color-highlight-dark: var(--color-brand-accent);
+  --color-highlight: rgba(200, 155, 74, 0.42);
+  --color-highlight-dark: var(--color-brand-primary);
 
   --shadow-small: 0px 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-reading-word-three-dots: var(--shadow-small);
@@ -110,22 +110,22 @@
   --color-separators-new: #f8f9fa;
   --color-separators-ayah-level: #ebeef0;
   --color-blue-buttons-and-icons: var(--color-brand-primary);
-  --color-faint-blue-icons: #d9e2dc;
+  --color-faint-blue-icons: #3a3225;
   --color-black-buttons: #000000;
-  --color-topics-grey: #f4f5f6;
-  --color-topics-gold: #fff7de;
+  --color-topics-grey: #1c232b;
+  --color-topics-gold: #3a3225;
   --color-gqc: #cb955b;
   --color-qdc-blue: var(--color-brand-primary);
   --color-qdc-faded-blue: var(--color-brand-muted-surface);
-  --color-qdc-faint-blue: #d9e2dc;
+  --color-qdc-faint-blue: #3a3225;
   --color-qdc-deep-blue: var(--color-brand-primary-hover);
   --color-streaks-dark: var(--color-brand-success);
-  --color-streaks-light: #eef3ef;
+  --color-streaks-light: #1d2a22;
   --color-calligraphy: #e2e7eb;
   --color-scholars-say-background: #fff8e4;
   --color-scholars-say-text: #7c6e21;
-  --color-search-background: #e9ecef;
+  --color-search-background: #0e1116;
   --color-check: var(--color-brand-success);
-  --color-green-light: #eef3ef;
+  --color-green-light: #1d2a22;
   --color-bookmark-icon: var(--color-brand-primary);
 }

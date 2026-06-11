@@ -6,6 +6,7 @@ $list-max-width: 80rem;
 .pageContainer {
   padding-inline-start: 0;
   padding-inline-end: 0;
+  background: var(--color-background-default);
 }
 
 .loadingContainer {
@@ -13,14 +14,6 @@ $list-max-width: 80rem;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.flow > .flowItem {
-  margin-block-start: calc(1.5 * var(--spacing-medium));
-
-  @include breakpoints.tablet {
-    margin-block-start: calc(2 * var(--spacing-medium));
-  }
 }
 
 .additionalVerticalGap {
@@ -77,7 +70,42 @@ $list-max-width: 80rem;
   @include breakpoints.tablet {
     padding-block-end: var(--spacing-large-px);
   }
-  border-block-end: 1px solid var(--color-separators-ayah-level);
+  border-block-end: 0;
+}
+
+.readingCard {
+  max-inline-size: 1180px;
+  margin-inline: auto;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 28px;
+  padding: var(--spacing-medium2-px);
+  background: var(--color-background-elevated-new);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+
+  @include breakpoints.tablet {
+    padding: var(--spacing-large-px);
+  }
+}
+
+.chapterListSection {
+  padding-block-start: var(--spacing-large-px);
+}
+
+.sectionIntro {
+  margin-block-end: var(--spacing-medium2-px);
+
+  p {
+    margin: 0 0 var(--spacing-xxsmall-px);
+    color: var(--color-brand-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-small-px);
+  }
+
+  h2 {
+    margin: 0;
+    color: var(--color-text-default);
+    font-size: var(--font-size-xxlarge-px);
+  }
 }
 
 .appsSection {
@@ -94,10 +122,10 @@ $list-max-width: 80rem;
 }
 
 .bodyContainer {
-  background: var(--color-background-elevated);
-  padding-block-end: var(--spacing-max);
+  background: var(--color-background-default);
+  padding-block: var(--spacing-large-px) var(--spacing-max);
   @include breakpoints.smallerThanTablet {
-    border-start-start-radius: var(--border-radius-rounded);
-    border-start-end-radius: var(--border-radius-rounded);
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
   }
 }

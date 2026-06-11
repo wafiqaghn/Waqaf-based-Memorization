@@ -2,16 +2,16 @@
 
 @mixin donationStripThemeVars {
   @include theme.light {
-    --donation-strip-gradient-start: #0f4c4c;
-    --donation-strip-gradient-end: #0b3d3d;
+    --donation-strip-gradient-start: #242c35;
+    --donation-strip-gradient-end: #151b21;
     --donation-strip-text: #ffffff;
     --donation-strip-cta-bg: #f8f5ee;
-    --donation-strip-cta-fg: #0f4c4c;
+    --donation-strip-cta-fg: #111820;
   }
 
   @include theme.dark {
-    --donation-strip-gradient-start: #0f4c4c;
-    --donation-strip-gradient-end: #0b3d3d;
+    --donation-strip-gradient-start: #242c35;
+    --donation-strip-gradient-end: #151b21;
     --donation-strip-text: #ffffff;
     --donation-strip-cta-bg: #263333;
     --donation-strip-cta-fg: #d6a85a;
@@ -28,8 +28,8 @@
 
 @mixin donationCardThemeVars {
   @include theme.light {
-    --donation-card-gradient-start: #0f4c4c;
-    --donation-card-gradient-end: #0b3d3d;
+    --donation-card-gradient-start: #242c35;
+    --donation-card-gradient-end: #151b21;
     --donation-card-title: #ffffff;
     --donation-card-text: #ffffff;
     --donation-card-cta-bg: #d6a85a;
@@ -39,8 +39,8 @@
   }
 
   @include theme.dark {
-    --donation-card-gradient-start: #0f4c4c;
-    --donation-card-gradient-end: #0b3d3d;
+    --donation-card-gradient-start: #242c35;
+    --donation-card-gradient-end: #151b21;
     --donation-card-title: #ffffff;
     --donation-card-text: #ffffff;
     --donation-card-cta-bg: #d6a85a;

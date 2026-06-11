@@ -1,30 +1,19 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/no-multi-comp */
-import { useEffect, useMemo, useState } from 'react';
-
 import classNames from 'classnames';
 import { NextPage, GetStaticProps } from 'next';
-import Head from 'next/head';
 import useTranslation from 'next-translate/useTranslation';
-import { useSelector } from 'react-redux';
 
 import styles from './index.module.scss';
 
 import ChapterAndJuzListWrapper from '@/components/chapters/ChapterAndJuzList';
-import HomepageFundraisingBanner from '@/components/Fundraising/HomepageFundraisingBanner';
-import ExploreTopicsSection from '@/components/HomePage/ExploreTopicsSection';
 import HomePageHero from '@/components/HomePage/HomePageHero';
-import MobileHomepageSections from '@/components/HomePage/MobileHomepageSections';
-import QuranInYearSection from '@/components/HomePage/QuranInYearSection';
 import ReadingSection from '@/components/HomePage/ReadingSection';
+import TartilaPracticeCards from '@/components/HomePage/TartilaPracticeCards';
 import NextSeoWrapper from '@/components/NextSeoWrapper';
-import useIsMobile from '@/hooks/useIsMobile';
-import { selectIsHomepageBannerVisible } from '@/redux/slices/fundraisingBanner';
-import { isLoggedIn } from '@/utils/auth/login';
 import { getAllChaptersData } from '@/utils/chapter';
 import { getLanguageAlternates } from '@/utils/locale';
 import { getCanonicalUrl } from '@/utils/navigation';
-import getCurrentDayAyah from '@/utils/quranInYearCalendar';
 import { ChaptersResponse } from 'types/ApiResponses';
 import ChaptersData from 'types/ChaptersData';
 
@@ -35,98 +24,38 @@ type IndexProps = {
 
 const Index: NextPage<IndexProps> = ({
   chaptersResponse: { chapters },
-  chaptersData,
 }): JSX.Element => {
   const { t, lang } = useTranslation('home');
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const todayAyah = useMemo(() => getCurrentDayAyah(), []);
-  const isBannerVisible = useSelector(selectIsHomepageBannerVisible);
-  const isMobileView = useIsMobile();
-
-  useEffect(() => {
-    setIsUserLoggedIn(isLoggedIn());
-  }, []);
 
   return (
     <>
-      <Head>
-        <link rel="preload" as="image" href="/images/background.png" crossOrigin="anonymous" />
-      </Head>
       <NextSeoWrapper
-        title={t('home:noble-quran')}
+        title={t('meta.title')}
+        description={t('meta.description')}
         url={getCanonicalUrl(lang, '')}
         languageAlternates={getLanguageAlternates('')}
       />
       <div className={styles.pageContainer}>
         <div className={styles.flow}>
           <HomePageHero />
+          <TartilaPracticeCards />
           <div className={styles.bodyContainer}>
-            <div className={classNames(styles.flowItem, styles.fullWidth, styles.homepageCard)}>
+            <div
+              className={classNames(
+                styles.flowItem,
+                styles.fullWidth,
+                styles.homepageCard,
+                styles.readingCard,
+              )}
+            >
               <ReadingSection />
             </div>
-            {isBannerVisible && (
-              <div
-                className={classNames(
-                  styles.flowItem,
-                  styles.fullWidth,
-                  styles.homepageCard,
-                  styles.homepageFundraisingCard,
-                )}
-              >
-                <HomepageFundraisingBanner />
-              </div>
-            )}
-            {isMobileView ? (
-              <MobileHomepageSections
-                isUserLoggedIn={isUserLoggedIn}
-                todayAyah={todayAyah}
-                chaptersData={chaptersData}
-              />
-            ) : (
-              <>
-                {isUserLoggedIn ? (
-                  <>
-                    {todayAyah && (
-                      <div
-                        className={classNames(
-                          styles.flowItem,
-                          styles.fullWidth,
-                          styles.homepageCard,
-                        )}
-                      >
-                        <QuranInYearSection chaptersData={chaptersData} />
-                      </div>
-                    )}
-                    <div
-                      className={classNames(styles.flowItem, styles.fullWidth, styles.homepageCard)}
-                    >
-                      <ExploreTopicsSection />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className={classNames(styles.flowItem, styles.fullWidth, styles.homepageCard)}
-                    >
-                      <ExploreTopicsSection />
-                    </div>
-                    {todayAyah && (
-                      <div
-                        className={classNames(
-                          styles.flowItem,
-                          styles.fullWidth,
-                          styles.homepageCard,
-                        )}
-                      >
-                        <QuranInYearSection chaptersData={chaptersData} />
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
-            )}
 
-            <div className={styles.flowItem}>
+            <div className={classNames(styles.flowItem, styles.chapterListSection)}>
+              <div className={styles.sectionIntro}>
+                <p>{t('surah-list.eyebrow')}</p>
+                <h2>{t('surah-list.title')}</h2>
+              </div>
               <ChapterAndJuzListWrapper chapters={chapters} />
             </div>
           </div>

@@ -49,8 +49,8 @@
     "waqaf": "Waqaf Segment"
   },
   "header": {
-    "subtitle": "<bold>A higher-quality, customizable way to include Quran verses in your content.</bold><br />Create an embed you can easily customize, with <bold>accurate Arabic rendering, built-in recitation</bold> and more, so readers can listen as they engage with the verse.",
-    "title": "Ayah Embed Builder"
+    "subtitle": "<bold>Build a Tartila embed with Arabic text, translation, and waqaf-aware listening options.</bold><br />Create a focused Quran snippet with <bold>recitation, repeat controls, word guidance</bold> and more, so readers can practice as they engage with the verse.",
+    "title": "Tartila Embed Builder"
   },
   "meta": {
     "description": "Configure and preview embed widgets for sharing Quran, then copy the ready-to-use script snippet.",

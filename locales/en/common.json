@@ -368,6 +368,10 @@
     "title": "Give During The Best Days!"
   },
   "powered-by": "Powered by",
+  "practice-banner": {
+    "mobile-line-one": "Practice mode is experimental.",
+    "mobile-line-two": "Waqaf segments use MVP marker data for learning and validation."
+  },
   "prepare-hearts": {
     "cta": "Learn more",
     "title": "Keep going after Ramadan!"
