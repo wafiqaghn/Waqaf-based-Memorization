@@ -7,7 +7,7 @@ import { getDefaultOgImageUrl } from '@/lib/og';
 import { VersesResponse } from 'types/ApiResponses';
 
 export const config = {
-  siteName: 'Quran.com',
+  siteName: 'Tartila',
   twitterHandle: '@app_quran',
   twitterCardType: 'summary_large_image',
   facebookApp: '342185219529773',
@@ -45,7 +45,7 @@ export function createSEOConfig({
   return {
     title: seoTitle,
     description,
-    titleTemplate: '%s - Quran.com',
+    titleTemplate: '%s - Tartila',
     defaultTitle: config.siteName,
     dangerouslySetAllPagesToNoFollow: !isProduction, // @see https://github.com/garmeeh/next-seo#dangerouslySetAllPagesToNoFollow
     dangerouslySetAllPagesToNoIndex: !isProduction, // @see https://github.com/garmeeh/next-seo#dangerouslySetAllPagesToNoIndex
@@ -122,7 +122,7 @@ export function createSEOConfig({
       },
       {
         name: 'theme-color',
-        content: '#fff', // placeholder
+        content: '#0F4C4C',
       },
       {
         name: 'viewport',

@@ -11,11 +11,11 @@
     "zekr": "<0>Zekr</0>: An open platform Quran study tool for browsing and researching on the Quran"
   },
   "global-effort": {
-    "desc": "Millions of people from all over the world rely on Quran.com as their primary digital Quran resource. Whether they come to recite, reflect, memorize, or study, they share a common purpose: a sincere desire to connect with the words of Allah. As we continue to grow, we remain committed to ensuring that Quran.com remains a trusted, accessible, and beautifully designed space for anyone seeking to engage with the Quran.",
+    "desc": "Tartila is designed for people who come to recite, reflect, memorize, or study with a sincere desire to connect with the words of Allah. As the app grows, we remain committed to making it a trusted, accessible, and beautifully focused space for anyone seeking to engage with the Quran.",
     "title": "A Global Effort"
   },
   "key-features": {
-    "desc": "Quran.com is designed to support every stage of engagement with the Quran—from reading and memorization to study and reflection. Our features include:",
+    "desc": "Tartila is designed to support every stage of engagement with the Quran—from reading and memorization to study and reflection. Our features include:",
     "features": [
       "User-Friendly Quran Interface– A clean and intuitive reading experience on any device.",
       "Multiple Translations & Tafsir – Access to translations in multiple languages, along with tafsir.",
@@ -29,13 +29,13 @@
     ],
     "title": "Key Features & Offerings"
   },
-  "main-description": "Since its founding in 1995, Quran.com has been committed to making the Quran available to everyone in a way that is clear, authentic, and easy to engage with. Every day, millions of people worldwide turn to Quran.com to read, listen, study, and reflect on the Quran—whether they are lifelong students, scholars, or just beginning their journey.",
+  "main-description": "Tartila is a calm Quran learning and memorization app built to make reading, listening, study, and reflection feel clear, steady, and easy to return to. It is shaped for lifelong students, scholars, and anyone beginning their journey with the Quran.",
   "our-mission": {
     "desc": "The Quran is meant to be read, understood, and reflected upon. Our mission is to remove barriers to access and empower individuals and communities by providing a reliable, well-designed, and deeply enriching Quranic experience. We aim to serve as a trusted source for anyone seeking to engage with the Quran, guided by the principles of accuracy, clarity, and sincerity.",
     "title": "Our Mission"
   },
   "who-we-are": {
-    "desc": "Quran.com is a waqf (endowment), established as a public trust to ensure that the Quran remains accessible to all, free of charge and without commercial interests. It is managed by <link>Quran.Foundation</link>, a 501(c)(3) nonprofit organization, which sustains and develops Quran.com as part of its mission to provide high-quality, authentic Quranic resources to the world. Our commitment is to serve the Quran and its readers with excellence, sincerity, and responsibility.",
+    "desc": "Tartila is built with the same commitment to keeping Quran learning accessible, useful, and sincere. It uses trusted Quran resources and remains connected to <link>Quran.Foundation</link>'s mission of providing high-quality, authentic Quranic resources to the world. Our commitment is to serve the Quran and its readers with excellence, sincerity, and responsibility.",
     "title": "Who We Are"
   }
 }

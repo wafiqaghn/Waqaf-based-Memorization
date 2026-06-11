@@ -55,7 +55,7 @@ const useAyahWidgetPreview = ({
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('allow', 'clipboard-write');
     iframe.setAttribute('loading', 'lazy');
-    iframe.setAttribute('title', 'Quran.com embed preview');
+    iframe.setAttribute('title', 'Tartila embed preview');
     iframe.style.border = '0';
     iframe.style.borderRadius = '12px';
     iframe.style.maxWidth = '100%';

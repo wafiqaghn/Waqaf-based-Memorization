@@ -2,7 +2,7 @@
   "benefits": {
     "access-anywhere": {
       "bullet-points": [
-        "Your notes are securely stored in your Quran.com account.",
+        "Your notes are securely stored in your Tartila account.",
         "Sync across devices—continue your study on mobile, tablet, or desktop."
       ],
       "description": "Your notes sync across devices when you're logged in, allowing you to access your reflections whether you're on your phone, tablet, or computer.",
@@ -59,7 +59,7 @@
         "Can you draw connections to the verse's context, other Quranic verses, hadith, or events?"
       ],
       "description": "Coming soon: the ability to share selected notes with friends, family, or study groups. Collaborate on understanding and spread beneficial knowledge.",
-      "paragraph1": "While notes on Quran.com are saved privately, you also have the option to share selected reflections publicly on <0>QuranReflect.com</0>. This is a non-profit community platform designed to encourage thoughtful engagement with the Quran - not through scholarly tafsir (which is reserved for qualified scholars), but through sincere, personal reflections that are reviewed and guided by a qualified moderation team.",
+      "paragraph1": "While notes on Tartila are saved privately, you also have the option to share selected reflections publicly on <0>QuranReflect.com</0>. This is a non-profit community platform designed to encourage thoughtful engagement with the Quran - not through scholarly tafsir (which is reserved for qualified scholars), but through sincere, personal reflections that are reviewed and guided by a qualified moderation team.",
       "paragraph2": "Allah invites all believers, not only scholars, to engage in tadabbur:",
       "quote": "This is a blessed Book which We have revealed to you O Prophet so that they may contemplate its verses, and people of reason may be mindful. (Surah Sad 38:29)",
       "reflection-prompt": "Examples of Personal Reflection Questions that you can use to reflect:",
@@ -74,7 +74,7 @@
     },
     "title": "Benefits of Using the Notes Feature"
   },
-  "description": "Discover 5 powerful reasons to take notes on Quran.com and how notes can play a vital role in your Journey with the Quran.",
+  "description": "Discover 5 powerful reasons to take notes on Tartila and how notes can play a vital role in your Journey with the Quran.",
   "heading": "5 Powerful Reasons to Take Notes - And How They Can Transform Your Journey with the Quran",
   "how-to-use": {
     "saved-note-explanation": "Once you save a note for a verse, the note icon will turn blue, making it easy to identify verses you've previously annotated during future readings.",
@@ -96,10 +96,10 @@
       "caption": "The notes feature is available next to every ayah"
     }
   },
-  "introduction": "The Notes feature on Quran.com is a meaningful way to deepen your engagement with the Quran. Whether you're studying, reflecting, or simply trying to better understand the message, taking notes can help you connect more deeply with the verses and retain insights that might otherwise be forgotten.",
+  "introduction": "The Notes feature on Tartila is a meaningful way to deepen your engagement with the Quran. Whether you're studying, reflecting, or simply trying to better understand the message, taking notes can help you connect more deeply with the verses and retain insights that might otherwise be forgotten.",
   "meta": {
-    "description": "Learn how to use the notes feature on Quran.com to enhance your Quran study experience.",
-    "title": "Take Notes - Quran.com"
+    "description": "Learn how to use the notes feature on Tartila to enhance your Quran study experience.",
+    "title": "Take Notes - Tartila"
   },
   "table-of-contents": {
     "items": [

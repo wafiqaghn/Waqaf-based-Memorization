@@ -67,7 +67,7 @@
     "BannedUserError": "Sorry, Your account is banned. Contact Quran.Foundation.",
     "TokenExpiredError": "You have been logged out, please login again."
   },
-  "login-title": "Login to Quran.com",
+  "login-title": "Login to Tartila",
   "new-password-placeholder": "New password",
   "or": "OR",
   "other-options": "Other Login Options",
@@ -83,7 +83,7 @@
   },
   "privacy-policy": "Protecting your privacy is our priority – By signing up, you consent to our <link>Privacy Policy</link> and <link1>Terms and conditions</link1>.",
   "quran-text": "Quran",
-  "quran-title": "Quran.com",
+  "quran-title": "Tartila",
   "reflect-feature-1": "Reflect on the Quran",
   "reflect-feature-2": "Join Groups",
   "reflect-feature-3": "Interact with others",

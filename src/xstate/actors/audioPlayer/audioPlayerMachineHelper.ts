@@ -121,10 +121,10 @@ export const getMediaSessionMetaData = async (
   return new MediaMetadata({
     title: `Surah ${context.audioData.chapterId}`,
     artist: reciterName,
-    album: 'Quran.com',
+    album: 'Tartila',
     artwork: [
       {
-        src: 'https://quran.com/images/logo/Logo@192x192.png',
+        src: '/images/logo/Logo@192x192.png',
         type: 'image/png',
         sizes: '192x192',
       },
