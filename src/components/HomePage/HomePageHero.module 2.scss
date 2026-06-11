@@ -1,0 +1,52 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/theme';
+
+.outerContainer {
+  position: relative;
+}
+
+.backgroundImage {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background-color: var(--color-search-background);
+
+  svg {
+    inline-size: 100%;
+    transform: translateY(-40%);
+  }
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  align-items: center;
+  padding-inline: var(--spacing-small);
+  padding-block: var(--spacing-medium2-px);
+
+  @include breakpoints.tablet {
+    padding-block: var(--spacing-large-px);
+  }
+
+  margin-inline: auto;
+}
+
+.logoContainer {
+  padding-block-end: var(--spacing-medium2-px);
+  @include breakpoints.smallerThanTablet {
+    display: none;
+    padding: 0;
+  }
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: var(--spacing-medium-px);
+  margin-block-start: var(--spacing-medium);
+  @include breakpoints.smallerThanTablet {
+    gap: var(--spacing-small-px);
+    margin-block-start: var(--spacing-small-px);
+  }
+}
