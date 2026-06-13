@@ -48,6 +48,28 @@ type ResolveWidgetSegmentParams = ResolveAyahSegmentParams &
     audioMode?: WidgetAudioMode;
   };
 
+export type WaqafSegmentFallbackReason =
+  | 'INVALID_WAQAF_INDEX'
+  | 'MARKER_NOT_FOUND'
+  | 'INVALID_WORD_INDEX'
+  | 'TIMESTAMP_NOT_FOUND'
+  | 'END_CLAMP_INVALID'
+  | 'NO_INTERNAL_WAQAF_SIGN';
+
+export type WaqafSegmentResolutionDebugInfo = {
+  markerCount: number;
+  selectedMarker?: WidgetWaqafMarker;
+  selectedSymbol?: string;
+  markerSource?: WidgetWaqafMarker['source'];
+  selectedWordIndex?: number;
+  matchedTimestamp?: WidgetWordTimestamp;
+  nextWordTimestamp?: WidgetWordTimestamp;
+  computedStartTimeMs?: number;
+  computedEndTimeMs?: number;
+  fallbackReason?: WaqafSegmentFallbackReason;
+  segment?: WidgetAudioSegment;
+};
+
 type WordRange = {
   startWordIndex: number;
   endWordIndex: number;
@@ -76,6 +98,15 @@ const findWordTimestamp = (
 ): WidgetWordTimestamp | undefined =>
   wordTimestamps?.find(
     (timestamp) => timestamp.ayahNumber === ayahNumber && timestamp.wordIndex === wordIndex,
+  );
+
+const findNextWordTimestamp = (
+  wordTimestamps: WidgetWordTimestamp[] | undefined,
+  ayahNumber: number,
+  wordIndex: number,
+): WidgetWordTimestamp | undefined =>
+  getAyahTimestamps(wordTimestamps, ayahNumber).find(
+    (timestamp) => timestamp.wordIndex > wordIndex,
   );
 
 /**
@@ -215,12 +246,12 @@ export const resolveCustomAudioSegment = ({
 };
 
 /**
- * Resolve a waqaf segment from helper marker metadata and word timestamps.
+ * Resolve a waqaf segment with debug metadata for tests and diagnostics.
  *
  * @param {ResolveWaqafSegmentParams} params - Resolver params.
- * @returns {WidgetAudioSegment | undefined} Resolved segment metadata.
+ * @returns {WaqafSegmentResolutionDebugInfo} Resolution details and optional segment.
  */
-export const resolveWaqafAudioSegment = ({
+export const getWaqafSegmentResolutionDebugInfo = ({
   audioUrl,
   surahId,
   ayahStart,
@@ -228,26 +259,70 @@ export const resolveWaqafAudioSegment = ({
   waqafIndex,
   wordTimestamps,
   waqafMarkers,
-}: ResolveWaqafSegmentParams): WidgetAudioSegment | undefined => {
-  if (!Number.isInteger(waqafIndex)) return undefined;
+}: ResolveWaqafSegmentParams): WaqafSegmentResolutionDebugInfo => {
+  const markerCount = waqafMarkers?.length ?? 0;
+  if (!Number.isInteger(waqafIndex)) {
+    return { markerCount, fallbackReason: 'INVALID_WAQAF_INDEX' };
+  }
+
   const marker = waqafMarkers?.[Number(waqafIndex)];
-  if (!marker) return undefined;
+  if (!marker) {
+    return { markerCount, fallbackReason: 'MARKER_NOT_FOUND' };
+  }
+
+  if (!Number.isInteger(marker.wordIndex) || marker.wordIndex < 0) {
+    return {
+      markerCount,
+      selectedMarker: marker,
+      selectedSymbol: marker.symbol,
+      markerSource: marker.source,
+      selectedWordIndex: marker.wordIndex,
+      fallbackReason: 'INVALID_WORD_INDEX',
+    };
+  }
 
   const ayahStartTimestamps = getAyahTimestamps(wordTimestamps, ayahStart);
   const markerAyahTimestamps = getAyahTimestamps(wordTimestamps, marker.ayahNumber);
   const startTimestamp = ayahStartTimestamps[0];
   const endTimestamp = findWordTimestamp(wordTimestamps, marker.ayahNumber, marker.wordIndex);
+  const nextWordTimestamp = findNextWordTimestamp(
+    wordTimestamps,
+    marker.ayahNumber,
+    marker.wordIndex,
+  );
   const markerAyahEndTimestamp = markerAyahTimestamps[markerAyahTimestamps.length - 1];
+  const debugBase: WaqafSegmentResolutionDebugInfo = {
+    markerCount,
+    selectedMarker: marker,
+    selectedSymbol: marker.symbol,
+    markerSource: marker.source,
+    selectedWordIndex: marker.wordIndex,
+    matchedTimestamp: endTimestamp,
+    nextWordTimestamp,
+    computedStartTimeMs: startTimestamp?.startTimeMs,
+  };
 
-  if (!startTimestamp || !endTimestamp) return undefined;
+  if (!startTimestamp) {
+    return { ...debugBase, fallbackReason: 'TIMESTAMP_NOT_FOUND' };
+  }
+  if (!endTimestamp) {
+    return { ...debugBase, fallbackReason: 'TIMESTAMP_NOT_FOUND' };
+  }
+
   const paddedEndTimeMs = endTimestamp.endTimeMs + WAQAF_END_PADDING_MS;
   const endTimeMs = markerAyahEndTimestamp
     ? Math.min(paddedEndTimeMs, markerAyahEndTimestamp.endTimeMs)
     : paddedEndTimeMs;
 
-  if (!isValidTimeRange(startTimestamp.startTimeMs, endTimeMs)) return undefined;
+  if (!isValidTimeRange(startTimestamp.startTimeMs, endTimeMs)) {
+    return {
+      ...debugBase,
+      computedEndTimeMs: endTimeMs,
+      fallbackReason: 'END_CLAMP_INVALID',
+    };
+  }
 
-  return {
+  const segment: WidgetAudioSegment = {
     audioUrl,
     segmentType: 'WAQAF',
     surahId,
@@ -259,6 +334,24 @@ export const resolveWaqafAudioSegment = ({
     endTimeMs,
     source: 'GENERATED',
   };
+
+  return {
+    ...debugBase,
+    computedEndTimeMs: endTimeMs,
+    segment,
+  };
+};
+
+/**
+ * Resolve a waqaf segment from helper marker metadata and word timestamps.
+ *
+ * @param {ResolveWaqafSegmentParams} params - Resolver params.
+ * @returns {WidgetAudioSegment | undefined} Resolved segment metadata.
+ */
+export const resolveWaqafAudioSegment = (
+  params: ResolveWaqafSegmentParams,
+): WidgetAudioSegment | undefined => {
+  return getWaqafSegmentResolutionDebugInfo(params).segment;
 };
 
 /**

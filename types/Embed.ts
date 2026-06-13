@@ -91,6 +91,7 @@ export type WidgetWaqafMarker = {
   type: string;
   description?: string;
   priorWeight?: number;
+  source?: 'manual' | 'generated' | 'auto';
 };
 
 /**
