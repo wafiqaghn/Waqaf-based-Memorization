@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 
 import { QuranReaderDataType } from '@/types/QuranReader';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 type AudioNavigationHandler = (ayahNumber: number) => unknown;
 

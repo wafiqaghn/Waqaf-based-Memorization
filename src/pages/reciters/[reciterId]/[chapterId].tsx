@@ -36,8 +36,8 @@ import {
 import { REVALIDATION_PERIOD_ON_ERROR_SECONDS } from '@/utils/staticPageGeneration';
 import { getCurrentPath } from '@/utils/url';
 import { isValidChapterId } from '@/utils/validator';
-import { selectCurrentAudioReciterId } from '@/xstate/actors/audioPlayer/selectors';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+import { selectCurrentAudioReciterId } from 'src/xstate/actors/audioPlayer/selectors';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 import Chapter from 'types/Chapter';
 import Reciter from 'types/Reciter';
 

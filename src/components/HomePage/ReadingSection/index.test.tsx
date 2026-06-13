@@ -44,6 +44,9 @@ vi.mock('@/components/HomePage/ReadingSection/ChapterCard', () => ({
     />
   ),
 }));
+vi.mock('@/components/HomePage/ReadingSection/AudioCard', () => ({
+  default: ({ surahNumber }: any) => <div data-testid="audio-card" data-surah={surahNumber} />,
+}));
 vi.mock('@/components/HomePage/ReadingSection/NewCard', () => ({ default: () => <div /> }));
 vi.mock('@/components/HomePage/ReadingSection/NoGoalOrStreakCard', () => ({
   default: () => <div />,
@@ -68,6 +71,7 @@ vi.mock('react-redux', () => {
     guestBookmark: { readingBookmark: 'page:2:1:1' },
   } as any;
   return {
+    shallowEqual: (a: unknown, b: unknown) => a === b,
     useSelector: (selector: (s: any) => any) =>
       selector((globalThis as any).mockState?.current || defaultState),
   };

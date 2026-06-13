@@ -7,8 +7,8 @@ import IconContainer, { IconColor, IconSize } from '@/dls/IconContainer/IconCont
 import PlayIcon from '@/icons/play-outline.svg';
 import { logButtonClick } from '@/utils/eventLogger';
 import { getChapterNumberFromKey, getVerseNumberFromKey } from '@/utils/verse';
-import { selectIsVerseLoading } from '@/xstate/actors/audioPlayer/selectors';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+import { selectIsVerseLoading } from 'src/xstate/actors/audioPlayer/selectors';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 interface PlayAudioMenuItemProps {
   verse: {

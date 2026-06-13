@@ -13,7 +13,7 @@ import NoSoundIcon from '@/icons/no-sound.svg';
 import VolumeDownIcon from '@/icons/volume-down.svg';
 import VolumeUpIcon from '@/icons/volume-up.svg';
 import { logValueChange } from '@/utils/eventLogger';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 const VOLUME_CONTROL_CLOSE_DELAY = 1500;
 const VOLUME_ICONS = {
