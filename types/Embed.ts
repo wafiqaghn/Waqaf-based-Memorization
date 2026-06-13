@@ -89,8 +89,12 @@ export type WidgetWaqafMarker = {
   wordIndex: number;
   symbol: string;
   type: string;
+  decision?: 'stop-preferred' | 'stop-allowed' | 'continue-preferred' | 'stop-prohibited';
+  defaultCutCandidate?: boolean;
+  priority?: number;
   description?: string;
   priorWeight?: number;
+  source?: 'manual' | 'generated' | 'auto' | 'auto-runtime';
 };
 
 /**

@@ -23,7 +23,7 @@ import type {
   WidgetWaqafMarker,
   WidgetWordTimestamp,
 } from '@/types/Embed';
-import { getWidgetWaqafMarkersForAyah } from '@/data/waqafMarks';
+import { getResolvedWidgetWaqafMarkersForAyah } from '@/data/waqafMarks';
 import { getQuranFontForMushaf } from '@/types/Embed';
 import { MushafLines } from '@/types/QuranReader';
 import { getDefaultWordFields, getMushafId } from '@/utils/api';
@@ -887,12 +887,13 @@ export const getAyahWidgetData = async (input: AyahWidgetDataInput): Promise<Aya
     reciterId,
     chapterData,
   });
-  const waqafMarkers: WidgetWaqafMarker[] = verseKeys.flatMap((verseKey: string) => {
-    const [, ayahNumberSegment] = verseKey.split(':');
-    const ayahNumber = Number(ayahNumberSegment);
-    if (!Number.isInteger(ayahNumber)) return [];
-    return getWidgetWaqafMarkersForAyah(chapterNumber, ayahNumber);
-  });
+  const waqafMarkers: WidgetWaqafMarker[] = enrichedVerses.flatMap((verseItem: Verse) =>
+    getResolvedWidgetWaqafMarkersForAyah({
+      chapterNumber,
+      verseNumber: verseItem.verseNumber,
+      words: verseItem.words,
+    }),
+  );
   const audioSegment = resolveWidgetAudioSegment({
     audioUrl: meta.audioUrl,
     surahId: chapterNumber,
