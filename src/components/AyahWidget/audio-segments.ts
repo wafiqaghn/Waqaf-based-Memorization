@@ -40,6 +40,12 @@ type ResolveWaqafSegmentParams = {
   waqafIndex?: number;
   wordTimestamps?: WidgetWordTimestamp[];
   waqafMarkers?: WidgetWaqafMarker[];
+  ignoredWaqafSigns?: {
+    symbol: string;
+    reason: string;
+    wordIndex?: number;
+    decision?: string;
+  }[];
 };
 
 type ResolveWidgetSegmentParams = ResolveAyahSegmentParams &
@@ -54,12 +60,18 @@ export type WaqafSegmentFallbackReason =
   | 'INVALID_WORD_INDEX'
   | 'TIMESTAMP_NOT_FOUND'
   | 'END_CLAMP_INVALID'
-  | 'NO_INTERNAL_WAQAF_SIGN';
+  | 'NO_ALLOWED_WAQAF_SIGN'
+  | 'NO_DEFAULT_CUT_CANDIDATE'
+  | 'NO_INTERNAL_WAQAF_SIGN'
+  | 'NO_WORDS_FOR_RUNTIME_EXTRACTION'
+  | 'NO_TEXT_FIELD_WITH_WAQAF_SIGNS';
 
 export type WaqafSegmentResolutionDebugInfo = {
   markerCount: number;
   selectedMarker?: WidgetWaqafMarker;
   selectedSymbol?: string;
+  selectedSymbolCodePoint?: string;
+  selectedSymbolAllowed?: boolean;
   markerSource?: WidgetWaqafMarker['source'];
   selectedWordIndex?: number;
   matchedTimestamp?: WidgetWordTimestamp;
@@ -67,6 +79,7 @@ export type WaqafSegmentResolutionDebugInfo = {
   computedStartTimeMs?: number;
   computedEndTimeMs?: number;
   fallbackReason?: WaqafSegmentFallbackReason;
+  ignoredSigns?: ResolveWaqafSegmentParams['ignoredWaqafSigns'];
   segment?: WidgetAudioSegment;
 };
 
@@ -77,6 +90,12 @@ type WordRange = {
 
 const MS_PER_SECOND = 1000;
 export const WAQAF_END_PADDING_MS = 300;
+const ALLOWED_WAQAF_SYMBOLS = new Set(['ۖ', 'ۚ', 'ۗ', 'ۘ', 'ۙ', 'ۛ', 'ۜ']);
+
+const getCodePointLabel = (char?: string): string | undefined =>
+  char
+    ? `U+${char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')}`
+    : undefined;
 
 const isValidTimeRange = (startTimeMs?: number, endTimeMs?: number): boolean =>
   Number.isFinite(startTimeMs) &&
@@ -259,15 +278,25 @@ export const getWaqafSegmentResolutionDebugInfo = ({
   waqafIndex,
   wordTimestamps,
   waqafMarkers,
+  ignoredWaqafSigns,
 }: ResolveWaqafSegmentParams): WaqafSegmentResolutionDebugInfo => {
   const markerCount = waqafMarkers?.length ?? 0;
   if (!Number.isInteger(waqafIndex)) {
-    return { markerCount, fallbackReason: 'INVALID_WAQAF_INDEX' };
+    return { markerCount, ignoredSigns: ignoredWaqafSigns, fallbackReason: 'INVALID_WAQAF_INDEX' };
+  }
+  if (markerCount === 0) {
+    return {
+      markerCount,
+      ignoredSigns: ignoredWaqafSigns,
+      fallbackReason: ignoredWaqafSigns?.length
+        ? 'NO_DEFAULT_CUT_CANDIDATE'
+        : 'NO_ALLOWED_WAQAF_SIGN',
+    };
   }
 
   const marker = waqafMarkers?.[Number(waqafIndex)];
   if (!marker) {
-    return { markerCount, fallbackReason: 'MARKER_NOT_FOUND' };
+    return { markerCount, ignoredSigns: ignoredWaqafSigns, fallbackReason: 'MARKER_NOT_FOUND' };
   }
 
   if (!Number.isInteger(marker.wordIndex) || marker.wordIndex < 0) {
@@ -275,8 +304,11 @@ export const getWaqafSegmentResolutionDebugInfo = ({
       markerCount,
       selectedMarker: marker,
       selectedSymbol: marker.symbol,
+      selectedSymbolCodePoint: getCodePointLabel(marker.symbol),
+      selectedSymbolAllowed: ALLOWED_WAQAF_SYMBOLS.has(marker.symbol),
       markerSource: marker.source,
       selectedWordIndex: marker.wordIndex,
+      ignoredSigns: ignoredWaqafSigns,
       fallbackReason: 'INVALID_WORD_INDEX',
     };
   }
@@ -295,11 +327,14 @@ export const getWaqafSegmentResolutionDebugInfo = ({
     markerCount,
     selectedMarker: marker,
     selectedSymbol: marker.symbol,
+    selectedSymbolCodePoint: getCodePointLabel(marker.symbol),
+    selectedSymbolAllowed: ALLOWED_WAQAF_SYMBOLS.has(marker.symbol),
     markerSource: marker.source,
     selectedWordIndex: marker.wordIndex,
     matchedTimestamp: endTimestamp,
     nextWordTimestamp,
     computedStartTimeMs: startTimestamp?.startTimeMs,
+    ignoredSigns: ignoredWaqafSigns,
   };
 
   if (!startTimestamp) {

@@ -3,10 +3,23 @@ import type Word from 'types/Word';
 
 import { GENERATED_AL_BAQARAH_WAQAF_MARKS } from './waqafMarks.alBaqarah.generated';
 
-export type WaqafMarkerSource = 'manual' | 'generated' | 'auto';
+export type WaqafMarkerSource = 'manual' | 'generated' | 'auto' | 'auto-runtime';
+export type WaqafDecision =
+  | 'stop-preferred'
+  | 'stop-allowed'
+  | 'continue-preferred'
+  | 'stop-prohibited';
+export type WaqafIgnoreReason =
+  | 'STOP_PROHIBITED_SIGN'
+  | 'CONTINUE_PREFERRED_SIGN'
+  | 'AMBIGUOUS_TEXTUAL_SIGN'
+  | 'NO_DEFAULT_CUT_CANDIDATE';
 
 export type WaqafSymbolMetadata = {
   type: string;
+  decision: WaqafDecision;
+  defaultCutCandidate: boolean;
+  priority: number;
   description: string;
   priorWeight: number;
 };
@@ -14,58 +27,116 @@ export type WaqafSymbolMetadata = {
 export const WAQAF_SYMBOL_METADATA: Record<string, WaqafSymbolMetadata> = {
   'ۖ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۚ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۗ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۛ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۘ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۙ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
   'ۜ': {
     type: 'pause-sign',
+    decision: 'stop-allowed',
+    defaultCutCandidate: true,
+    priority: 60,
     description: 'Auto-detected MVP waqaf marker from Quran text',
     priorWeight: 0.6,
   },
-  'ۢ': {
-    type: 'pause-sign',
-    description: 'Auto-detected MVP waqaf marker from Quran text',
-    priorWeight: 0.6,
+  ط: {
+    type: 'waqaf-mutlaq',
+    decision: 'stop-preferred',
+    defaultCutCandidate: true,
+    priority: 90,
+    description: 'Waqaf Mutlaq: stopping is preferred',
+    priorWeight: 0.9,
   },
-  'ۭ': {
-    type: 'pause-sign',
-    description: 'Auto-detected MVP waqaf marker from Quran text',
-    priorWeight: 0.6,
+  لا: {
+    type: 'waqaf-mamnu',
+    decision: 'stop-prohibited',
+    defaultCutCandidate: false,
+    priority: 0,
+    description: 'Waqaf Mamnu: stopping is prohibited',
+    priorWeight: 0,
   },
-  '۞': {
-    type: 'pause-sign',
-    description: 'Auto-detected MVP waqaf marker from Quran text',
-    priorWeight: 0.6,
+  صلى: {
+    type: 'al-washlu-aula',
+    decision: 'continue-preferred',
+    defaultCutCandidate: false,
+    priority: 10,
+    description: 'Al-Washlu Aula: continuing is preferred',
+    priorWeight: 0.1,
   },
 };
 
-const WAQAF_SYMBOL_PRIORITY: string[] = ['ۖ', 'ۚ', 'ۗ', 'ۛ', 'ۘ', 'ۙ', 'ۜ', 'ۢ', 'ۭ', '۞'];
-const WAQAF_SYMBOLS: Set<string> = new Set(WAQAF_SYMBOL_PRIORITY);
+export const WAQAF_PAUSE_SIGNS: readonly string[] = ['ۖ', 'ۚ', 'ۗ', 'ۘ', 'ۙ', 'ۛ', 'ۜ'];
+const TEXTUAL_WAQAF_SIGNS: readonly string[] = ['لا', 'ط', 'صلى'];
+
+export type IgnoredWaqafSign = {
+  symbol: string;
+  codePoints: string[];
+  wordIndex: number;
+  wordText: string;
+  decision?: WaqafDecision;
+  defaultCutCandidate?: boolean;
+  priority?: number;
+  source: WaqafMarkerSource;
+  reason: WaqafIgnoreReason;
+};
+
+export type WaqafExtractionResult = {
+  markers: WidgetWaqafMarker[];
+  ignoredSigns: IgnoredWaqafSign[];
+};
+
+export type WordTextFieldDebugInfo = {
+  position?: number;
+  charTypeName?: string;
+  textFields: {
+    field: string;
+    value: string;
+    codePoints: ReturnType<typeof toCodePoints>;
+    detectedWaqafSymbols: string[];
+  }[];
+};
 
 /**
  * MVP/sample waqaf marker metadata for Al-Baqarah only.
@@ -82,6 +153,9 @@ export type WaqafMark = {
   wordIndex: number;
   symbol: string;
   type: string;
+  decision?: WaqafDecision;
+  defaultCutCandidate?: boolean;
+  priority?: number;
   description?: string;
   priorWeight?: number;
   source?: WaqafMarkerSource;
@@ -145,24 +219,66 @@ export const WAQAF_MARKS_HAFS: readonly WaqafMark[] = [
   ...GENERATED_AL_BAQARAH_WAQAF_MARKS,
 ];
 
+const WORD_TEXT_FIELD_NAMES = [
+  'qpcUthmaniHafs',
+  'textUthmani',
+  'text',
+  'textIndopak',
+  'textUthmaniTajweed',
+  'text_uthmani',
+  'qpc_uthmani_hafs',
+  'text_uthmani_tajweed',
+] as const;
+
+type WordTextFieldName = (typeof WORD_TEXT_FIELD_NAMES)[number];
+
+const getWordTextFieldEntries = (word: Word): { field: WordTextFieldName; value: string }[] =>
+  WORD_TEXT_FIELD_NAMES.map((field) => ({ field, value: word[field] })).filter(
+    (entry): entry is { field: WordTextFieldName; value: string } =>
+      typeof entry.value === 'string' && entry.value.length > 0,
+  );
+
 const getWordTextFields = (word: Word): string[] =>
-  [
-    word.qpcUthmaniHafs,
-    word.textUthmani,
-    word.text,
-    word.textIndopak,
-    word.textUthmaniTajweed,
-    word.text_uthmani,
-    word.qpc_uthmani_hafs,
-    word.text_uthmani_tajweed,
-  ].filter((value): value is string => typeof value === 'string' && value.length > 0);
+  getWordTextFieldEntries(word).map((entry) => entry.value);
+
+const getPrimaryWordText = (word: Word): string =>
+  getWordTextFields(word)[0] ?? word.location ?? '';
 
 export const extractWaqafSymbolFromWord = (word: Word): string | undefined => {
   const textFields = getWordTextFields(word);
-  return WAQAF_SYMBOL_PRIORITY.find((symbol) =>
+  return WAQAF_PAUSE_SIGNS.find((symbol) =>
     textFields.some((textField) => textField.includes(symbol)),
   );
 };
+
+export const extractWaqafSymbols = (text: string): string[] =>
+  WAQAF_PAUSE_SIGNS.filter((symbol) => text.includes(symbol));
+
+export const toCodePoints = (
+  text: string,
+): {
+  char: string;
+  codePoint: string;
+}[] =>
+  Array.from(text).map((char) => ({
+    char,
+    codePoint: `U+${char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')}`,
+  }));
+
+const getCodePointLabels = (text: string): string[] =>
+  toCodePoints(text).map((item) => item.codePoint);
+
+export const debugWordTextFields = (words: Word[] = []): WordTextFieldDebugInfo[] =>
+  words.map((word) => ({
+    position: word.position,
+    charTypeName: word.charTypeName ?? word.char_type_name,
+    textFields: getWordTextFieldEntries(word).map(({ field, value }) => ({
+      field,
+      value,
+      codePoints: toCodePoints(value),
+      detectedWaqafSymbols: extractWaqafSymbols(value),
+    })),
+  }));
 
 const getWordIndexFromWord = (word: Word, fallbackIndex: number): number => {
   if (Number.isInteger(word.position) && word.position > 0) return word.position - 1;
@@ -174,9 +290,60 @@ const getWordIndexFromWord = (word: Word, fallbackIndex: number): number => {
   return fallbackIndex;
 };
 
-const isVerseEndWord = (word: Word): boolean => word.charTypeName === 'end';
+const getCharTypeName = (word: Word): string | undefined => word.charTypeName ?? word.char_type_name;
 
-export const extractWaqafMarkersFromVerseWords = ({
+const isVerseEndWord = (word: Word): boolean => getCharTypeName(word) === 'end';
+const isAnnotationWord = (word: Word): boolean => getCharTypeName(word) === 'pause';
+
+const normalizeAnnotationText = (value: string): string =>
+  value.replace(/<[^>]+>/g, '').replace(/\s|\u200C/g, '');
+
+const extractSafeTextualAnnotation = (word: Word): string | undefined => {
+  if (!isAnnotationWord(word)) return undefined;
+  const normalizedFields = getWordTextFields(word).map(normalizeAnnotationText);
+  return TEXTUAL_WAQAF_SIGNS.find((symbol) =>
+    normalizedFields.some((textField) => textField === symbol),
+  );
+};
+
+const getIgnoreReason = (metadata?: WaqafSymbolMetadata): WaqafIgnoreReason => {
+  if (metadata?.decision === 'stop-prohibited') return 'STOP_PROHIBITED_SIGN';
+  if (metadata?.decision === 'continue-preferred') return 'CONTINUE_PREFERRED_SIGN';
+  return 'NO_DEFAULT_CUT_CANDIDATE';
+};
+
+const buildMarker = ({
+  chapterNumber,
+  verseNumber,
+  wordIndex,
+  symbol,
+  source,
+}: {
+  chapterNumber: number;
+  verseNumber: number;
+  wordIndex: number;
+  symbol: string;
+  source: WaqafMarkerSource;
+}): WidgetWaqafMarker | undefined => {
+  const metadata = WAQAF_SYMBOL_METADATA[symbol];
+  if (!metadata?.defaultCutCandidate) return undefined;
+
+  return {
+    surahId: chapterNumber,
+    ayahNumber: verseNumber,
+    wordIndex,
+    symbol,
+    type: metadata.type,
+    decision: metadata.decision,
+    defaultCutCandidate: metadata.defaultCutCandidate,
+    priority: metadata.priority,
+    description: metadata.description,
+    priorWeight: metadata.priorWeight,
+    source,
+  };
+};
+
+export const extractWaqafSignsFromVerseWords = ({
   chapterNumber,
   verseNumber,
   words = [],
@@ -184,32 +351,58 @@ export const extractWaqafMarkersFromVerseWords = ({
   chapterNumber: number;
   verseNumber: number;
   words?: Word[];
-}): WidgetWaqafMarker[] => {
+}): WaqafExtractionResult => {
   const markers: WidgetWaqafMarker[] = [];
+  const ignoredSigns: IgnoredWaqafSign[] = [];
   const quranWords = words.filter((word) => !isVerseEndWord(word));
 
   quranWords.forEach((word, index) => {
-    if (index === quranWords.length - 1) return;
+    if (index === quranWords.length - 1 && !isAnnotationWord(word)) return;
 
-    const wordIndex = getWordIndexFromWord(word, index);
-    const symbol = extractWaqafSymbolFromWord(word);
-    if (!symbol || !WAQAF_SYMBOLS.has(symbol)) return;
+    const safeTextualSymbol = extractSafeTextualAnnotation(word);
+    const wordIndex = safeTextualSymbol
+      ? Math.max(0, index - 1)
+      : getWordIndexFromWord(word, index);
+    const symbol = safeTextualSymbol ?? extractWaqafSymbolFromWord(word);
+    if (!symbol) return;
 
-    const metadata = WAQAF_SYMBOL_METADATA[symbol];
-    markers.push({
-      surahId: chapterNumber,
-      ayahNumber: verseNumber,
+    const marker = buildMarker({
+      chapterNumber,
+      verseNumber,
       wordIndex,
       symbol,
-      type: metadata.type,
-      description: metadata.description,
-      priorWeight: metadata.priorWeight,
-      source: 'auto',
+      source: 'auto-runtime',
+    });
+    if (marker) {
+      markers.push(marker);
+      return;
+    }
+
+    const metadata = WAQAF_SYMBOL_METADATA[symbol];
+    ignoredSigns.push({
+      symbol,
+      codePoints: getCodePointLabels(symbol),
+      wordIndex,
+      wordText: getPrimaryWordText(word),
+      decision: metadata?.decision,
+      defaultCutCandidate: metadata?.defaultCutCandidate,
+      priority: metadata?.priority,
+      source: 'auto-runtime',
+      reason: getIgnoreReason(metadata),
     });
   });
 
-  return markers.sort((a, b) => a.wordIndex - b.wordIndex);
+  return {
+    markers: markers.sort((a, b) => a.wordIndex - b.wordIndex),
+    ignoredSigns,
+  };
 };
+
+export const extractWaqafMarkersFromVerseWords = (params: {
+  chapterNumber: number;
+  verseNumber: number;
+  words?: Word[];
+}): WidgetWaqafMarker[] => extractWaqafSignsFromVerseWords(params).markers;
 
 export const getWaqafMarksForVerse = (
   allWaqafMarks: readonly WaqafMark[],
@@ -230,6 +423,9 @@ export const getWidgetWaqafMarkersForAyah = (
     wordIndex: mark.wordIndex - 1,
     symbol: mark.symbol,
     type: mark.type,
+    decision: mark.decision,
+    defaultCutCandidate: mark.defaultCutCandidate,
+    priority: mark.priority,
     description: mark.description,
     priorWeight: mark.priorWeight,
     source: mark.source,
@@ -242,6 +438,7 @@ const MARKER_SOURCE_PRIORITY: Record<WaqafMarkerSource, number> = {
   manual: 0,
   generated: 1,
   auto: 2,
+  'auto-runtime': 2,
 };
 
 const dedupeMarkers = (markers: WidgetWaqafMarker[]): WidgetWaqafMarker[] => {

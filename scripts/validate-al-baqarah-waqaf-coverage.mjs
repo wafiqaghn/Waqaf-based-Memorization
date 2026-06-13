@@ -61,6 +61,9 @@ console.log(
   `Ayahs resolving WAQAF segment: ${rows.filter((row) => row.segmentType === 'WAQAF').length}`,
 );
 console.log(`Ayahs falling back by MARKER_NOT_FOUND: ${fallbackCounts.MARKER_NOT_FOUND ?? 0}`);
+console.log(
+  `Ayahs falling back by NO_ALLOWED_WAQAF_SIGN: ${fallbackCounts.NO_ALLOWED_WAQAF_SIGN ?? 0}`,
+);
 console.log(`Ayahs failing due to TIMESTAMP_NOT_FOUND: ${fallbackCounts.TIMESTAMP_NOT_FOUND ?? 0}`);
 console.log(`Ayahs failing due to INVALID_WORD_INDEX: ${fallbackCounts.INVALID_WORD_INDEX ?? 0}`);
 console.log(`Ayahs failing due to END_CLAMP_INVALID: ${fallbackCounts.END_CLAMP_INVALID ?? 0}`);
