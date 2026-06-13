@@ -9,15 +9,19 @@ export const X_PROXY_SIGNATURE = 'x-proxy-signature';
 export const X_PROXY_TIMESTAMP = 'x-proxy-timestamp';
 export const X_INTERNAL_CLIENT = 'x-internal-client';
 
+const DEFAULT_API_GATEWAY_URL = 'https://api.quran.com';
+
 export const getAdditionalHeaders = (req: NextApiRequest) => {
   let additionalHeaders = {};
   const isServer = typeof window === 'undefined';
-  const isDirectApiRequest =
-    isServer &&
+  const apiGatewayUrl = process.env.API_GATEWAY_URL || DEFAULT_API_GATEWAY_URL;
+  const isDirectApiRequest = isServer && req.url?.startsWith(apiGatewayUrl);
+  const hasApiSignatureConfig =
     Boolean(process.env.API_GATEWAY_URL) &&
-    req.url?.startsWith(process.env.API_GATEWAY_URL);
+    Boolean(process.env.SIGNATURE_TOKEN) &&
+    Boolean(process.env.INTERNAL_CLIENT_ID);
 
-  if (isStaticBuild || isDirectApiRequest) {
+  if ((isStaticBuild || isDirectApiRequest) && hasApiSignatureConfig) {
     const { signature, timestamp } = generateSignature(
       req,
       req.url,
@@ -30,7 +34,7 @@ export const getAdditionalHeaders = (req: NextApiRequest) => {
     };
   }
 
-  if (isServer && !isDirectApiRequest) {
+  if (isServer && !isDirectApiRequest && process.env.PROXY_SIGNATURE_TOKEN) {
     const { signature: proxySignature, timestamp: proxyTimestamp } = generateSignature(
       req,
       req.url,

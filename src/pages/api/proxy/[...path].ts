@@ -30,6 +30,9 @@ EventEmitter.defaultMaxListeners = Number(process.env.PROXY_DEFAULT_MAX_LISTENER
 
 const IS_DEVELOPMENT = process.env.NEXT_PUBLIC_VERCEL_ENV === 'development';
 const DEFAULT_BODY_SIZE_LIMIT = '8mb';
+const DEFAULT_API_GATEWAY_URL = 'https://api.quran.com';
+
+const getApiGatewayUrl = (): string => process.env.API_GATEWAY_URL || DEFAULT_API_GATEWAY_URL;
 
 const getHostname = (host: string | undefined): string | undefined => host?.split(':')[0];
 
@@ -148,7 +151,7 @@ const attachCookies = (proxyReq, req) => {
 };
 
 const attachSignatureHeaders = (proxyReq, req) => {
-  const requestUrl = `${process.env.API_GATEWAY_URL}${req.url}`;
+  const requestUrl = `${getApiGatewayUrl()}${req.url}`;
   const { signature, timestamp } = generateSignature(
     req,
     requestUrl,
@@ -161,7 +164,7 @@ const attachSignatureHeaders = (proxyReq, req) => {
 };
 
 const apiProxy = createProxyMiddleware<NextApiRequest, NextApiResponse>({
-  target: process.env.API_GATEWAY_URL,
+  target: getApiGatewayUrl(),
   changeOrigin: true,
   pathRewrite: (path) => path.replace(/^\/api\/proxy\/[^/]+/, ''),
   secure: process.env.NEXT_PUBLIC_VERCEL_ENV === 'production', // Disable SSL verification to avoid UNABLE_TO_VERIFY_LEAF_SIGNATURE error for dev
