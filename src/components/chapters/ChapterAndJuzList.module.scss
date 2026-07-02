@@ -63,7 +63,12 @@
   border-radius: var(--border-radius-pill);
   background-color: var(--color-background-elevated-new);
 }
-
+&[aria-selected='true'] {
+    border-color: var(--color-brand-primary);
+    background: var(--color-brand-primary);
+    color: var(--color-text-inverse);
+  }
+}
 // sorter
 .sorter {
   display: flex;
