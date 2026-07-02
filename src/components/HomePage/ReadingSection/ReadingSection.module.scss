@@ -25,7 +25,7 @@
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: var(--spacing-medium);
+  gap: var(--spacing-medium2-px);
 
   @include breakpoints.smallerThanTablet {
     gap: 0;
