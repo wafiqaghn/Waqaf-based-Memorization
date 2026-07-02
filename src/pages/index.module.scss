@@ -86,7 +86,13 @@ $list-max-width: 80rem;
     padding: var(--spacing-large-px);
   }
 }
+.homepageCard.readingCard {
+  padding-inline: var(--spacing-medium2-px);
 
+  @include breakpoints.tablet {
+    padding-inline: 40px;
+  }
+}
 .chapterListSection {
   padding-block-start: var(--spacing-large-px);
 }
