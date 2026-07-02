@@ -121,8 +121,8 @@ const NavbarBody: React.FC<Props> = ({ isBannerVisible }) => {
   const { openSearchDrawer, openNavigationDrawer, openLanguageDrawer } = useNavbarDrawerActions();
 
   const bannerCopy = {
-    mobileLineOne: t('fundraising-sticky-banner-v2.mobile-line-one'),
-    mobileLineTwo: t('fundraising-sticky-banner-v2.mobile-line-two'),
+    mobileLineOne: t('practice-banner.mobile-line-one'),
+    mobileLineTwo: t('practice-banner.mobile-line-two'),
   };
 
   const standaloneDesktopText = `${bannerCopy.mobileLineOne} ${bannerCopy.mobileLineTwo}`;
@@ -134,7 +134,6 @@ const NavbarBody: React.FC<Props> = ({ isBannerVisible }) => {
       mobileLineTwo: bannerCopy.mobileLineTwo,
     },
     text: standaloneDesktopText,
-    ctaButtonText: t('fundraising-sticky-banner-v2.cta'),
   };
 
   return (

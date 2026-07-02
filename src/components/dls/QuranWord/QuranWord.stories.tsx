@@ -5,7 +5,7 @@ import QuranWord from './QuranWord';
 
 import getStore from '@/redux/store';
 import { QuranFont } from '@/types/QuranReader';
-import { AudioPlayerMachineProvider } from '@/xstate/AudioPlayerMachineContext';
+import { AudioPlayerMachineProvider } from 'src/xstate/AudioPlayerMachineContext';
 import { mockWord } from 'tests/mocks/words';
 // @ts-ignore
 import Word from 'types/Word';

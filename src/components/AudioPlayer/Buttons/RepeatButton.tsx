@@ -13,7 +13,7 @@ import PopoverMenu from '@/dls/PopoverMenu/PopoverMenu';
 import Spinner, { SpinnerSize } from '@/dls/Spinner/Spinner';
 import RepeatIcon from '@/icons/repeat.svg';
 import { logButtonClick } from '@/utils/eventLogger';
-import { selectIsLoading } from '@/xstate/actors/audioPlayer/selectors';
+import { selectIsLoading } from 'src/xstate/actors/audioPlayer/selectors';
 import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 const RepeatAudioButton = () => {

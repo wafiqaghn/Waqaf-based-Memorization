@@ -1,0 +1,86 @@
+@use 'src/styles/breakpoints';
+
+.section {
+  max-inline-size: 1180px;
+  margin-inline: auto;
+  padding: var(--spacing-large-px) var(--spacing-medium2-px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxsmall-px);
+  margin-block-end: var(--spacing-medium2-px);
+
+  @include breakpoints.tablet {
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small-px);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text-default);
+  font-size: var(--font-size-xxlarge-px);
+  line-height: 1.12;
+}
+
+.subtitle {
+  max-inline-size: 520px;
+  margin: 0;
+  color: var(--color-text-faded-new);
+  line-height: 1.55;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-small-px);
+
+  @include breakpoints.tablet {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.card {
+  min-block-size: 180px;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 24px;
+  padding: var(--spacing-medium2-px);
+  background:
+    linear-gradient(180deg, rgba(245, 239, 230, 0.055), transparent),
+    var(--color-background-elevated-new);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.16);
+}
+
+.index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 50%;
+  background: rgba(200, 155, 74, 0.16);
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.cardTitle {
+  margin-block: var(--spacing-medium-px) var(--spacing-xxsmall-px);
+  color: var(--color-text-default);
+  font-size: var(--font-size-large-px);
+}
+
+.cardCopy {
+  margin: 0;
+  color: var(--color-text-faded-new);
+  line-height: 1.55;
+}

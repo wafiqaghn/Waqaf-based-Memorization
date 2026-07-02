@@ -84,16 +84,16 @@
 }
 
 .beginButton {
-  --themed-bg: var(--color-primary-medium);
+  --themed-bg: var(--color-brand-primary);
   --themed-fg: var(--color-text-inverse);
-  --themed-border: var(--color-primary-medium);
+  --themed-border: var(--color-brand-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   block-size: calc(2 * var(--spacing-medium));
   padding-inline: var(--spacing-small);
   border: var(--spacing-hairline-px) solid var(--themed-border);
-  border-radius: var(--border-radius-rounded);
+  border-radius: var(--border-radius-pill);
   background-color: var(--themed-bg);
   color: var(--themed-fg);
   font-size: var(--font-size-normal);

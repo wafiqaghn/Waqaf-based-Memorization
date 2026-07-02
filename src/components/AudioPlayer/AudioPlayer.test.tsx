@@ -14,6 +14,10 @@ vi.mock('next/dynamic', () => ({
   },
 }));
 
+vi.mock('next/router', () => ({
+  useRouter: () => ({ pathname: '/1' }),
+}));
+
 vi.mock('@/components/Onboarding/OnboardingProvider', () => ({
   useOnboarding: () => ({ isActive: false }),
 }));

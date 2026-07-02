@@ -55,6 +55,21 @@ describe('getProxiedServiceUrl', () => {
     }
   });
 
+  it('falls back to the public API gateway on the server when API_GATEWAY_URL is missing', async () => {
+    const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
+    delete process.env.API_GATEWAY_URL;
+    vi.stubGlobal('window', undefined);
+
+    try {
+      expect(
+        getProxiedServiceUrl(QuranFoundationService.CONTENT, '/api/qdc/pages/lookup'),
+      ).toBe('https://api.quran.com/api/qdc/pages/lookup');
+    } finally {
+      vi.unstubAllGlobals();
+      clearEnv();
+    }
+  });
+
   it('routes content through the current browser origin on the client', async () => {
     const { getProxiedServiceUrl, QuranFoundationService } = await loadUrlModule(false);
     vi.stubGlobal('window', {

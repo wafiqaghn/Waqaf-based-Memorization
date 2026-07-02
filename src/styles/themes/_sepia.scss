@@ -1,10 +1,21 @@
 @use 'src/styles/shades';
 
 @mixin mode {
-  --color-primary-faded: #fff;
-  --color-primary-faint: #fff;
-  --color-primary-medium: #000;
-  --color-primary-deep: #fff;
+  --color-brand-primary: #b4863d;
+  --color-brand-primary-hover: #c89b4a;
+  --color-brand-accent: #5f7f6a;
+  --color-brand-background: #f7f0e5;
+  --color-brand-surface: #fff9ef;
+  --color-brand-muted-surface: #e8d8be;
+  --color-brand-text: #111820;
+  --color-brand-text-muted: #655d52;
+  --color-brand-border: #d6c7ad;
+  --color-brand-success: #5f7f6a;
+
+  --color-primary-faded: var(--color-brand-muted-surface);
+  --color-primary-faint: #ead6ad;
+  --color-primary-medium: var(--color-brand-primary);
+  --color-primary-deep: var(--color-brand-primary-hover);
 
   --color-secondary-faded: #efe2cd;
   --color-secondary-faint: #999;
@@ -26,12 +37,12 @@
   --color-warning-medium: #9d5c01;
   --color-warning-deep: #ab570a;
 
-  --color-text-default-new: #272727;
-  --color-text-default: #010101;
-  --color-text-faded: #666;
-  --color-text-faded-new: #666666;
+  --color-text-default-new: var(--color-brand-text);
+  --color-text-default: var(--color-brand-text);
+  --color-text-faded: var(--color-brand-text-muted);
+  --color-text-faded-new: var(--color-brand-text-muted);
   --color-text-inverse: #fff;
-  --color-text-link: #2ca4ab;
+  --color-text-link: var(--color-brand-primary);
   --color-text-link-new: #72603f;
   --color-text-warning: #ab570a;
   --color-text-error: #c50000;
@@ -39,10 +50,10 @@
   --color-text-white: #ffffff;
   --color-text-gray: #495057;
 
-  --color-background-default: #f8ebd5;
-  --color-background-elevated: #fff7ea;
-  --color-background-elevated-new: #fff7ea;
-  --color-background-gradient: #fff7ea;
+  --color-background-default: var(--color-brand-background);
+  --color-background-elevated: var(--color-brand-surface);
+  --color-background-elevated-new: var(--color-brand-surface);
+  --color-background-gradient: var(--color-brand-surface);
 
   --color-background-alternative-faded: #efe2cd;
   --color-background-alternative-faint: #f0e2cc;
@@ -56,9 +67,9 @@
   --color-background-lighten: rgba(252, 233, 203, 0.8);
   // lighten the `background-color` by using it in `background-image`. check Button's ghost variant for example
 
-  --color-borders-hairline: #dbccb3;
+  --color-borders-hairline: var(--color-brand-border);
 
-  --color-highlight: #50e3c2;
+  --color-highlight: rgba(200, 155, 74, 0.38);
 
   --shadow-small: 0px 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-reading-word-three-dots: var(--shadow-small);
@@ -90,23 +101,23 @@
   --color-daily-progress: #ccb996;
   --color-separators: #f8ebd5;
   --color-separators-new: #f8ebd5;
-  --color-blue-buttons-and-icons: #72603f;
-  --color-faint-blue-icons: #f2e0bf;
+  --color-blue-buttons-and-icons: var(--color-brand-primary);
+  --color-faint-blue-icons: #ead6ad;
   --color-black-buttons: #000000;
   --color-topics-grey: #efe2cd;
   --color-topics-gold: #fae7a9;
   --color-gqc: #cb955b;
-  --color-qdc-blue: #22a5ad;
-  --color-qdc-faded-blue: #ebf9fa;
-  --color-qdc-faint-blue: #c2edef;
-  --color-qdc-deep-blue: #258c91;
-  --color-streaks-dark: #415d49;
+  --color-qdc-blue: var(--color-brand-primary);
+  --color-qdc-faded-blue: var(--color-brand-muted-surface);
+  --color-qdc-faint-blue: #ead6ad;
+  --color-qdc-deep-blue: var(--color-brand-primary-hover);
+  --color-streaks-dark: var(--color-brand-success);
   --color-streaks-light: #efe2cd;
   --color-calligraphy: #ccb996;
   --color-scholars-say-background: #f1d5b7;
   --color-scholars-say-text: #7c4221;
   --color-search-background: #d8c6a5;
-  --color-check: rgba(56, 121, 75, 1);
-  --color-green-light: rgba(228, 244, 233, 1);
-  --color-bookmark-icon: #22a5ad;
+  --color-check: var(--color-brand-success);
+  --color-green-light: #eef3ef;
+  --color-bookmark-icon: var(--color-brand-primary);
 }

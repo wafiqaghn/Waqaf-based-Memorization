@@ -6,17 +6,17 @@
     "auth-onboarding": {
       "data-sync": {
         "action": "Next",
-        "description": "Whether you're using Quran.com on your phone or your laptop, your bookmarks, last read verses, and your preferences will be available",
+        "description": "Whether you're using Tartila on your phone or your laptop, your bookmarks, last read verses, and your preferences will be available",
         "title": "Your data will be synced <br></br> across devices"
       },
       "feedback": {
         "action": "Okay, got it",
-        "description": "Thank you for using Quran.com and we would be glad to hear your feedback on <link>feedback.quran.com</link>",
+        "description": "Thank you for using Tartila and we would be glad to hear your feedback on <link>feedback.quran.com</link>",
         "title": "We want to hear your thoughts"
       },
       "quran-foundation-link": {
         "action": "Next",
-        "description": "Use your Quran.com login for access to QuranReflect.com — a thriving global community engaged in Quranic reflection.",
+        "description": "Use your Tartila login for access to QuranReflect.com — a thriving global community engaged in Quranic reflection.",
         "title": "Use your account across Quran.Foundation apps!"
       },
       "quran-growth-journey": {
@@ -26,7 +26,7 @@
       },
       "welcome": {
         "action": "See what's new",
-        "title": "Welcome to Quran.com <br></br> User Account"
+        "title": "Welcome to Tartila <br></br> User Account"
       }
     },
     "collections-announcement": {
@@ -153,7 +153,7 @@
   },
   "create": "Create",
   "create-my-goal": "Create My Goal",
-  "default-description": "The Quran translated into many languages in a simple and easy interface",
+  "default-description": "A calm Quran learning and memorization experience with recitation, translations, and study tools",
   "delete": "Delete",
   "developers": "Developers",
   "display": "Display",
@@ -251,7 +251,7 @@
   },
   "footer": {
     "apps-disclaimer": "Each application is independently owned and maintained by its developer. For support, bug reports, or feature requests, please contact the app creator directly.",
-    "description": "Quran.com is a trusted platform used by millions worldwide to read, search, listen to, and reflect on the Quran in multiple languages. It provides translations, tafsir, recitations, word-by-word translation, and tools for deeper study, making the Quran accessible to everyone. <br/> <br/> As a Sadaqah Jariyah, Quran.com is dedicated to helping people connect deeply with the Quran. Supported by <link>Quran.Foundation</link>, a 501(c)(3) non-profit organization, Quran.com continues to grow as a free and valuable resource for all, Alhamdulillah.",
+    "description": "Tartila is a focused Quran learning space for reading, listening, memorizing, and reflecting in multiple languages. It provides translations, tafsir, recitations, word-by-word translation, and study tools that help readers build a steady connection with the Quran. <br/> <br/> Built on trusted Quran resources and supported by <link>Quran.Foundation</link>, Tartila keeps the experience calm, accessible, and useful for daily study, Alhamdulillah.",
     "hiring": "We're hiring! Join the QuranFoundation team and contribute to our mission. <link>Apply now!</link>",
     "rights": "All Rights Reserved",
     "title": "Read, Listen, Search, and Reflect on the Quran"
@@ -274,10 +274,10 @@
   "from": "From",
   "fundraising-card-v2": {
     "cta": "Donate now",
-    "description": "Monthly donors help us improve Quran.com and sustain operations so we focus less on fundraising and more on creating impact.",
+    "description": "Monthly donors help us improve Tartila and sustain operations so we focus less on fundraising and more on creating impact.",
     "title": "Become a Monthly Donor"
   },
-  "fundraising-share-title": "Share Quran.com Fundraising",
+  "fundraising-share-title": "Share Tartila Fundraising",
   "fundraising-sticky-banner-v2": {
     "cta": "Donate",
     "desktop-text": "Contribute to our mission",
@@ -289,7 +289,7 @@
     "title": "Give during the best days!"
   },
   "fundraising": {
-    "description": "Monthly donations help us improve Quran.com and sustain operations so we focus less on fundraising and more on creating impact.",
+    "description": "Monthly donations help us improve Tartila and sustain operations so we focus less on fundraising and more on creating impact.",
     "donation-campaign": {
       "cta": "Donate today",
       "text": "Become a supporter"
@@ -368,6 +368,10 @@
     "title": "Give During The Best Days!"
   },
   "powered-by": "Powered by",
+  "practice-banner": {
+    "mobile-line-one": "Practice mode is experimental.",
+    "mobile-line-two": "Waqaf segments use MVP marker data for learning and validation."
+  },
   "prepare-hearts": {
     "cta": "Learn more",
     "title": "Keep going after Ramadan!"
@@ -378,7 +382,7 @@
   "profile": "Profile",
   "q-reflect": "QuranReflect",
   "quran-apps": "Quran Apps",
-  "quran-com": "Quran.com",
+  "quran-com": "Tartila",
   "quran-radio": "Quran Radio",
   "read": "Read",
   "read-more": "Read More",

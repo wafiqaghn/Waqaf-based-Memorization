@@ -7,7 +7,7 @@
     "action-text": "I understand the consequence, delete my account",
     "confirmation-text": "delete my account",
     "instruction-text": "Please type <strong>{{text}}</strong> to confirm",
-    "subtitle": "Deleting your Quran.com account is permanent and cannot be undone. Your account data, preferences, and history will be permanently removed from your profile and will no longer be available. If you use the same login for QuranReflect, that account will also be deleted. [Please note: This does not affect your donor account and is not tied to your donations. Donations must be managed directly through the donor platform.]",
+    "subtitle": "Deleting your Tartila account is permanent and cannot be undone. Your account data, preferences, and history will be permanently removed from your profile and will no longer be available. If you use the same login for QuranReflect, that account will also be deleted. [Please note: This does not affect your donor account and is not tied to your donations. Donations must be managed directly through the donor platform.]",
     "title": "Are you absolutely sure?"
   },
   "delete-profile-picture": {

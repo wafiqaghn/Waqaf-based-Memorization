@@ -16,6 +16,8 @@ const STATIC_SERVICE_BASE_PATHS: Record<QuranFoundationService, string> = {
   [QuranFoundationService.QURAN_REFLECT]: '/quran-reflect',
 };
 
+const DEFAULT_API_GATEWAY_URL = 'https://api.quran.com';
+
 export const getCurrentPath = () => {
   if (typeof window !== 'undefined') {
     return window.location.href;
@@ -86,9 +88,10 @@ export const getBasePath = (): string => {
 
 export const getProxiedServiceUrl = (service: QuranFoundationService, path: string): string => {
   const PROXY_PATH = `/api/proxy/${service}`;
+  const apiGatewayUrl = process.env.API_GATEWAY_URL || DEFAULT_API_GATEWAY_URL;
   const BASE_PATH =
     isStaticBuild || typeof window === 'undefined'
-    ? `${process.env.API_GATEWAY_URL}${STATIC_SERVICE_BASE_PATHS[service]}`
+    ? `${apiGatewayUrl}${STATIC_SERVICE_BASE_PATHS[service]}`
     : `${getBasePath()}${PROXY_PATH}`;
   return `${BASE_PATH}${path}`;
 };

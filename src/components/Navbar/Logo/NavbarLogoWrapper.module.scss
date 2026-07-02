@@ -2,16 +2,33 @@
 
 .logoWrapper {
   display: flex;
+  align-items: center;
   align-self: center;
+  gap: var(--spacing-xxsmall);
   justify-content: flex-start;
   block-size: var(--spacing-medium2-px);
+  color: var(--color-brand-primary);
+  text-decoration: none;
+}
 
-  & > svg {
-    margin-block-start: 1px;
-    inline-size: auto;
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: calc(1.5 * var(--spacing-medium));
+  inline-size: calc(1.5 * var(--spacing-medium));
+  border: 1px solid var(--color-brand-accent);
+  border-radius: 50%;
+  background: var(--color-brand-primary);
+  color: var(--color-brand-background);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
 
-    & > path {
-      fill: var(--color-text-default);
-    }
-  }
+.logoText {
+  color: var(--color-text-default);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0;
 }

@@ -2,7 +2,9 @@
   min-block-size: 100vh;
   padding: 40px 0 64px;
   color: var(--color-text-default);
-  background: var(--color-background-default);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(200, 155, 74, 0.12), transparent 24rem),
+    var(--color-background-default);
 }
 
 .inner {
@@ -17,10 +19,11 @@
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  font-weight: 800;
   margin-block-end: 8px;
-  color: var(--color-blue-buttons-and-icons);
+  color: var(--color-brand-text);
+  letter-spacing: 0;
 }
 
 .subtitle {
@@ -44,10 +47,10 @@
 
 .panel {
   background: var(--color-background-elevated-new);
-  border: 1px solid var(--color-border-gray-lighter);
-  border-radius: 16px;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 24px;
   padding: 20px;
-  box-shadow: var(--shadow-medium);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
 }
 
 .configPanel {
@@ -79,7 +82,7 @@
 .searchInput,
 .sizeInput {
   border: 1px solid var(--color-border-gray-lighter);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 10px 12px;
   font-size: 0.95rem;
   background: var(--color-background-default);
@@ -95,7 +98,7 @@
 .sizeInput:focus {
   outline: none;
   border-color: var(--color-blue-buttons-and-icons);
-  box-shadow: 0 0 0 2px rgba(34, 165, 173, 0.25);
+  box-shadow: 0 0 0 2px rgba(200, 155, 74, 0.26);
 }
 
 .inline {
@@ -160,8 +163,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-qdc-faint-blue);
-  color: var(--color-qdc-deep-blue);
+  background: rgba(200, 155, 74, 0.16);
+  color: var(--color-brand-primary);
   border-radius: 999px;
   padding: 6px 12px;
   font-size: 0.85rem;
@@ -300,7 +303,7 @@
 
 .copyButton {
   border: none;
-  background: var(--color-blue-buttons-and-icons);
+  background: var(--color-brand-primary);
   color: var(--color-text-inverse);
   border-radius: 8px;
   padding: 8px 16px;

@@ -9,8 +9,8 @@ import {
   selectIsAudioPlayerVisible,
   selectIsAudioPlaying,
   selectIsLoadingCurrentChapter,
-} from '@/xstate/actors/audioPlayer/selectors';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+} from 'src/xstate/actors/audioPlayer/selectors';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 const useAudioCardState = (surahNumber: number) => {
   const { t, lang } = useTranslation('common');

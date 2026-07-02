@@ -413,10 +413,10 @@
 }
 
 .pillActive {
-  background: #22a5ad;
-  border-color: #22a5ad;
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
   color: var(--color-text-inverse);
-  box-shadow: 0 6px 16px rgba(34, 165, 173, 0.2);
+  box-shadow: 0 6px 16px rgba(200, 155, 74, 0.22);
 }
 
 @include breakpoints.smallerThanTablet {

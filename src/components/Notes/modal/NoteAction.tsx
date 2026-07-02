@@ -15,7 +15,7 @@ import { openNotesModal, VerseActionModalType } from '@/redux/slices/QuranReader
 import { isLoggedIn } from '@/utils/auth/login';
 import { logEvent } from '@/utils/eventLogger';
 import { getChapterWithStartingVerseUrl, getLoginNavigationUrl } from '@/utils/navigation';
-import { AudioPlayerMachineContext } from '@/xstate/AudioPlayerMachineContext';
+import { AudioPlayerMachineContext } from 'src/xstate/AudioPlayerMachineContext';
 
 interface NoteActionControllerProps {
   verseKey: string;

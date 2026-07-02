@@ -11,14 +11,14 @@
   min-block-size: calc(8 * var(--spacing-mega));
 }
 
-$text-color: #fff; // text color is always white because the background is green (success)
+$text-color: #fff; // text color is always white because the background is a deep brand color
 .title {
   font-weight: var(--font-weight-bold);
   font-size: calc(1.5 * var(--font-size-xlarge));
   color: $text-color;
 }
 
-$fallbackColor: #22a5ad;
+$fallbackColor: var(--color-brand-primary);
 .backgroundImage {
   position: absolute;
   z-index: -1;

@@ -46,11 +46,11 @@ const BottomSection = () => {
         </div>
         <div className={styles.copyright}>
           © {localizedCurrentYear}{' '}
-          <Link href="https://quran.com" variant={LinkVariant.Highlight} shouldPrefetch={false}>
+          <Link href={ROUTES.HOME} variant={LinkVariant.Highlight} shouldPrefetch={false}>
             {
-              // we don't want to localize Quran.com text
+              // Brand names should stay stable across locales unless explicitly localized.
               // eslint-disable-next-line i18next/no-literal-string
-              'Quran.com'
+              'Tartila'
             }
           </Link>
           . {t('footer.rights')}

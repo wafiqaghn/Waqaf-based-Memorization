@@ -1,13 +1,13 @@
 # Embed Widget
 
-This document is a full reference for the Ayah embed widget: architecture, data flow, fonts, and how
-to extend it safely. Use this if you are onboarding or adding new widget options.
+This document is a full reference for the Tartila Ayah embed widget: architecture, data flow, fonts,
+and how to extend it safely. Use this if you are onboarding or adding new widget options.
 
 ## What the widget is
 
 The widget renders one ayah (or a small range) with Arabic text, translations, optional audio, and
 action buttons. It is embedded on external sites via an `<iframe>` pointing to `/embed/v1`, and it
-can also be configured through the builder page inside this app.
+can also be configured through the Tartila builder page inside this app.
 
 ## Key entry points
 
@@ -297,7 +297,7 @@ type WidgetTrimOptions = {
 Client-side interactions are handled by `src/hooks/widget/useWidgetInteractions.ts`:
 
 - **Copy**: Copies formatted text (Arabic + translation + URL) to clipboard
-- **Share**: Copies the quran.com URL to clipboard
+- **Share**: Copies the canonical quran.com verse URL to clipboard
 - **Audio**: Toggle play/pause with time clamping for verse segments
 - **Analytics**: Emits explicit interaction events: `embed_copy_text_clicked`,
   `embed_copy_link_clicked`, `embed_open_verse_clicked`, `embed_tafsirs_clicked`,

@@ -53,10 +53,31 @@
 }
 
 .iconContainer {
-  & > svg > path {
-    fill: var(--color-text-default);
-  }
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xxsmall);
   margin-block-end: var(--spacing-xxsmall);
+}
+
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: calc(1.5 * var(--spacing-medium));
+  inline-size: calc(1.5 * var(--spacing-medium));
+  border: 1px solid var(--color-brand-accent);
+  border-radius: 50%;
+  background: var(--color-brand-primary);
+  color: var(--color-brand-background);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.logoText {
+  color: var(--color-text-default);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
 }
 .headingContainer {
   display: flex;
