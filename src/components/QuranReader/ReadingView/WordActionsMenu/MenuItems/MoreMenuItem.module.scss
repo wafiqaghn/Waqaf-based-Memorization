@@ -1,0 +1,17 @@
+.menuWithChevron {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+
+  svg {
+    margin-inline-start: 8px;
+  }
+}
+
+[dir='rtl'] .menuWithChevron {
+  svg {
+    margin-inline: 0 8px;
+    transform: rotate(180deg);
+  }
+}

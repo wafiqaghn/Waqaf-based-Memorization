@@ -1,0 +1,19 @@
+$tooltip-max-width: 200px;
+.questionMarkIconContainer {
+  display: flex;
+  align-items: center;
+  color: var(--color-background-alternative-deep);
+  margin-inline: var(--spacing-xsmall);
+  & > svg {
+    inline-size: var(--spacing-large);
+  }
+}
+
+.trigger {
+  display: flex;
+}
+
+.content {
+  display: flex;
+  max-inline-size: $tooltip-max-width;
+}

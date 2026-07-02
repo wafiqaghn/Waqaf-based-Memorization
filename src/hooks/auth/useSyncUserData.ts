@@ -1,0 +1,219 @@
+/* eslint-disable max-lines */
+import { useEffect, useCallback, useRef } from 'react';
+
+import { shallowEqual, useSelector } from 'react-redux';
+import { useSWRConfig } from 'swr';
+
+import { useAuthContext } from '@/contexts/AuthContext';
+import { READING_BOOKMARK_KEY } from '@/hooks/auth/useGlobalReadingBookmark';
+import useIsLoggedIn from '@/hooks/auth/useIsLoggedIn';
+import { logErrorToSentry } from '@/lib/sentry';
+import { selectGuestReadingBookmark } from '@/redux/slices/guestBookmark';
+import { selectIsPersistGateHydrationComplete } from '@/redux/slices/persistGateHydration';
+import { selectBookmarkedPages, selectBookmarks } from '@/redux/slices/QuranReader/bookmarks';
+import { PinnedVerse, selectPinnedVerses } from '@/redux/slices/QuranReader/pinnedVerses';
+import {
+  RecentReadingSessions,
+  selectRecentReadingSessions,
+} from '@/redux/slices/QuranReader/readingTracker';
+import { selectQuranReaderStyles } from '@/redux/slices/QuranReader/styles';
+import { getMushafId } from '@/utils/api';
+import { syncUserLocalData } from '@/utils/auth/api';
+import {
+  BOOKMARK_CACHE_PATHS,
+  makeReadingSessionsUrl,
+  makeUserProfileUrl,
+} from '@/utils/auth/apiPaths';
+import { getLastSyncAt, removeLastSyncAt, setLastSyncAt } from '@/utils/auth/userDataSync';
+import { GuestReadingBookmark } from '@/utils/bookmark';
+import { getVerseAndChapterNumbersFromKey } from '@/utils/verse';
+import SyncDataType, {
+  SyncBookmarkPayload,
+  SyncLocalDataPayload,
+  SyncReadingSessionPayload,
+} from 'types/auth/SyncDataType';
+import UserProfile from 'types/auth/UserProfile';
+import BookmarkType from 'types/BookmarkType';
+import { PinnedItemTargetType, SyncPinnedItemPayload } from 'types/PinnedItem';
+
+const MAX_SYNC_ATTEMPTS = 3; // 1 initial + 2 retries
+const INITIAL_RETRY_DELAY_MS = 1000;
+
+const formatLocalBookmarkRecord = (
+  ayahKey: string,
+  bookmarkTimestamp: number,
+  mushafId: number,
+): SyncBookmarkPayload => {
+  const [surahNumber, ayahNumber] = getVerseAndChapterNumbersFromKey(ayahKey);
+  return {
+    createdAt: new Date(bookmarkTimestamp).toISOString(),
+    type: BookmarkType.Ayah,
+    key: Number(surahNumber),
+    verseNumber: Number(ayahNumber),
+    mushaf: mushafId,
+  };
+};
+
+const formatLocalPageBookmarkRecord = (
+  pageNumber: string,
+  bookmarkTimestamp: number,
+  mushafId: number,
+): SyncBookmarkPayload => ({
+  createdAt: new Date(bookmarkTimestamp).toISOString(),
+  type: BookmarkType.Page,
+  key: Number(pageNumber),
+  mushaf: mushafId,
+});
+
+const formatLocalReadingSession = (
+  ayahKey: string,
+  updatedAt: number,
+): SyncReadingSessionPayload => {
+  const [surahNumber, ayahNumber] = getVerseAndChapterNumbersFromKey(ayahKey);
+  return {
+    updatedAt: new Date(updatedAt).toISOString(),
+    chapterNumber: Number(surahNumber),
+    verseNumber: Number(ayahNumber),
+  };
+};
+
+const formatLocalPinnedVerse = (verse: PinnedVerse, mushafId: number): SyncPinnedItemPayload => ({
+  targetType: PinnedItemTargetType.Ayah,
+  targetId: verse.verseKey,
+  metadata: {
+    sourceMushafId: mushafId,
+    key: verse.chapterNumber,
+    verseNumber: verse.verseNumber,
+  },
+  createdAt: new Date(verse.timestamp).toISOString(),
+});
+
+/**
+ * Format the reading bookmark for sync with isReading: true
+ *
+ * @param {GuestReadingBookmark} bookmark - The guest reading bookmark
+ * @returns {SyncBookmarkPayload} - The formatted bookmark payload
+ */
+const formatReadingBookmark = (bookmark: GuestReadingBookmark): SyncBookmarkPayload => ({
+  createdAt: new Date().toISOString(),
+  type: bookmark.type,
+  key: bookmark.key,
+  verseNumber: bookmark.verseNumber,
+  mushaf: bookmark.mushafId,
+  isReading: true,
+});
+
+const buildSyncPayload = (
+  verses: Record<string, number>,
+  pages: Record<string, number>,
+  sessions: RecentReadingSessions,
+  pinnedVerses: PinnedVerse[],
+  mushafId: number,
+  readingBookmark: GuestReadingBookmark | null,
+): SyncLocalDataPayload => {
+  const bookmarks: SyncBookmarkPayload[] = [
+    ...Object.keys(verses).map((k) => formatLocalBookmarkRecord(k, verses[k], mushafId)),
+    ...Object.keys(pages).map((k) => formatLocalPageBookmarkRecord(k, pages[k], mushafId)),
+  ];
+
+  // Add reading bookmark if present
+  if (readingBookmark) {
+    bookmarks.push(formatReadingBookmark(readingBookmark));
+  }
+
+  return {
+    [SyncDataType.BOOKMARKS]: bookmarks,
+    [SyncDataType.READING_SESSIONS]: Object.entries(sessions).map(([k, v]) =>
+      formatLocalReadingSession(k, v),
+    ),
+    [SyncDataType.PINNED_VERSES]: pinnedVerses.map((v) => formatLocalPinnedVerse(v, mushafId)),
+  };
+};
+
+const isBookmarkCacheKey = (key: unknown): boolean =>
+  typeof key === 'string' &&
+  (Object.values(BOOKMARK_CACHE_PATHS).some((p) => key.includes(p)) ||
+    key.startsWith('pageBookmark:') ||
+    key.startsWith('reading-bookmark-'));
+
+/** Syncs local user data (bookmarks, reading sessions) to DB on login with retry logic */
+const useSyncUserData = () => {
+  const { mutate } = useSWRConfig();
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isSyncingRef = useRef(false);
+  const hasSyncedRef = useRef(false);
+  const { isLoggedIn } = useIsLoggedIn();
+  const { state: authState } = useAuthContext();
+  const userId = authState?.user?.id;
+  const isPersistGateHydrationComplete = useSelector(selectIsPersistGateHydrationComplete);
+  const bookmarkedVerses = useSelector(selectBookmarks, shallowEqual);
+  const bookmarkedPages = useSelector(selectBookmarkedPages, shallowEqual);
+  const recentReadingSessions = useSelector(selectRecentReadingSessions, shallowEqual);
+  const pinnedVerses = useSelector(selectPinnedVerses, shallowEqual);
+  const pinnedVersesRef = useRef(pinnedVerses);
+  pinnedVersesRef.current = pinnedVerses;
+  const guestReadingBookmark = useSelector(selectGuestReadingBookmark);
+  const guestReadingBookmarkRef = useRef(guestReadingBookmark);
+  guestReadingBookmarkRef.current = guestReadingBookmark;
+  const { quranFont, mushafLines } = useSelector(selectQuranReaderStyles, shallowEqual);
+  const { mushaf: mushafId } = getMushafId(quranFont, mushafLines);
+
+  const performSync = useCallback(
+    async (attempt = 0): Promise<void> => {
+      const bookmarksCount =
+        Object.keys(bookmarkedVerses).length + Object.keys(bookmarkedPages).length;
+      // prettier-ignore
+      const payload = buildSyncPayload(bookmarkedVerses, bookmarkedPages, recentReadingSessions, pinnedVersesRef.current, mushafId, guestReadingBookmarkRef.current);
+      try {
+        const { lastSyncAt } = await syncUserLocalData(payload);
+        mutate(makeUserProfileUrl(), (data: UserProfile) => ({ ...data, lastSyncAt }));
+        mutate(makeReadingSessionsUrl());
+        // Invalidate reading bookmark cache explicitly since it has a custom key pattern
+        mutate(READING_BOOKMARK_KEY(mushafId, userId));
+        mutate(isBookmarkCacheKey, undefined, { revalidate: true });
+        setLastSyncAt(new Date(lastSyncAt));
+        hasSyncedRef.current = true;
+      } catch (error) {
+        const readingSessionsCount = Object.keys(recentReadingSessions).length;
+        logErrorToSentry(error, {
+          transactionName: 'useSyncUserData',
+          metadata: { bookmarksCount, readingSessionsCount, mushafId, attempt },
+        });
+        // Retry with exponential backoff (attempt 0, 1, 2 = 3 total attempts)
+        if (attempt < MAX_SYNC_ATTEMPTS - 1) {
+          const delay = INITIAL_RETRY_DELAY_MS * 2 ** attempt;
+          if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+          retryTimeoutRef.current = setTimeout(() => performSync(attempt + 1), delay);
+        }
+      }
+    },
+    [bookmarkedVerses, bookmarkedPages, recentReadingSessions, mushafId, mutate, userId],
+  );
+
+  useEffect(() => {
+    // Clear lastSyncAt cookie when user is logged out (handles server-side logout via /logout page)
+    if (!isLoggedIn) {
+      if (getLastSyncAt()) removeLastSyncAt();
+      hasSyncedRef.current = false;
+      return () => {};
+    }
+    // Wait for Redux hydration to complete before syncing to ensure we have the full bookmark data
+    if (!isPersistGateHydrationComplete) {
+      return () => {};
+    }
+    // Sync local data to DB when user logs in and hasn't synced yet
+    // Use hasSyncedRef to track if we've successfully synced (not just started syncing)
+    // This ensures we retry if the first sync ran before hydration completed
+    if (!getLastSyncAt() && !hasSyncedRef.current && !isSyncingRef.current) {
+      isSyncingRef.current = true;
+      performSync().finally(() => {
+        isSyncingRef.current = false;
+      });
+    }
+    return () => {
+      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+    };
+  }, [isLoggedIn, isPersistGateHydrationComplete, performSync, bookmarkedVerses, bookmarkedPages]);
+};
+
+export default useSyncUserData;

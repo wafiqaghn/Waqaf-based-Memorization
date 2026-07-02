@@ -1,0 +1,41 @@
+{
+  "credits": {
+    "desc": "We extend our gratitude to all those who have supported and contributed to this project, helping to make the Quran accessible to millions worldwide.",
+    "lokalize": "<0>Lokalize</0>: A computer-aided translation system that focuses on productivity and quality assurance and provides a seamless localization workflow.",
+    "quran-align": "<0>Collin Fair</0>: A tool for producing word-precise segmentation of recorded Qur'anic recitation.",
+    "quran-complex": "<0>QuranComplex</0>: King Fahd Glorious Qur'an Printing Complex is a leader in serving the Glorious Qur'an and its Sciences, translating its Meanings, and safeguarding the Qur'anic Text from distortion, through the optimal use of advanced technologies in the field of printing, audio recordings, electronic publishing and digital applications.",
+    "quran-enc": "<0>QuranEnc</0>: A portal featuring free and trustworthy translations of the meanings and exegeses of the noble Qur'an in many world languages.",
+    "tanzil": "<0>Tanzil</0>: An international Quranic project aimed at providing a highly-verified precise Quran text.",
+    "tarteel": "<0>Tarteel</0>: An AI-powered Quran memorization app. It's designed to help you memorize smarter, whether you're searching for a verse, tracking your progress, or following along with your recitation.",
+    "title": "Credits",
+    "zekr": "<0>Zekr</0>: An open platform Quran study tool for browsing and researching on the Quran"
+  },
+  "global-effort": {
+    "desc": "Tartila is designed for people who come to recite, reflect, memorize, or study with a sincere desire to connect with the words of Allah. As the app grows, we remain committed to making it a trusted, accessible, and beautifully focused space for anyone seeking to engage with the Quran.",
+    "title": "A Global Effort"
+  },
+  "key-features": {
+    "desc": "Tartila is designed to support every stage of engagement with the Quran—from reading and memorization to study and reflection. Our features include:",
+    "features": [
+      "User-Friendly Quran Interface– A clean and intuitive reading experience on any device.",
+      "Multiple Translations & Tafsir – Access to translations in multiple languages, along with tafsir.",
+      "Audio Recitations – Listen to high-quality recitations from world-renowned Qaris, with the ability to follow along word by word.",
+      "Advanced Search & Navigation – Find verses instantly by topic or keywords across the entire Quran.",
+      "Ayah Bookmarking & Notes – Save verses and write personal reflections for later reference.",
+      "QuranReflect Integration – Engage with a global community through reflections and insights shared by scholars and individuals.",
+      "Reading Progress Tracking and Goals – Keep track of your daily goals and reading history",
+      "APIs for Developers – Free access to content and features to power Islamic apps and R&D.",
+      "And much more, Alhamdulillah."
+    ],
+    "title": "Key Features & Offerings"
+  },
+  "main-description": "Tartila is a calm Quran learning and memorization app built to make reading, listening, study, and reflection feel clear, steady, and easy to return to. It is shaped for lifelong students, scholars, and anyone beginning their journey with the Quran.",
+  "our-mission": {
+    "desc": "The Quran is meant to be read, understood, and reflected upon. Our mission is to remove barriers to access and empower individuals and communities by providing a reliable, well-designed, and deeply enriching Quranic experience. We aim to serve as a trusted source for anyone seeking to engage with the Quran, guided by the principles of accuracy, clarity, and sincerity.",
+    "title": "Our Mission"
+  },
+  "who-we-are": {
+    "desc": "Tartila is built with the same commitment to keeping Quran learning accessible, useful, and sincere. It uses trusted Quran resources and remains connected to <link>Quran.Foundation</link>'s mission of providing high-quality, authentic Quranic resources to the world. Our commitment is to serve the Quran and its readers with excellence, sincerity, and responsibility.",
+    "title": "Who We Are"
+  }
+}

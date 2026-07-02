@@ -1,0 +1,1 @@
+../../.agents/quran/commands/create-pr.md

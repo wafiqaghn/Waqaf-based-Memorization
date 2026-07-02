@@ -1,0 +1,11 @@
+.loginButtonContainer {
+  margin-inline-end: var(--spacing-small-px);
+}
+
+.loginButton {
+  min-inline-size: max-content;
+}
+
+.bookmarkIcon > path {
+  fill: var(--color-blue-buttons-and-icons);
+}

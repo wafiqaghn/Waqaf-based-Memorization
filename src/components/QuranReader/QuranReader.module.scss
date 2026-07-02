@@ -1,0 +1,163 @@
+@use 'src/styles/constants';
+@use 'src/styles/breakpoints';
+@use 'src/styles/utility';
+
+// Padding clears fixed elements; ChapterHeader's margin provides the 20px visual gap
+$quran-reader-padding: var(--navbar-height);
+$quran-reader-padding-mobile: var(--navbar-height);
+$virtual-scrolling-height-bandage: calc(
+  4 * var(--spacing-mega)
+); // library react-virtuoso's inline `height` is less than the required `height`.
+// so we're adding a little extra padding at the bottom to make sure the other components are visible.
+// for example for EndOfScrollingButton component
+
+.infiniteScroll {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.readingView {
+  min-block-size: 100vh;
+}
+
+.singleVerseReadingView {
+  min-block-size: auto;
+}
+
+.loading {
+  text-align: center;
+  max-inline-size: 80%;
+  margin-block-start: var(--spacing-medium);
+  margin-block-end: var(--spacing-medium);
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}
+
+.container {
+  overflow: hidden;
+  @include breakpoints.smallerThanTablet {
+    padding-block-start: $quran-reader-padding-mobile;
+  }
+  padding-block-start: calc(#{$quran-reader-padding} + var(--pinned-verses-bar-height));
+  // padding-inline: var(--spacing-medium2-px);
+  background-color: var(--color-background-elevated-new);
+  background-image: var(--color-background-lighten);
+  padding-block-end: $virtual-scrolling-height-bandage;
+  @include breakpoints.tablet {
+    transition: var(--transition-regular);
+    // margin-inline-end: 0;
+  }
+
+  @include breakpoints.smallerThanTablet {
+    padding-block-start: calc(var(--mobile-context-menu-height) + var(--pinned-verses-bar-height));
+    // Faster expand with ease-out
+    transition: padding-block-start var(--transition-fast) ease-out
+      var(--mobile-stagger-delay-content);
+  }
+}
+
+.translationView {
+  padding-block-end: var(--spacing-xxlarge-px);
+}
+
+.singleVerseView {
+  padding-block-end: var(--spacing-xxlarge-px);
+
+  @include breakpoints.smallerThanTablet {
+    padding-block-end: var(--spacing-medium2-px);
+  }
+}
+
+.withVisibleSideBar {
+  @include breakpoints.tablet {
+    margin-inline-end: constants.$notes-side-bar-desktop-width;
+  }
+}
+
+.withSidebarNavigationOpenOrAuto {
+  @include breakpoints.tablet {
+    margin-inline-start: calc(10 * var(--spacing-mega));
+  }
+}
+
+.playButton {
+  display: flex;
+  justify-content: center;
+}
+
+// Mobile collapsed state: when context menu is collapsed (scrolled past threshold)
+.mobileCollapsed {
+  padding-block-start: var(--pinned-verses-bar-height);
+  // Fast collapse with ease-in
+  transition: padding-block-start var(--transition-fast) ease-in 0ms;
+}
+
+// Mobile collapsed state with Tajweed mushaf: needs extra padding for tajweed trigger
+.mobileCollapsedTajweed {
+  padding-block-start: calc(var(--tajweed-trigger-height) + var(--pinned-verses-bar-height));
+  // Fast collapse with ease-in
+  transition: padding-block-start var(--transition-fast) ease-in 0ms;
+}
+
+// Mobile expanded state with Tajweed mushaf: context menu + tajweed trigger
+.mobileTajweedExpanded {
+  padding-block-start: calc(
+    var(--mobile-context-menu-height) + var(--tajweed-trigger-height) +
+      var(--pinned-verses-bar-height)
+  );
+  // Faster expand with ease-out, consistent with base container mobile styles
+  transition: padding-block-start var(--transition-fast) ease-out
+    var(--mobile-stagger-delay-content);
+}
+
+// Desktop state with Tajweed mushaf: add extra padding for tajweed trigger
+.desktopTajweed {
+  @include breakpoints.tablet {
+    padding-block-start: calc(
+      var(--navbar-height) + var(--tajweed-trigger-height) + var(--pinned-verses-bar-height)
+    );
+  }
+}
+
+.floatingDonationBanner {
+  position: fixed;
+  inset-inline-start: var(--spacing-small-px);
+  inset-inline-end: var(--spacing-small-px);
+  inset-block-end: var(--spacing-small-px);
+  z-index: 299;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  @include breakpoints.tablet {
+    inset-inline-start: auto;
+    inset-inline-end: var(--spacing-medium-plus-px);
+    inset-block-end: var(--spacing-medium-px);
+    justify-content: flex-end;
+    inline-size: 370px;
+  }
+}
+
+.floatingDonationBannerWithAudio {
+  inset-block-end: calc(
+    var(--spacing-small-px) + var(--audio-player-height-mobile) + var(--spacing-small-px)
+  );
+
+  @include breakpoints.tablet {
+    inset-block-end: calc(
+      var(--spacing-medium-px) + var(--audio-player-height-desktop) + var(--spacing-small-px)
+    );
+  }
+}
+
+.withPinnedVerses {
+  --pinned-verses-bar-height: 83px;
+
+  @include breakpoints.smallerThanTablet {
+    --pinned-verses-bar-height: 78px;
+  }
+}

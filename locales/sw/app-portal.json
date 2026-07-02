@@ -1,0 +1,104 @@
+{
+  "browse": {
+    "apps": {
+      "muhaffidh": {
+        "caption": "Kariri na Hakiki Qur'ani kwa ufanisi",
+        "description": "Programu ya Qur'ani iliyoundwa ili kukusaidia kukariri na kupitia Qur'ani kwa njia bunifu.",
+        "tagline": "Msaidizi bunifu wa kuhifadhi na kuhakiki Qur'ani",
+        "title": "Muhafidh"
+      },
+      "quran_android": {
+        "caption": "Soma, alamisha na usikilize Qur'ani kwenye vifaa vya Android",
+        "description": "Vipengele ni pamoja na kurasa za mtindo wa Madani, sauti isiyo na nafasi, kuweka alama/kuweka lebo/kushiriki, utafutaji, hali ya usiku, kurudia sauti, na tarjuma/tafsir katika lugha nyingi.",
+        "tagline": "Programu ya Qur'ani ya bure na huria ya Android",
+        "title": "Qur'ani kwa Android"
+      },
+      "quran_ios": {
+        "caption": "Programu nzuri ya kusoma na kusikiliza Qur'ani bila matangazo kwa iPhone na iPad",
+        "description": "Kutoka kwa watengenezaji wa Quran.com: soma Qur'ani popote ulipo, kariri, na usikilize wasomaji wako uwapendao katika hali safi na isiyo na matangazo.",
+        "tagline": "Programu nzuri ya Msahafu isiyo na matangazo",
+        "title": "Qur'ani kwa iOS (iliyoundwa na quran.com)"
+      },
+      "quranmeet": {
+        "caption": "Vipindi vya moja kwa moja vya masomo ya Qur'ani",
+        "description": "Jukwaa linalowaunganisha wanafunzi, walimu au hata vikundi vya masomo kwa ajili ya vipindi vya kujifunza Qur'ani  ana kwa ana au katika vikundi vidogo.",
+        "tagline": "Vipindi vya Qur'ani vya vikundi vidogo au ana kwa ana",
+        "title": "QuranMeet"
+      },
+      "quranreflect": {
+        "caption": "Shiriki tafakari",
+        "description": "Jukwaa la kijamii la kukuza utamaduni wa kutafakari Quran Tukufu",
+        "tagline": "Soma na Shiriki Tafakari",
+        "title": "QuranReflect"
+      },
+      "readtafsir": {
+        "caption": "Tafuta na ulinganishe tafsir za awali",
+        "description": "Soma na usikilize vyanzo vingi vya tafsir vya kitambo katika sehemu moja, ambayo hurahisisha kuvinjari, kutafuta mada, na kulinganisha ufafanuzi.",
+        "tagline": "Usomaji na usikilizaji wa tafsir shirikishi",
+        "title": "ReadTafsir"
+      },
+      "sunnah": {
+        "caption": "Mkusanyiko wa Hadith",
+        "description": "Maktaba ya hadithi yenye makusanyo makubwa yanayopatikana mtandaoni, ikiwa ni pamoja na zana za utafutaji na tarjuma katika lugha tofauti.",
+        "tagline": "Hadithi karibu nawe",
+        "title": "Sunnah.com"
+      },
+      "tafsirapp": {
+        "caption": "Tafsiri shirikishi yenye vyanzo vingi",
+        "description": "Tovuti ya utafiti wa Qur'ani ambayo huleta pamoja tafsir, qira'at, misahafu, i'rab, sayansi ya Qur'ani, asbab al-nuzul, hukumu na kamusi.",
+        "tagline": "Kitovu cha utafiti wa Qur'ani",
+        "title": "Tafsir App"
+      }
+    },
+    "filters": {
+      "all": "Programu zote",
+      "community": "Jumuiya",
+      "hadith-sunnah": "Hadith na Sunnah",
+      "popular": "Maarufu",
+      "quran-reader": "Visomi vya Qur'ani",
+      "reflections": "Tafakari",
+      "study-tools": "Zana za kujifunzia"
+    },
+    "title": "Vinjari Programu Zote"
+  },
+  "cta": {
+    "app-store": "Pakua kutoka kwa App Store",
+    "google-play": "Ipate kwenye Google Play",
+    "visit": "Tembelea"
+  },
+  "featured": {
+    "apps": {
+      "qariah": {
+        "headline": "Sikiliza wanawake zaidi ya 60 kutoka kote ulimwenguni wakisoma Quran katika visomo tofauti!",
+        "name": "Qariah",
+        "tagline": "Wasomaji wanawake wa Qur'ani"
+      },
+      "quran-kareem": {
+        "headline": "Lango lako jipya la kuungana na Kitabu cha Mwenyezi Mungu",
+        "name": "Quran Kareem",
+        "tagline": "Soma, sikiliza na tafakari"
+      },
+      "quran-link": {
+        "headline": "Gundua zaidi ya tafsir 25 na zaidi ya tarjuma 100 katika sehemu moja",
+        "name": "Quran Link",
+        "tagline": "Tafsir & mwenzi wa masomo"
+      },
+      "quran-space": {
+        "headline": "Ungana na walimu, wanafunzi, au wenzako katika sauti na video za muda halisi ili kusoma, kutafakari, na kujifunza Quran pamoja.",
+        "name": "Nafasi ya Quran",
+        "tagline": "Nafasi ya Mkutano wa Kurani Moja kwa Moja"
+      }
+    },
+    "learn-more": "Jifunze zaidi",
+    "title": "Programu Zilizoangaziwa",
+    "view-all": "Tazama yote"
+  },
+  "footer": {
+    "disclaimer": "Kila programu inamilikiwa na kutunzwa kwa kujitegemea na msanidi programu wake. Kwa usaidizi, ripoti za hitilafu, au maombi ya vipengele, tafadhali wasiliana na muundaji wa programu moja kwa moja."
+  },
+  "hero": {
+    "description": "Gundua programu za kipekee zinazoendeshwa na maudhui na vipengele vya mtumiaji vilivyothibitishwa na Wakfu wa Quran, huku akaunti yako, maendeleo, na safari yako zikiendelea kuunganishwa.",
+    "title": "Gundua Mfumo wetu wa Ikolojia wa Programu"
+  },
+  "quran-apps-portal": "Programu za Quran Zilizounganishwa"
+}

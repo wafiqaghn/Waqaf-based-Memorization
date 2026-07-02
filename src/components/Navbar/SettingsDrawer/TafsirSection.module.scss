@@ -1,0 +1,14 @@
+.container {
+  min-block-size: calc(4 * var(--spacing-mega));
+}
+
+.changeTafsirsButtonContainer {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: var(--spacing-xsmall);
+}
+
+.skeleton {
+  block-size: calc(2.2 * var(--spacing-mega));
+  inline-size: 100%;
+}

@@ -1,0 +1,1 @@
+../../../.agents/quran/skills/test-plan/SKILL.md

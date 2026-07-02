@@ -1,0 +1,1 @@
+../../.agents/quran/skills/parse-figma-urls.md

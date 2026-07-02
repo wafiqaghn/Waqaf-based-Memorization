@@ -1,0 +1,1 @@
+../../.agents/quran/skills/extract-figma-links.md

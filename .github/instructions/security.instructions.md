@@ -1,0 +1,1 @@
+../../.agents/quran/standards/instructions/security.instructions.md

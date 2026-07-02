@@ -1,0 +1,1 @@
+../../.agents/quran/skills/setup-jira-and-figma.md

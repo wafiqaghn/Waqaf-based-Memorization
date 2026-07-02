@@ -1,0 +1,35 @@
+{
+  "api-docs": {
+    "cta": "Afficher la documentation de l'API",
+    "header": "Documentation de l'API",
+    "sub-header": "Intégrez les données de Quran.com dans vos applications grâce à notre API complète",
+    "title": "Documentation de l'API"
+  },
+  "app-portal": {
+    "cta-explore": "Explorer les applications",
+    "cta-oauth": "Consultez le guide OAuth2",
+    "description": "Explorez les dernières expériences créées par la communauté et découvrez les possibilités offertes par notre plateforme.",
+    "heading": "Applications Coran connectées",
+    "oauth-pitch": "Utilisez le système OAuth2 de la Fondation Coran pour une connexion simplifiée et soumettez votre application pour qu'elle soit présentée sur le portail des applications coraniques.",
+    "tagline": "Mettez en valeur vos applications coraniques"
+  },
+  "careers": {
+    "career": "Opportunités de carrière",
+    "cta": "Voir les postes",
+    "header": "Découvrez nos offres d'emploi actuelles"
+  },
+  "footer": "- L'équipe Quran.com",
+  "header": "Aide au développement",
+  "hero": {
+    "subtitle": "Ressources, outils et conseils pour les développeurs créant des expériences coraniques.",
+    "title": "Construisez avec Quran.com"
+  },
+  "issues-cta": "Si vous avez des questions ou si vous souhaitez contacter les responsables, écrivez simplement un problème ! Nous vous répondrons dans les plus brefs délais, inch Allah.",
+  "issues-guide": "Typiquement, nous nous inspirons de <0>projets Github</0> pour bâtir de nouvelles fonctionnalités, et corriger les bugs. Par exemple, <1>cette URL</1> contient une liste de bugs, des choses pour lesquelles nous avons besoin d'aide et des fonctionnalités à venir.",
+  "labs": "Labs du Coran",
+  "labs-cta": "Explorer les laboratoires",
+  "labs-description": "Découvrez des fonctionnalités expérimentales et des nouveautés à venir.",
+  "labs-pitch": "Partagez vos idées et participez à l'avenir de l'engagement et des expériences coraniques.",
+  "main-desc": "Merci pour votre contribution au développement de Quran.com et ses projets. Nous sommes ravis de travailler avec vous !",
+  "thanks": "Nous attendons votre contribution avec impatience !"
+}

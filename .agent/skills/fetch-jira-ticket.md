@@ -1,0 +1,1 @@
+../../.agents/quran/skills/fetch-jira-ticket.md

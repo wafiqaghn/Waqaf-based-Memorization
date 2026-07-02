@@ -1,0 +1,35 @@
+@use 'src/styles/utility';
+
+.container {
+  @include utility.center-vertically;
+}
+
+.containerStale {
+  &:hover {
+    background: var(--color-background-alternative-medium);
+  }
+}
+
+.innerContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.itemContainer {
+  display: flex;
+  align-items: center;
+}
+
+.titleContainer {
+  margin-inline-start: var(--spacing-medium);
+  font-size: var(--font-size-normal-px);
+  font-weight: var(--font-weight-semibold);
+  line-height: 0;
+}
+
+.containerEvent {
+  color: var(--color-warning-deep);
+}
+
+.containerEventIcon svg path {
+  fill: var(--color-warning-deep);
+}

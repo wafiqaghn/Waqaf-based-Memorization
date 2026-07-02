@@ -1,0 +1,23 @@
+@use 'src/styles/theme';
+
+.card {
+  @include theme.light {
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
+  }
+  @include theme.dark {
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.8);
+  }
+  @include theme.sepia {
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
+  }
+  border: 1px solid var(--color-brand-border);
+  border-radius: 24px;
+  padding: var(--spacing-medium);
+  background:
+    linear-gradient(180deg, rgba(245, 239, 230, 0.04), transparent),
+    var(--color-background-elevated-new);
+}
+
+.cardWithLink {
+  cursor: pointer;
+}

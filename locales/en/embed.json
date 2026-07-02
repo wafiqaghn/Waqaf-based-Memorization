@@ -1,0 +1,96 @@
+{
+  "actions": {
+    "copied": "Copied!",
+    "copy": "Copy",
+    "copyEmbedSnippet": "Copy Embed Snippet"
+  },
+  "checkboxes": {
+    "answers": "Show Answers button (if available)",
+    "audio": "Enable audio playback",
+    "customSize": "Use custom width/height",
+    "lessons": "Show Lessons button",
+    "mergeVerses": "Merge verses (inline display)",
+    "reflections": "Show Reflections button",
+    "showArabic": "Show Arabic verse",
+    "tafsirs": "Show Tafsirs button",
+    "translator": "Show translator name",
+    "verseRange": "Enable verse range",
+    "wordHighlight": "Highlight active word",
+    "wordByWord": "Enable word-by-word translation",
+    "wordByWordTransliteration": "Enable word-by-word transliteration"
+  },
+  "errors": {
+    "clipboardFallback": "Clipboard write failed, using fallback",
+    "clipboardUnavailable": "Clipboard API unavailable",
+    "loadChapters": "Unable to load chapters",
+    "loadReciters": "Unable to load reciters",
+    "loadTranslations": "Unable to load translations"
+  },
+  "fields": {
+    "audioMode": "Audio mode",
+    "ayah": "Ayah",
+    "clientId": "Client Id",
+    "endWordIndex": "End word index",
+    "height": "Height",
+    "language": "Language",
+    "mushaf": "Mushaf",
+    "reciter": "Reciter",
+    "repeatCount": "Repeat count",
+    "startWordIndex": "Start word index",
+    "surah": "Surah",
+    "theme": "Theme",
+    "translations": "Translations",
+    "waqafIndex": "Waqaf index",
+    "width": "Width"
+  },
+  "audioModes": {
+    "ayah": "Full Ayah",
+    "custom": "Custom Word Range",
+    "waqaf": "Waqaf Segment"
+  },
+  "header": {
+    "subtitle": "<bold>Build a Tartila embed with Arabic text, translation, and waqaf-aware listening options.</bold><br />Create a focused Quran snippet with <bold>recitation, repeat controls, word guidance</bold> and more, so readers can practice as they engage with the verse.",
+    "title": "Tartila Embed Builder"
+  },
+  "meta": {
+    "description": "Configure and preview embed widgets for sharing Quran, then copy the ready-to-use script snippet.",
+    "title": "Ayah Embed Builder | Tartila"
+  },
+  "mushaf": {
+    "indopak": "Indopak",
+    "kfgqpc_v1": "King Fahad Complex v1",
+    "kfgqpc_v2": "King Fahad Complex v2",
+    "qpc": "QPC Uthmani Hafs",
+    "tajweed": "Tajweed"
+  },
+  "placeholders": {
+    "searchTranslations": "Search translations..."
+  },
+  "reciters": {
+    "select": "Select reciter"
+  },
+  "sections": {
+    "configuration": "Configuration",
+    "preview": "Live preview",
+    "snippet": "Embed snippet"
+  },
+  "states": {
+    "loadingChapters": "Loading chapters...",
+    "loadingPreview": "Loading preview...",
+    "loadingReciters": "Loading reciters...",
+    "loadingVerses": "Loading verses...",
+    "noTranslations": "No translations found"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "sepia": "Sepia"
+  },
+  "translations": {
+    "chipRemoveLabel": "Remove translation",
+    "otherLanguage": "Other"
+  },
+  "widget": {
+    "readOnQuran": "Read on Quran.com"
+  }
+}

@@ -1,0 +1,28 @@
+$separator-size: 1px;
+
+.base {
+  &[data-orientation='horizontal'] {
+    block-size: $separator-size;
+    inline-size: 100%;
+  }
+
+  &[data-orientation='vertical'] {
+    block-size: 100%;
+    inline-size: $separator-size;
+  }
+}
+
+.semiBold {
+  background-color: var(--color-borders-hairline);
+}
+
+.bold {
+  background-color: var(--color-primary-medium);
+  &[data-orientation='horizontal'] {
+    block-size: calc(1.28 * $separator-size);
+  }
+
+  &[data-orientation='vertical'] {
+    inline-size: calc(1.28 * $separator-size);
+  }
+}

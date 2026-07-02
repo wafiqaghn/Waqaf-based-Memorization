@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  border-block-end: 0;
+}
+
+.tabItem {
+  cursor: pointer;
+  padding-block-start: var(--spacing-xxsmall);
+  padding-block-end: var(--spacing-xxsmall);
+  padding-inline-start: var(--spacing-xxsmall);
+  padding-inline-end: var(--spacing-xxsmall);
+  border-radius: var(--border-radius-pill);
+  background-color: transparent;
+  color: var(--color-text-faded-new);
+}
+.tabItem + .tabItem {
+  margin-inline-start: var(--spacing-xxsmall);
+}
+
+.tabItemSelected {
+  background: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}

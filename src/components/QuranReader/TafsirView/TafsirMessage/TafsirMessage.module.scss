@@ -1,0 +1,9 @@
+.tafsirMessage {
+  position: relative;
+  padding: var(--spacing-medium);
+  margin-block-end: var(--spacing-medium);
+  background: var(--color-success-faded);
+  border-radius: var(--border-radius-default);
+  font-size: var(--font-size-small);
+  color: var(--color-text-default-new);
+}

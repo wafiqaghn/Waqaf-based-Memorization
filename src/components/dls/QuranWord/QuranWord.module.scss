@@ -1,0 +1,75 @@
+.container {
+  display: inline-block;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.interactionDisabled {
+  cursor: auto;
+}
+
+.additionalWordGap {
+  margin-inline-end: var(--spacing-xxsmall);
+}
+
+.additionalStopSignGap {
+  margin-inline-end: var(--spacing-small);
+}
+
+.wbwContainer {
+  text-align: center;
+  padding-block-start: var(--spacing-micro);
+  padding-block-end: var(--spacing-micro);
+  padding-inline-start: var(--spacing-micro);
+  padding-inline-end: var(--spacing-micro);
+}
+
+.highlightOnHover {
+  &:hover {
+    color: var(--color-success-medium);
+  }
+}
+
+.highlighted {
+  color: var(--color-success-medium);
+}
+
+.startingVerseHighlighted {
+  position: relative;
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-block-end: 0;
+    inset-inline-start: -2px;
+    inset-inline-end: -2px;
+    background-color: var(--color-success-faded);
+    z-index: -1;
+  }
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-micro);
+}
+
+.tooltipText {
+  padding-block-start: var(--spacing-micro);
+  padding-block-end: var(--spacing-micro);
+  padding-inline-start: var(--spacing-micro);
+  padding-inline-end: var(--spacing-micro);
+  white-space: normal;
+  margin: 0;
+}
+
+// Use higher specificity to override popover container margins
+div.popoverTrigger {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}

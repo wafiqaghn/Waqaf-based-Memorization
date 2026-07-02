@@ -1,0 +1,1 @@
+../../.agents/quran/workflows/sync-ticket.md

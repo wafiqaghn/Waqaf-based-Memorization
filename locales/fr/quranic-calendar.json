@@ -1,0 +1,117 @@
+{
+  "additional-resources": "Ressources Supplémentaires",
+  "additional-resources-subtitle": "Ces ressources supplémentaires vous aideront à établir un lien plus profond avec les Ayahs que vous avez lues.",
+  "ask-question": "Poser une question",
+  "complete": "Terminé",
+  "completed-weeks": "{{completedWeeks}} / {{totalWeeks}} Semaines terminées",
+  "divine-book-club": "Le Divine Book Club",
+  "divine-book-club-description": "Il s’agit d’une discussion de groupe accessible qui vous aide à suivre le contexte de chaque lecture hebdomadaire.",
+  "end-of-calendar": "Fin du calendrier",
+  "english-pdf": "PDF en anglais",
+  "faq": "Foire Aux Questions",
+  "faq-items": [
+    {
+      "answer": "Le Coran en un An est un programme de lecture simple et structuré pour vous aider à lire tout le Coran en un an, d'un Ramadan au suivant. L'objectif est d'acquérir une compréhension de base du Coran du début à la fin, avec sérénité et tranquillité.",
+      "question": "Qu'est-ce que « Le Coran en un an » ?"
+    },
+    {
+      "answer": "Nous vous invitons à consacrer, chaque semaine, du temps à la lecture de quelques pages du Coran dans une langue que vous comprenez. Il y a 46 lectures au total, une pour chaque semaine du calendrier islamique, de Shawwal à Sha'ban. Cette division du Coran complète d'autres divisions, comme les célèbres 30 parties qui facilitent la lecture du Coran en un mois.",
+      "question": "Comment fonctionne le programme?"
+    },
+    {
+      "answer": "Absolument pas. Le point de départ de ce programme est de vous familiariser avec les significations du Coran dans la langue (traduction) que vous maîtrisez. Quran.com propose des traductions dans de nombreuses langues pour rendre ce programme accessible à tous. Notre objectif est d'inciter les participants à progresser d'année en année.",
+      "question": "Dois-je savoir lire l’arabe pour participer ?"
+    },
+    {
+      "answer": "Chaque semaine, le nouveau devoir de lecture sera disponible sur Quran.com/calendrier. Vous pouvez le lire directement sur Quran.com, où un lien dédié vous mènera directement à la lecture principale de la semaine. \\n\\nVous pouvez également ouvrir le PDF en anglais et l'imprimer. Il contient une traduction fluide principalement issue de l'œuvre de MAS Abdel Haleem. Chaque semaine, le document est divisé en sept parties, ce qui facilite la répartition de la lecture. Il comprend de courtes introductions aux Sourates, des en-têtes et des notes pour clarifier certains points essentiels, et chaque partie quotidienne propose une question invitant à la méditation, et une suggestion d'action.",
+      "question": "Où puis-je trouver les devoirs de lecture hebdomadaires ?"
+    },
+    {
+      "answer": "Plusieurs options s'offrent à vous pour rester sur la bonne voie. Nous vous recommandons vivement de vous abonner pour recevoir les e-mails contenant les lectures hebdomadaires. Nous avons également créé des canaux communautaires sur Telegram et WhatsApp, qui contiennent des rappels et des encouragements. Cliquez simplement sur le bouton de votre choix sur Quran.com/calendrier pour vous abonner. Vous pouvez choisir les trois options si vous le souhaitez.",
+      "question": "Comment puis-je recevoir des rappels de lecture hebdomadaires ?"
+    },
+    {
+      "answer": "Sur Quran.com, accédez au menu des paramètres pour : \\n • Ajuster les tailles et les styles de police \\n • Basculer entre les modes clair, foncé et sépia \\n • Choisir parmi plusieurs traductions disponibles \\n \\nCela permet à chacun de participer facilement dans la langue qu'il comprend le mieux, et avec une traduction claire et informative.",
+      "question": "Comment puis-je personnaliser mon expérience de lecture ?"
+    },
+    {
+      "answer": "Nous vous encourageons à parcourir QuranReflect.com pour découvrir les réflexions d'autres personnes sur les passages lus chaque semaine, et quand vous vous sentirez prêt, partagez vos propres réflexions ! \\n \\nN'oubliez pas aussi de consulter le podcast The Divine Book Club : une discussion approfondie animée par des érudits qui suit ce programme. Elle dure seulement une heure par semaine et offre un contexte très utile.",
+      "question": "Quelles ressources supplémentaires proposez-vous ?"
+    },
+    {
+      "answer": "Pas de problème. Reprenez simplement la lecture de la semaine en cours — inutile de rattraper les semaines manquées. Restez consistant et concentrez-vous sur l'avenir. Vous aurez toujours l'année prochaine pour rattraper ce que vous avez manqué.",
+      "question": "Que se passe-t-il si je prends du retard ou si j'adhère en retard ?"
+    },
+    {
+      "answer": "La meilleure façon de rester régulier est de lire avec d'autres. Nous vous encourageons à créer un club de lecture personnel, en famille, entre amis ou même en ligne. Réunissez-vous chaque semaine, discutez de vos lectures et soutenez-vous mutuellement dans ce voyage.",
+      "question": "Comment puis-je tirer le meilleur parti de ce voyage ?"
+    },
+    {
+      "answer": "Nous prévoyons de promouvoir les prochaines étapes et les niveaux supérieurs. Cette année, nous invitons le plus grand nombre à commencer par la simplicité : lire le Coran en entier avec une compréhension de base. Une fois cela fait, vous vous sentirez prêt à le relire et à l'approfondir !",
+      "question": "Y aura-t-il des options d’études plus approfondies plus tard ?"
+    },
+    {
+      "answer": "Oui. « Le Coran en un An » est entièrement gratuit et nous vous encourageons à le partager. Invitez un ami, créez un club de lecture et aidez davantage de personnes à lire le Coran pour la première fois.",
+      "question": "Est-ce gratuit ? Puis-je le partager ?"
+    }
+  ],
+  "hero": {
+    "description": "Un programme soigneusement conçu qui vous permet de lire et de comprendre facilement l'intégralité du Coran d'un Ramadan à l'autre, à un rythme régulier et facile à gérer.",
+    "line-1": "Le Calendrier Coranique Global est un programme encourageant la lecture engagée de l'intégralité du Coran, à partir de la fin d'un Ramadan, jusqu'au début du suivant. Nous vous encourageons à prendre le temps de comprendre, et de réfléchir aux Ayahs afin d’avoir une connexion plus profonde et plus sincère."
+  },
+  "interact-with-post": "Interagissez avec cet article sur QuranReflect",
+  "islamic-months": {
+    "1": "Muharram",
+    "2": "Safar",
+    "3": "Rabi' al-Awwal",
+    "4": "Rabi' al-Thani",
+    "5": "Jumada al-Awwal",
+    "6": "Jumada al-Thani",
+    "7": "Rajab",
+    "8": "Sha'ban",
+    "9": "Ramadan",
+    "10": "Shawwal",
+    "11": "Dhu al-Qi'dah",
+    "12": "Dhu al-Hijjah"
+  },
+  "join-qc": {
+    "line-1": "Nous sommes la <highlight> semaine {{weekNumber}} </highlight> du Calendrier Coranique.",
+    "line-2": "<normal>Rejoignez-nous pour la lecture de cette semaine même si c'est votre première fois !</normal>"
+  },
+  "join-quranic-calendar": "Abonnez-vous pour recevoir des mises à jour et des ressources via QuranReflect",
+  "join-quranic-calendar-success": "Vous avez rejoint le club \"Le Coran en un An\" avec succès !",
+  "join-telegram": "Rejoignez notre Telegram",
+  "join-telegram-mobile": "Telegram",
+  "join-whatsapp": "Rejoignez notre Whatsapp",
+  "join-whatsapp-mobile": "WhatsApp",
+  "mark-as-completed": "Marquer comme terminé",
+  "marked-as-completed": "Cette semaine a été marquée comme terminée avec succès !",
+  "month": "Mois",
+  "my-progress": "Mes progrès",
+  "progress-subtitle": "N'hésitez pas à revenir en arrière et à compléter les semaines que vous avez manquées !",
+  "quran-calendar-description": "Un plan de lecture structuré pour lire le Coran en un an. Gagnez en régularité, approfondissez votre compréhension et maintenez le cap, sans vous sentir submergé(e).",
+  "quran-calendar-title": "Le Coran en un an – Un plan simple pour lire et comprendre l'intégralité du Coran",
+  "quran-reflect": "QuranReflect",
+  "quran-reflect-description": "Interagissez avec les autres au sujet des Ayahs que vous avez lues cette semaine.",
+  "quranic-calendar": "Le Coran en un An",
+  "ramadan": "Ramadan",
+  "read-online": "Lire en ligne",
+  "read-this-weeks-verses": "Lire les Ayahs de la Semaine",
+  "reading-options": {
+    "default-settings": "Lire avec mes paramètres par défaut",
+    "en-and-ar": "Lire en Anglais et en Arabe",
+    "en-only": "Lire uniquement en Anglais"
+  },
+  "reflection-prompts": "💭 RÉFLEXIONS issues de la lecture de cette semaine <span>(Téléchargez le PDF pour en voir plus)</span> :",
+  "share-reflections": "Partagez vos réflexions",
+  "start-tracking": "Commencer le suivi",
+  "supplemental-resources": "Ressources de Soutien",
+  "today": "La date d'aujourd'hui est : <highlight> {{day}} {{month}} {{year}} , {{gregorianDate}} </highlight>",
+  "verse": "Ayah",
+  "verses-subtitle": "Nous vous encourageons à vous concentrer sur la compréhension des significations de base. Sélectionnez alors la langue qui vous convient le mieux.",
+  "watch-episode": "Regarder l'Épisode {{weekNumber}}",
+  "week": "Semaine",
+  "week-completed": "Complétée",
+  "week-title": "Semaine {{weekNumber}} ({{month}}) couvrant les Ayahs {{rangeStart}} à {{rangeEnd}}",
+  "weekly-verses-help-description-1": "Ce PDF contient une traduction fluide, principalement issue de l'œuvre de MAS Abdel Haleem. Chaque semaine, le document est divisé en sept parties, ce qui permet de répartir la lecture sur la semaine, si vous le souhaitez. Il comprend de courtes introductions aux Sourates, des en-têtes et des notes pour clarifier certains points essentiels, et chaque partie quotidienne propose une question de réflexion et des suggestions d'action."
+}

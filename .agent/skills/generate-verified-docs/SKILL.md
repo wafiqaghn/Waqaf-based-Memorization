@@ -1,0 +1,1 @@
+../../../.agents/quran/skills/generate-verified-docs/SKILL.md

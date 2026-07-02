@@ -1,0 +1,35 @@
+{
+  "api-docs": {
+    "cta": "Tazama Hati za API",
+    "header": "Nyaraka za API",
+    "sub-header": "Unganisha data ya Quran.com kwenye programu zako na API yetu ya kina",
+    "title": "Nyaraka za API"
+  },
+  "app-portal": {
+    "cta-explore": "Gundua Programu",
+    "cta-oauth": "Tazama mwongozo wa OAuth2",
+    "description": "Gundua Programu zinazobadilisha maisha na zinazoshughulikia mahitaji ya kipekee na makundi mbalimbali ya jamii.",
+    "heading": "Programu za Quran Zilizounganishwa",
+    "oauth-pitch": "Tumia OAuth2.0 ya Quran.Foundation ili kumruhusu mtumiaji kupata data yake na kuendelea pale alipoishia kwenye Quran.com na Programu zilizounganishwa.",
+    "tagline": "Onyesha programu zako za Qur'ani"
+  },
+  "careers": {
+    "career": "Fursa za Kazi",
+    "cta": "Tazama vyeo vya kazi",
+    "header": "Tazama nafasi za kazi zilizoko"
+  },
+  "footer": "- Timu ya Quran.com",
+  "header": "Msaada wa Usanidi",
+  "hero": {
+    "subtitle": "Rasilimali, zana, na mwongozo kwa wasanidi programu wanaojenga uzoefu wa Qur'ani.",
+    "title": "Jenga na Quran.com"
+  },
+  "issues-cta": "Iwapo una maswali yoyote au unataka kuwasiliana na wasimamizi, andika tu hoja lako. Tutakujibu haraka tuwezavyo inshaAllah.",
+  "issues-guide": "Kwa kawaida sisi hutumia <0>Miradi ya Github</0> kama chanzo cha kazi inayofuata, nini kinakuja na ni hitilafu zipi zipo zinazohitaji kutatuliwa. Kwa mfano <1>url hii</1> ina orodha ya hitilafu, mambo tunayohitaji usaidizi, na vipengele vijavyo.",
+  "labs": "Maabara ya Qur'ani",
+  "labs-cta": "Chunguza Maabara",
+  "labs-description": "Gundua vipengele vya majaribio na ubunifu ujao. Shiriki mawazo yako",
+  "labs-pitch": "Toa mawazo yako na ushiriki katika mustakabali wa ushirikiano na uzoefu wa Qur'ani.",
+  "main-desc": "Asante kwa nia yako ya kutusaidia kukuza Quran.com na miradi yake. Tunafurahi kufanya kazi na wewe!",
+  "thanks": "Tunatazamia mchango wako!"
+}

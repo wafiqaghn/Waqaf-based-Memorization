@@ -1,0 +1,35 @@
+{
+  "api-docs": {
+    "cta": "Lihat Dokumen API",
+    "header": "Dokumentasi API",
+    "sub-header": "Integrasikan data Quran.com ke dalam aplikasi Anda dengan API komprehensif kami",
+    "title": "Dokumentasi API"
+  },
+  "app-portal": {
+    "cta-explore": "Jelajahi Aplikasi",
+    "cta-oauth": "Lihat panduan OAuth2",
+    "description": "Jelajahi pengalaman terbaru yang dibangun oleh komunitas dan lihat apa yang mungkin dilakukan dengan platform kami.",
+    "heading": "Aplikasi Al-Quran Terhubung",
+    "oauth-pitch": "Kirimkan aplikasi Anda melalui Quran Foundation OAuth2 untuk proses masuk yang mudah dan tampilkan aplikasi Anda di Portal Aplikasi Quran.",
+    "tagline": "Pamerkan aplikasi Quran Anda"
+  },
+  "careers": {
+    "career": "Peluang Karir",
+    "cta": "Lihat Lowongan",
+    "header": "Jelajahi lowongan pekerjaan kami saat ini"
+  },
+  "footer": "- Tim Quran.com",
+  "header": "Bantuan pengembangan",
+  "hero": {
+    "subtitle": "Sumber daya, alat, dan panduan untuk pengembang yang membangun pengalaman Al-Quran.",
+    "title": "Dibangun dengan Quran.com"
+  },
+  "issues-cta": "Jika Anda memiliki pertanyaan atau ingin menghubungi pengelola, tulis saja masalah! Kami akan menghubungi Anda sesegera mungkin, insyaAllah.",
+  "issues-guide": "Biasanya kami menggunakan <0> proyek Github </0> sebagai sumber untuk apa yang harus dikerjakan selanjutnya, apa yang akan datang dan bug apa yang ada yang perlu dipecahkan. Misalnya <1> URL ini </1> memiliki daftar bug, hal-hal yang perlu kami bantu, dan fitur yang akan datang.",
+  "labs": "Laboratorium",
+  "labs-cta": "Jelajahi Labs",
+  "labs-description": "Temukan fitur eksperimental dan inovasi mendatang. Bagikan ide Anda",
+  "labs-pitch": "Bagikan ide Anda dan berpartisipasilah dalam masa depan keterlibatan dan pengalaman Al-Quran.",
+  "main-desc": "Assalamu A'laikum, Pertama, terima kasih banyak atas minat Anda untuk membantu kami mengembangkan Quran.com dan projek-projeknya. Kami amat senang kerana dapat bekerja sama dengan Anda!",
+  "thanks": "Terima kasih sudah membaca! selanjutnya berharap untuk melihat Anda melakukan beberapa kode!"
+}

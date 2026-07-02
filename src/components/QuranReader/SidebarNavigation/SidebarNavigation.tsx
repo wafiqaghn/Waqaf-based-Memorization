@@ -1,0 +1,182 @@
+/* eslint-disable max-lines */
+/* eslint-disable react/no-multi-comp */
+import { useEffect, useRef, useState } from 'react';
+
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import useTranslation from 'next-translate/useTranslation';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+
+import styles from './SidebarNavigation.module.scss';
+import SidebarNavigationSelections from './SidebarNavigationSelections';
+
+import RevelationOrderNavigationNotice, {
+  RevelationOrderNavigationNoticeView,
+} from '@/components/QuranReader/RevelationOrderNavigationNotice';
+import Button, { ButtonShape, ButtonSize, ButtonVariant } from '@/dls/Button/Button';
+import KeyboardInput from '@/dls/KeyboardInput';
+import Switch from '@/dls/Switch/Switch';
+import useOutsideClickDetector from '@/hooks/useOutsideClickDetector';
+import IconClose from '@/icons/close.svg';
+import { selectIsNavigationDrawerOpen, selectNavbar } from '@/redux/slices/navbar';
+import {
+  NavigationItem,
+  selectIsSidebarNavigationVisible,
+  selectNavigationItem,
+  selectSelectedNavigationItem,
+  setIsSidebarNavigationVisible,
+} from '@/redux/slices/QuranReader/sidebarNavigation';
+import { selectIsReadingByRevelationOrder } from '@/redux/slices/revelationOrder';
+import { logButtonClick, logEvent, logValueChange } from '@/utils/eventLogger';
+import { isMobile } from '@/utils/responsive';
+
+const SidebarNavigation = () => {
+  const router = useRouter();
+  const isHomePage = router.pathname === '/';
+  const isSidebarVisible = useSelector(selectIsSidebarNavigationVisible);
+  const { isVisible: isNavbarVisible } = useSelector(selectNavbar, shallowEqual);
+  const selectedNavigationItem = useSelector(selectSelectedNavigationItem);
+  const isReadingByRevelationOrder = useSelector(selectIsReadingByRevelationOrder);
+  const isNavigationDrawerOpen = useSelector(selectIsNavigationDrawerOpen);
+
+  const dispatch = useDispatch();
+  const { t } = useTranslation('common');
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+  // Delay the visibility state calculation to prevent unwanted CSS transitions on initial mount.
+  // When the component first renders with sidebar visible, we temporarily set this to true,
+  // then set it to false after the next animation frame. This ensures the browser completes
+  // the initial render before applying transition classes, avoiding flash/animation artifacts.
+  const [shouldDelayVisibleState, setShouldDelayVisibleState] = useState(
+    isSidebarVisible === true || isSidebarVisible === 'auto',
+  );
+  useEffect(() => {
+    if (!shouldDelayVisibleState) return undefined;
+    const animationFrameId = requestAnimationFrame(() => {
+      setShouldDelayVisibleState(false);
+    });
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [shouldDelayVisibleState]);
+
+  useOutsideClickDetector(
+    sidebarRef,
+    () => {
+      logEvent('sidebar_navigation_close_outside_click');
+      dispatch(setIsSidebarNavigationVisible(false));
+    },
+    isSidebarVisible && isMobile(),
+    true,
+  );
+
+  const navigationItems = [
+    {
+      name: t('surah'),
+      value: NavigationItem.Surah,
+    },
+    {
+      name: t('verse'),
+      value: NavigationItem.Verse,
+    },
+    {
+      name: t('juz'),
+      value: NavigationItem.Juz,
+    },
+    {
+      name: t('page'),
+      value: NavigationItem.Page,
+    },
+  ];
+
+  const isSidebarAuto = isSidebarVisible === 'auto' && !shouldDelayVisibleState;
+  const showSidebar = isSidebarVisible === true && !shouldDelayVisibleState;
+  const isSidebarActive = Boolean(isSidebarVisible) && !shouldDelayVisibleState;
+
+  return (
+    <div
+      ref={sidebarRef}
+      data-is-homepage={isHomePage}
+      data-testid={showSidebar ? 'sidebar-navigation' : undefined}
+      className={classNames(styles.container, {
+        [styles.dimmed]: isNavigationDrawerOpen,
+        [styles.drawerShown]: isNavigationDrawerOpen,
+        [styles.drawerHide]: !isNavigationDrawerOpen,
+        [styles.visibleContainer]: showSidebar && isNavbarVisible,
+        [styles.visibleContainerCollapsed]: showSidebar && !isNavbarVisible,
+        [styles.containerAuto]: isSidebarAuto && isNavbarVisible,
+        [styles.containerAutoCollapsed]: isSidebarAuto && !isNavbarVisible,
+        [styles.inVisibleContainer]: isNavbarVisible,
+        [styles.inVisibleContainerCollapsed]: !isNavbarVisible,
+        [styles.spaceOnTop]: isSidebarActive && isNavbarVisible,
+        [styles.spaceOnTopCollapsed]: isSidebarActive && !isNavbarVisible,
+      })}
+    >
+      {!isReadingByRevelationOrder ? (
+        // Default ordering
+        <>
+          <div className={styles.header}>
+            <div className={styles.switchContainer}>
+              <Switch
+                items={navigationItems}
+                selected={selectedNavigationItem}
+                onSelect={(value) => {
+                  logValueChange('sidebar_navigation_view', selectedNavigationItem, value);
+                  dispatch(selectNavigationItem(value as NavigationItem));
+                }}
+              />
+            </div>
+            <Button
+              tooltip={t('close')}
+              shape={ButtonShape.Circle}
+              size={ButtonSize.Small}
+              variant={ButtonVariant.Ghost}
+              onClick={() => {
+                logButtonClick('sidebar_navigation_close');
+                dispatch(setIsSidebarNavigationVisible(false));
+              }}
+              ariaLabel={t('aria.sidebar-nav-close')}
+            >
+              <IconClose />
+            </Button>
+          </div>
+          <p className={styles.tip}>
+            <span>{t('sidebar.try-navigating-with')}</span>
+            <KeyboardInput meta keyboardKey="K" />
+          </p>
+
+          <div className={styles.contentContainer}>
+            <SidebarNavigationSelections
+              isVisible={isSidebarVisible}
+              selectedNavigationItem={selectedNavigationItem}
+            />
+          </div>
+        </>
+      ) : (
+        // Revelation ordering
+        <>
+          <div className={styles.revelationOrderHeader}>
+            <Button
+              tooltip={t('close')}
+              shape={ButtonShape.Circle}
+              size={ButtonSize.Small}
+              variant={ButtonVariant.Ghost}
+              onClick={() => {
+                logButtonClick('sidebar_navigation_close');
+                dispatch(setIsSidebarNavigationVisible(false));
+              }}
+              ariaLabel={t('aria.sidebar-nav-close')}
+            >
+              <IconClose />
+            </Button>
+          </div>
+          <RevelationOrderNavigationNotice view={RevelationOrderNavigationNoticeView.SideDrawer} />
+          <SidebarNavigationSelections
+            isVisible={isSidebarVisible}
+            selectedNavigationItem={NavigationItem.Surah}
+          />{' '}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default SidebarNavigation;

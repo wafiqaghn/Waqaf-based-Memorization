@@ -1,0 +1,16 @@
+.plainVerseWordContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-inline-end: var(--spacing-xxsmall);
+  margin-block-end: var(--spacing-xsmall);
+}
+
+.highlighted {
+  color: var(--color-success-medium);
+}
+
+.plainVerseWbwText {
+  margin-block: var(--spacing-xxsmall);
+  margin-inline: var(--spacing-xxsmall);
+}

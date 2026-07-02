@@ -1,0 +1,85 @@
+@use '@/styles/breakpoints';
+@use '@/styles/constants';
+
+div.container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--spacing-large-px);
+  overflow: hidden;
+
+  margin-block-start: var(--spacing-large-px);
+
+  @include breakpoints.smallerThanTablet {
+    margin-block-start: var(--spacing-medium2-px);
+  }
+}
+
+.notesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+  overflow-y: auto;
+  min-block-size: 8rem;
+}
+
+.statusContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-block-size: calc(2 * var(--spacing-max));
+
+  &[data-error='true'] {
+    color: var(--color-text-error);
+  }
+}
+
+.actions {
+  margin-inline-start: auto;
+  padding-block-end: var(--content-padding-end, 0);
+}
+
+.addNoteButton {
+  border-radius: var(--border-radius-medium-px);
+}
+
+.postToButton {
+  all: unset;
+
+  display: flex;
+  align-items: center;
+  padding-block: var(--spacing-micro-px);
+  padding-inline: var(--spacing-xsmall-px);
+  gap: calc(2 * var(--spacing-xmicro));
+  margin-inline-end: var(--spacing-xsmall-px);
+  font-size: var(--font-size-xsmall);
+
+  border-radius: var(--border-radius-xsmall-px);
+
+  background-color: var(--color-text-default-new);
+  color: var(--color-text-inverse);
+  transition: transform var(--transition-fast);
+  cursor: pointer;
+
+  svg {
+    block-size: var(--spacing-small);
+    inline-size: var(--spacing-small);
+  }
+
+  &:hover {
+    opacity: var(--opacity-85);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(constants.$button-active-scale);
+  }
+
+  &:focus-visible {
+    outline: var(--spacing-micro-px) solid var(--color-primary-medium);
+    outline-offset: var(--spacing-micro-px);
+  }
+}
+
+.bidiText {
+  unicode-bidi: plaintext;
+}

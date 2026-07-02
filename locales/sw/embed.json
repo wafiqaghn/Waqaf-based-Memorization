@@ -1,0 +1,85 @@
+{
+  "actions": {
+    "copied": "Imenakiliwa!",
+    "copy": "Nakili",
+    "copyEmbedSnippet": "Nakili Kijisehemu Kilichopachikwa"
+  },
+  "checkboxes": {
+    "answers": "Onyesha Kitufe cha Majibu (ikiwa kinapatikana)",
+    "audio": "Wezesha uchezaji wa sauti",
+    "customSize": "Tumia upana/urefu maalum",
+    "lessons": "Onyesha Kitufe cha Masomo",
+    "mergeVerses": "Unganisha aya (onyesho la ndani)",
+    "reflections": "Onyesha Kitufe cha Tafakari",
+    "showArabic": "Onyesha aya kwa Kiarabu",
+    "tafsirs": "Onyesha kitufe cha Tafsir",
+    "translator": "Onyesha jina la mtafsiri",
+    "verseRange": "Wezesha safu ya aya",
+    "wordByWord": "Wezesha tarjuma ya neno kwa neno",
+    "wordByWordTransliteration": "Wezesha unukuzi wa neno kwa neno"
+  },
+  "errors": {
+    "clipboardFallback": "Uandishi wa ubao wa kunakili umepata hitilafu, njia mbadala inatumika",
+    "clipboardUnavailable": "API ya Ubao wa Kunakili haipatikani",
+    "loadChapters": "Imeshindikana kupakia sura",
+    "loadReciters": "Imeshindikana kupakia wasomaji",
+    "loadTranslations": "Imeshindikana kupakia tarjuma"
+  },
+  "fields": {
+    "ayah": "Aya",
+    "clientId": "Kitambulisho cha Mteja",
+    "height": "Urefu",
+    "language": "Lugha",
+    "mushaf": "Msahafu",
+    "reciter": "Msomaji",
+    "surah": "Sura",
+    "theme": "Mandhari",
+    "translations": "Tarjuma",
+    "width": "Upana"
+  },
+  "header": {
+    "subtitle": "<bold>Njia ya ubora wa juu na inayoweza kubadilishwa ili kujumuisha aya za Qur'ani katika maudhui yako.</bold><br />Unda kipachiko ambacho unaweza kukibadilisha kwa urahisi, ikiwa na <bold>Uandishi sahihi wa Kiarabu, usomaji uliojengewa kwa ndani</bold> na zaidi, ili wasomaji waweze kusikiliza wanapojishughulisha na aya hio.",
+    "title": "Mjenzi wa Kiambatisho cha Aya"
+  },
+  "meta": {
+    "description": "Sanidi na hakiki wijeti za kupachika kwa ajili ya kushiriki Qur'ani, kisha nakili kipande cha hati kilicho tayari kutumika.",
+    "title": "Mjenzi wa Kiambatisho cha Aya | Quran.com"
+  },
+  "mushaf": {
+    "indopak": "Indopak",
+    "kfgqpc_v1": "King Fahad Complex v1",
+    "kfgqpc_v2": "King Fahad Complex v2",
+    "qpc": "QPC Uthmani Hafs",
+    "tajweed": "Tajweed"
+  },
+  "placeholders": {
+    "searchTranslations": "Tafuta tarjuma..."
+  },
+  "reciters": {
+    "select": "Chagua msomaji"
+  },
+  "sections": {
+    "configuration": "Usanidi",
+    "preview": "Hakikisho la moja kwa moja",
+    "snippet": "Kijisehemu cha kupachika"
+  },
+  "states": {
+    "loadingChapters": "Inapakia sura...",
+    "loadingPreview": "Inapakia onyesho la kuhakikisha...",
+    "loadingReciters": "Inapakia wasomaji...",
+    "loadingVerses": "Inapakia aya...",
+    "noTranslations": "Hakuna tarjuma zilizopatikana"
+  },
+  "theme": {
+    "dark": "Nyeusi",
+    "light": "Mwanga",
+    "sepia": "Sepia"
+  },
+  "translations": {
+    "chipRemoveLabel": "Ondoa tarjuma",
+    "otherLanguage": "Nyingine"
+  },
+  "widget": {
+    "readOnQuran": "Soma kwenye Quran.com"
+  }
+}

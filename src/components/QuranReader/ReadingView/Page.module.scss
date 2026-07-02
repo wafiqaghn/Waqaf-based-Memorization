@@ -1,0 +1,51 @@
+@use 'src/styles/breakpoints';
+@use 'src/styles/constants';
+@use 'src/styles/utility';
+
+@include utility.generate-line-width-scales(
+  'fallback_qpc_uthmani_hafs'
+); // fallback font's line-width
+
+.container {
+  // Avoid external margins on virtualized items; they can cause spacer/measurement
+  // drift when items are recycled and trigger visible scroll jumps.
+  padding-block-end: var(--spacing-large-px);
+  // Prevent end-of-list wide items (EndOfScrollingControls) from stretching
+  // nearby page containers in the virtualized range.
+  inline-size: fit-content;
+  margin-inline: auto;
+  max-inline-size: 100%;
+  position: relative;
+
+  // Keep the separator visually centered between pages while preserving
+  // margin-free virtualized item measurements.
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(var(--spacing-large-px) / 1.25);
+    block-size: 1px;
+    background: var(--color-borders-hairline);
+  }
+}
+
+.linesContainer {
+  @include utility.edgeHorizontalPadding;
+}
+
+.mobileCenterText {
+  text-align: center;
+  direction: rtl;
+  @include breakpoints.tablet {
+    text-align: start;
+  }
+}
+
+.translationPageContainer {
+  // ChapterHeader's margin provides the visual gap
+}
+
+.chapterHeaderNoTopMargin {
+  // !important needed to override ChapterHeader's default margin since both classes have equal specificity
+  margin-block-start: 0 !important;
+}

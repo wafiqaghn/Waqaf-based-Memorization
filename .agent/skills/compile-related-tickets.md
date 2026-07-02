@@ -1,0 +1,1 @@
+../../.agents/quran/skills/compile-related-tickets.md
